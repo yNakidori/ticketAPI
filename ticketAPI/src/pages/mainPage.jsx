@@ -1,8 +1,11 @@
 import React from 'react'
 
+
 const mainPage = () => {
   return (
-    <div>mainPage</div>
+    <div>
+      <h1>mainPage</h1>
+    </div >
   )
 }
 
