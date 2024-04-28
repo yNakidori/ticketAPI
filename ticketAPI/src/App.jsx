@@ -1,15 +1,13 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import MainPage from './pages/mainPage';
 
 function App() {
   return (
-    <>
-      <h1>
-        simple application
-      </h1>
-      <Link to="/login">logIn</Link>
-    </>
+    <Routes>
+      <Route path="/" element={<MainPage />} />
+    </Routes>
   );
 }
 

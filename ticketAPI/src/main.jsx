@@ -1,21 +1,27 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import LogIn from './register/logIn.jsx'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import App from './App.jsx';
+import LogIn from './register/logIn.jsx';
+import MainPage from './pages/mainPage.jsx';
 
-const router = createBrowserRouter([{
-  path: '/',
-  element: <App />,
-  chindren: [
-    {
-      path: '/login',
-      element: <LogIn />,
-    },
-  ],
-}])
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <App />,
+    children: [
+      {
+        path: '/mainPage',
+        element: <MainPage />,
+      },
+    ],
+  },
+  {
+    path: '/logIn',
+    element: <LogIn />,
+  },
+]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <RouterProvider router={router} />
-)
+);
