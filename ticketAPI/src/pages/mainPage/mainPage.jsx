@@ -1,18 +1,23 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Button from '@mui/material/Button'
-import FrameComponent from '../../components/mainPage_Components/FrameComponent'
+import './mainPage.scss'
 
 const MainPage = () => {
   return (
-    <div>
-      <h1 className='font-bold underline'>mainPage</h1>
+    <div className='bg'>
+      <h1>mainPage</h1>
       <Link to="/logIn">
         <Button>
           LogIn
         </Button>
       </Link>
-      <FrameComponent />
+
+      <Link to="/menuPage">
+        <Button>
+          MenuPage
+        </Button>
+      </Link>
     </div >
   )
 }
