@@ -8,12 +8,12 @@ import ToggleThemeButton from './ToggleThemeButton';
 
 const { Header, Sider, Content } = Layout;
 
-const SideBar = () => {
-    const [darkTheme, setDarkTheme] = useState(true)
-    const [collapsed, setCollapsed] = useState(false)
+const SideBar = ({ children }) => {
+    const [darkTheme, setDarkTheme] = useState(true);
+    const [collapsed, setCollapsed] = useState(false);
 
     const toggleTheme = () => {
-        setDarkTheme(!darkTheme)
+        setDarkTheme(!darkTheme);
     }
 
     return (
@@ -29,9 +29,7 @@ const SideBar = () => {
                 </Header>
                 <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
                     <div className="site-layout-background" style={{ padding: 24, textAlign: 'center' }}>
-                        <div>
-                            <h1>hello</h1>
-                        </div>
+                        {children}
                     </div>
                 </Content>
             </Layout>

@@ -1,14 +1,14 @@
 import React from 'react'
 import { Menu } from 'antd'
 import { HomeOutlined, AppstoreOutlined, WechatWorkOutlined, SpotifyOutlined, SettingOutlined, BarsOutlined } from '@ant-design/icons'
+import { Link } from 'react-router-dom'
 
 const MenuList = ({ darkTheme }) => {
     return (
         <Menu theme={darkTheme ? 'dark' : 'light'} mode='inline' className='menu-bar'>
             <Menu.Item key='home' icon={<HomeOutlined />}>
-                Home
+                <Link to='/homePage'>Home</Link>
             </Menu.Item>
-
             <Menu.Item key='activity' icon={<AppstoreOutlined />}>
                 Atividades
             </Menu.Item>
@@ -17,14 +17,14 @@ const MenuList = ({ darkTheme }) => {
                 <Menu.Item key='task-2'>Tickets abertos</Menu.Item>
                 <Menu.Item key='task-3'>Minha área</Menu.Item>
             </Menu.SubMenu>
-            <Menu.Item key='progress' icon={<WechatWorkOutlined />}>
-                Chats
+            <Menu.Item key='chat' icon={<WechatWorkOutlined />}>
+                <Link to='/chatPage'>Chat</Link>
             </Menu.Item>
-            <Menu.Item key='payment' icon={<SpotifyOutlined />}>
-                Flow
+            <Menu.Item key='spotify' icon={<SpotifyOutlined />}>
+                <Link to='/flowPage'>Flow</Link>
             </Menu.Item>
             <Menu.Item key='setting' icon={<SettingOutlined />}>
-                Configurações
+                <Link to='/configPage'>Configurações</Link>
             </Menu.Item>
         </Menu>
     )
