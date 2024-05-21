@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { AlipayOutlined, LockOutlined, MobileOutlined, TaobaoOutlined, UserOutlined, WeiboOutlined, } from '@ant-design/icons';
-import { LoginFormPage, ProConfigProvider, ProFormCaptcha, ProFormCheckbox, ProFormText, } from '@ant-design/pro-components';
+import Logo from '../components/menuPage_Components/Logo'; // Certifique-se de que este componente retorna uma imagem ou altere para importar a URL da imagem
+import {
+  AlipayOutlined,
+  LockOutlined,
+  MobileOutlined,
+  TaobaoOutlined,
+  UserOutlined,
+  WeiboOutlined,
+} from '@ant-design/icons';
+import {
+  LoginFormPage,
+  ProConfigProvider,
+  ProFormCaptcha,
+  ProFormCheckbox,
+  ProFormText,
+} from '@ant-design/pro-components';
 import { Button, Divider, Space, Tabs, message, theme } from 'antd';
 import axios from 'axios';
 
@@ -44,9 +58,9 @@ const LogIn = () => {
   }, []);
 
   const handleButtonClick = () => {
-    window.location.href = 'https://github.com/yNakidori'
+    window.location.href = 'https://github.com/yNakidori';
+  };
 
-  }
   return (
     <div
       style={{
@@ -56,13 +70,13 @@ const LogIn = () => {
     >
       <LoginFormPage
         backgroundVideoUrl={videoUrl}
-        logo="https://github.githubassets.com/images/modules/logos_page/Octocat.png"
-        title="Github"
+        logo={<Logo />}
+        title="ticketAPI"
         containerStyle={{
           backgroundColor: 'rgba(0, 0, 0,0.65)',
           backdropFilter: 'blur(4px)',
         }}
-        subTitle="Maior plataforma de hospedagem de código do mundo"
+        subTitle="Soluçaõ gratuita para gerenciamento de chamados"
         activityConfig={{
           style: {
             boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)',
