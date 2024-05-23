@@ -20,7 +20,10 @@
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.2.0",
     "react-icons": "^5.2.1",
-    "react-router-dom": "^6.23.0"
+    "react-lottie": "^1.2.4",
+    "react-router-dom": "^6.23.0",
+    "react-spotify-web-playback": "^0.14.4",
+    "spotify-web-api-node": "^5.0.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

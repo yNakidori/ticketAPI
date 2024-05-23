@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Logo from '../components/menuPage_Components/Logo'; // Certifique-se de que este componente retorna uma imagem ou altere para importar a URL da imagem
+import Logo from '../components/menuPage_Components/Logo';
 import {
   AlipayOutlined,
   LockOutlined,
@@ -37,7 +37,7 @@ const LogIn = () => {
           'https://api.pexels.com/videos/search?query=nature&per_page=50',
           {
             headers: {
-              Authorization: '',
+              Authorization: `Bearer ${import.meta.env.VITE_PEXELS_API_KEY}`,
             },
           }
         );
