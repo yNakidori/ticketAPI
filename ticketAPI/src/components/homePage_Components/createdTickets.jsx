@@ -11,6 +11,10 @@ const TicketsCriados = () => {
         { id: 2, title: 'Ticket 2', description: 'Descrição do ticket 2' },
         { id: 3, title: 'Ticket 3', description: 'Descrição do ticket 3' },
         { id: 4, title: 'Ticket 4', description: 'Descrição do ticket 4' },
+        { id: 5, title: 'Ticket 4', description: 'Descrição do ticket 4' },
+        { id: 6, title: 'Ticket 4', description: 'Descrição do ticket 4' },
+        { id: 7, title: 'Ticket 4', description: 'Descrição do ticket 4' },
+        { id: 8, title: 'Ticket 4', description: 'Descrição do ticket 4' },
     ];
 
     return (
@@ -20,12 +24,6 @@ const TicketsCriados = () => {
                     <Col key={ticket.id} xs={24} sm={12} md={8} lg={6}> {/* Define o tamanho do card em diferentes tamanhos de tela */}
                         <Card
                             className="message-card"
-                            cover={
-                                <img
-                                    alt="example"
-                                    src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                                />
-                            }
                             actions={[
                                 <SettingOutlined key="setting" />,
                                 <EditOutlined key="edit" />,
