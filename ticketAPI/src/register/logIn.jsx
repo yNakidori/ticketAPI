@@ -37,7 +37,7 @@ const LogIn = () => {
           'https://api.pexels.com/videos/search?query=nature&per_page=50',
           {
             headers: {
-              Authorization: `Bearer ${import.meta.env.VITE_PEXELS_API_KEY}`,
+              Authorization: import.meta.env.VITE_PEXELS_API_KEY,
             },
           }
         );
