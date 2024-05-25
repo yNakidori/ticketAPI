@@ -4,3 +4,8 @@
     justify-content: center;
     margin-top: 20px;
 }
+
+.tickets-scroll-container {
+    max-height: 400px;
+    overflow-y: scroll;
+}
