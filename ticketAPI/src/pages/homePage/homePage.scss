@@ -12,19 +12,14 @@
     }
 }
 
-.homepage {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 20px;
-}
+
 
 .section {
-    min-width: 80vw;
+    min-width: 75vw;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    padding: 15px;
     position: relative;
     transition: box-shadow 0.3s ease;
 

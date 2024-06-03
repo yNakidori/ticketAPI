@@ -76,7 +76,7 @@ const LogIn = () => {
           backgroundColor: 'rgba(0, 0, 0,0.65)',
           backdropFilter: 'blur(4px)',
         }}
-        subTitle="Soluçaõ gratuita para gerenciamento de chamados"
+        subTitle="Solução gratuita para gerenciamento de chamados, equipes"
         activityConfig={{
           style: {
             boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)',

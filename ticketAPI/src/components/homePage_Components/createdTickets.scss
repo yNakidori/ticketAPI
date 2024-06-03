@@ -7,5 +7,6 @@
 
 .tickets-scroll-container {
     max-height: 400px;
-    overflow-y: scroll;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
