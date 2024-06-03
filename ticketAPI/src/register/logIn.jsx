@@ -15,8 +15,12 @@ import {
   ProFormCheckbox,
   ProFormText,
 } from '@ant-design/pro-components';
+import { ConfigProvider } from 'antd';
+import enUs from 'antd/lib/locale/en_US';
 import { Button, Divider, Space, Tabs, message, theme } from 'antd';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
+
 
 const estilosIcone = {
   color: 'rgba(0, 0, 0, 0.2)',
@@ -62,254 +66,266 @@ const LogIn = () => {
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: 'white',
-        height: '100vh',
-      }}
-    >
-      <LoginFormPage
-        backgroundVideoUrl={videoUrl}
-        logo={<Logo />}
-        title="ticketAPI"
-        containerStyle={{
-          backgroundColor: 'rgba(0, 0, 0,0.65)',
-          backdropFilter: 'blur(4px)',
+    <ConfigProvider locale={enUs}>
+      <div
+        style={{
+          backgroundColor: 'white',
+          height: '100vh',
         }}
-        subTitle="Solução gratuita para gerenciamento de chamados, equipes"
-        activityConfig={{
-          style: {
-            boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)',
-            color: token.colorTextHeading,
-            borderRadius: 8,
-            backgroundColor: 'rgba(255,255,255,0.25)',
+      >
+        <LoginFormPage
+          backgroundVideoUrl={videoUrl}
+          logo={<Logo />}
+          title="ticketAPI"
+          containerStyle={{
+            backgroundColor: 'rgba(0, 0, 0,0.65)',
             backdropFilter: 'blur(4px)',
-          },
-          title: 'Conheça o meu trabalho!',
-          subTitle: 'Visite a minha página no GitHub e veja os meus projetos!',
-          action: (
-            <Button
-              size="large"
+          }}
+          subTitle="Solução gratuita para gerenciamento de chamados, equipes"
+          activityConfig={{
+            style: {
+              boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)',
+              color: token.colorTextHeading,
+              borderRadius: 8,
+              backgroundColor: 'rgba(255,255,255,0.25)',
+              backdropFilter: 'blur(4px)',
+            },
+            title: 'Conheça o meu trabalho!',
+            subTitle: 'Visite a minha página no GitHub e veja os meus projetos!',
+            action: (
+              <Button
+                size="large"
+                style={{
+                  borderRadius: 20,
+                  background: token.colorBgElevated,
+                  color: token.colorPrimary,
+                  width: 120,
+                }}
+                onClick={handleButtonClick}
+              >
+                Ver mais
+              </Button>
+            ),
+          }}
+          actions={
+            <div
               style={{
-                borderRadius: 20,
-                background: token.colorBgElevated,
-                color: token.colorPrimary,
-                width: 120,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
               }}
-              onClick={handleButtonClick}
             >
-              Ver mais
-            </Button>
-          ),
-        }}
-        actions={
+              <Divider plain>
+                <span
+                  style={{
+                    color: token.colorTextPlaceholder,
+                    fontWeight: 'normal',
+                    fontSize: 14,
+                  }}
+                >
+                  Outras formas de login
+                </span>
+              </Divider>
+              <Space align="center" size={24}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    height: 40,
+                    width: 40,
+                    border: '1px solid ' + token.colorPrimaryBorder,
+                    borderRadius: '50%',
+                  }}
+                >
+                  <AlipayOutlined style={{ ...estilosIcone, color: '#1677FF' }} />
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    height: 40,
+                    width: 40,
+                    border: '1px solid ' + token.colorPrimaryBorder,
+                    borderRadius: '50%',
+                  }}
+                >
+                  <TaobaoOutlined style={{ ...estilosIcone, color: '#FF6A10' }} />
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    height: 40,
+                    width: 40,
+                    border: '1px solid ' + token.colorPrimaryBorder,
+                    borderRadius: '50%',
+                  }}
+                >
+                  <WeiboOutlined style={{ ...estilosIcone, color: '#1890ff' }} />
+                </div>
+              </Space>
+              <Divider />
+              <Link to="/signIn">
+                <Button>
+                  <span> Ainda não tenho uma conta</span>
+                </Button>
+
+              </Link>
+
+            </div>
+          }
+        >
+          <Tabs
+            centered
+            activeKey={tipoLogin}
+            onChange={(activeKey) => setTipoLogin(activeKey)}
+          >
+            <Tabs.TabPane key={'account'} tab={'Login com Usuário e Senha'} />
+            <Tabs.TabPane key={'phone'} tab={'Login com Celular'} />
+          </Tabs>
+          {tipoLogin === 'account' && (
+            <>
+              <ProFormText
+                name="username"
+                fieldProps={{
+                  size: 'large',
+                  prefix: (
+                    <UserOutlined
+                      style={{
+                        color: token.colorText,
+                      }}
+                      className={'prefixIcon'}
+                    />
+                  ),
+                }}
+                placeholder={'Usuário: admin ou user'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Por favor, insira o nome de usuário!',
+                  },
+                ]}
+              />
+              <ProFormText.Password
+                name="password"
+                fieldProps={{
+                  size: 'large',
+                  prefix: (
+                    <LockOutlined
+                      style={{
+                        color: token.colorText,
+                      }}
+                      className={'prefixIcon'}
+                    />
+                  ),
+                }}
+                placeholder={'Senha: ant.design'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Por favor, insira a senha!',
+                  },
+                ]}
+              />
+            </>
+          )}
+          {tipoLogin === 'phone' && (
+            <>
+              <ProFormText
+                fieldProps={{
+                  size: 'large',
+                  prefix: (
+                    <MobileOutlined
+                      style={{
+                        color: token.colorText,
+                      }}
+                      className={'prefixIcon'}
+                    />
+                  ),
+                }}
+                name="mobile"
+                placeholder={'Número de Celular'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Por favor, insira o número de celular!',
+                  },
+                  {
+                    pattern: /^1\d{10}$/,
+                    message: 'Formato do número de celular incorreto!',
+                  },
+                ]}
+              />
+              <ProFormCaptcha
+                fieldProps={{
+                  size: 'large',
+                  prefix: (
+                    <LockOutlined
+                      style={{
+                        color: token.colorText,
+                      }}
+                      className={'prefixIcon'}
+                    />
+                  ),
+                }}
+                captchaProps={{
+                  size: 'large',
+                }}
+                placeholder={'Por favor, insira o código de verificação'}
+                captchaTextRender={(timing, count) => {
+                  if (timing) {
+                    return `${count} ${'Reenviar código'}`;
+                  }
+                  return 'Reenviar código';
+                }}
+                name="captcha"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Por favor, insira o código de verificação!',
+                  },
+                ]}
+                onGetCaptcha={async () => {
+                  message.success('Código de verificação enviado! Código: 1234');
+                }}
+              />
+            </>
+          )}
           <div
             style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'column',
+              marginBlockEnd: 24,
             }}
           >
-            <Divider plain>
-              <span
-                style={{
-                  color: token.colorTextPlaceholder,
-                  fontWeight: 'normal',
-                  fontSize: 14,
-                }}
-              >
-                Outras formas de login
-              </span>
-            </Divider>
-            <Space align="center" size={24}>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  height: 40,
-                  width: 40,
-                  border: '1px solid ' + token.colorPrimaryBorder,
-                  borderRadius: '50%',
-                }}
-              >
-                <AlipayOutlined style={{ ...estilosIcone, color: '#1677FF' }} />
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  height: 40,
-                  width: 40,
-                  border: '1px solid ' + token.colorPrimaryBorder,
-                  borderRadius: '50%',
-                }}
-              >
-                <TaobaoOutlined style={{ ...estilosIcone, color: '#FF6A10' }} />
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  height: 40,
-                  width: 40,
-                  border: '1px solid ' + token.colorPrimaryBorder,
-                  borderRadius: '50%',
-                }}
-              >
-                <WeiboOutlined style={{ ...estilosIcone, color: '#1890ff' }} />
-              </div>
-            </Space>
+            <ProFormCheckbox noStyle name="autoLogin">
+              Login automático
+            </ProFormCheckbox>
+            <a
+              style={{
+                float: 'right',
+              }}
+            >
+              Esqueci a senha
+            </a>
           </div>
-        }
-      >
-        <Tabs
-          centered
-          activeKey={tipoLogin}
-          onChange={(activeKey) => setTipoLogin(activeKey)}
-        >
-          <Tabs.TabPane key={'account'} tab={'Login com Usuário e Senha'} />
-          <Tabs.TabPane key={'phone'} tab={'Login com Celular'} />
-        </Tabs>
-        {tipoLogin === 'account' && (
-          <>
-            <ProFormText
-              name="username"
-              fieldProps={{
-                size: 'large',
-                prefix: (
-                  <UserOutlined
-                    style={{
-                      color: token.colorText,
-                    }}
-                    className={'prefixIcon'}
-                  />
-                ),
-              }}
-              placeholder={'Usuário: admin ou user'}
-              rules={[
-                {
-                  required: true,
-                  message: 'Por favor, insira o nome de usuário!',
-                },
-              ]}
-            />
-            <ProFormText.Password
-              name="password"
-              fieldProps={{
-                size: 'large',
-                prefix: (
-                  <LockOutlined
-                    style={{
-                      color: token.colorText,
-                    }}
-                    className={'prefixIcon'}
-                  />
-                ),
-              }}
-              placeholder={'Senha: ant.design'}
-              rules={[
-                {
-                  required: true,
-                  message: 'Por favor, insira a senha!',
-                },
-              ]}
-            />
-          </>
-        )}
-        {tipoLogin === 'phone' && (
-          <>
-            <ProFormText
-              fieldProps={{
-                size: 'large',
-                prefix: (
-                  <MobileOutlined
-                    style={{
-                      color: token.colorText,
-                    }}
-                    className={'prefixIcon'}
-                  />
-                ),
-              }}
-              name="mobile"
-              placeholder={'Número de Celular'}
-              rules={[
-                {
-                  required: true,
-                  message: 'Por favor, insira o número de celular!',
-                },
-                {
-                  pattern: /^1\d{10}$/,
-                  message: 'Formato do número de celular incorreto!',
-                },
-              ]}
-            />
-            <ProFormCaptcha
-              fieldProps={{
-                size: 'large',
-                prefix: (
-                  <LockOutlined
-                    style={{
-                      color: token.colorText,
-                    }}
-                    className={'prefixIcon'}
-                  />
-                ),
-              }}
-              captchaProps={{
-                size: 'large',
-              }}
-              placeholder={'Por favor, insira o código de verificação'}
-              captchaTextRender={(timing, count) => {
-                if (timing) {
-                  return `${count} ${'Reenviar código'}`;
-                }
-                return 'Reenviar código';
-              }}
-              name="captcha"
-              rules={[
-                {
-                  required: true,
-                  message: 'Por favor, insira o código de verificação!',
-                },
-              ]}
-              onGetCaptcha={async () => {
-                message.success('Código de verificação enviado! Código: 1234');
-              }}
-            />
-          </>
-        )}
-        <div
-          style={{
-            marginBlockEnd: 24,
-          }}
-        >
-          <ProFormCheckbox noStyle name="autoLogin">
-            Login automático
-          </ProFormCheckbox>
-          <a
-            style={{
-              float: 'right',
-            }}
-          >
-            Esqueci a senha
-          </a>
-        </div>
-      </LoginFormPage>
-    </div>
+        </LoginFormPage>
+      </div>
+    </ConfigProvider>
   );
 };
 
 export default () => {
   return (
-    <ProConfigProvider dark>
-      <LogIn />
-    </ProConfigProvider>
+    <ConfigProvider locale={enUs}>
+      <ProConfigProvider dark>
+        <LogIn />
+      </ProConfigProvider>
+    </ConfigProvider>
   );
 };
