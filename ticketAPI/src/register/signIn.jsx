@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { auth } from '../firebase/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import Logo from '../components/menuPage_Components/Logo';
 import {
     LockOutlined,
@@ -11,21 +11,14 @@ import {
     LoginFormPage,
     ProConfigProvider,
     ProFormCaptcha,
-    ProFormCheckbox,
     ProFormText,
 } from '@ant-design/pro-components';
 import { ConfigProvider } from 'antd';
 import enUs from 'antd/lib/locale/en_US';
-import { Button, Divider, Space, Tabs, message, theme } from 'antd';
+import { Button, Divider, Tabs, message, theme } from 'antd';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-
-const estilosIcone = {
-    color: 'rgba(0, 0, 0, 0.2)',
-    fontSize: '18px',
-    verticalAlign: 'middle',
-    cursor: 'pointer',
-};
+import './signIn.scss'
 
 const SignIn = () => {
 
@@ -33,15 +26,14 @@ const SignIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const signIn = (e) => {
-        e.preventDefault();
-        signInWithEmailAndPassword(auth, email, password)
+    const signIn = ({ username, password }) => {
+        createUserWithEmailAndPassword(auth, username, password)
             .then((userCredential) => {
-                console.log('Usuário logado:', userCredential.user);
+                console.log('Usuário criado:', userCredential.user);
             }).catch((error) => {
                 console.error('Erro ao logar:', error);
-            })
-    }
+            });
+    };
 
     // Restante do código
     const [videoUrl, setVideoUrl] = useState('');
@@ -88,7 +80,7 @@ const SignIn = () => {
                 }}
             >
                 <LoginFormPage
-                    onSubmit={signIn}
+                    onFinish={signIn}
                     backgroundVideoUrl={videoUrl}
                     logo={<Logo />}
                     title="ticketAPI"
@@ -154,7 +146,7 @@ const SignIn = () => {
                                     },
                                 ]}
                                 value={email}
-                                onMetaChange={(e) => setEmail(e.target.value)}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                             <ProFormText.Password
                                 name="password"
@@ -177,8 +169,28 @@ const SignIn = () => {
                                     },
                                 ]}
                                 value={password}
-                                onMetaChange={(e) => setPassword(e.targe.value)}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                flexDirection: 'column',
+                                marginBottom: 24,
+                            }}>
+                                <Divider />
+                                <Link to="/logIn">
+                                    <Button
+                                        type='primary'
+                                        className='crt-btn'>
+                                        <p
+                                            className='crt-fnt'
+                                            style={{ color: 'black' }}>
+                                            Já possui uma conta? Entre agora!
+                                        </p>
+                                    </Button>
+                                </Link>
+                            </div>
                         </>
                     )}
                     {tipoLogin === 'phone' && (
@@ -250,22 +262,26 @@ const SignIn = () => {
                             }}>
                                 <Divider />
                                 <Link to="/logIn">
-                                    <Button>
-                                        Já possui uma conta? Entre agora!
+                                    <Button
+                                        type='primary'
+                                        className='crt-btn'>
+                                        <p
+                                            className='crt-fnt'
+                                            style={{ color: 'black' }}>
+                                            Já possui uma conta? Entre agora!
+                                        </p>
                                     </Button>
                                 </Link>
                             </div>
                         </>
                     )}
                 </LoginFormPage>
-
-
             </div>
         </ConfigProvider>
     );
 };
 
-export default () => {
+const SignInWrapper = () => {
     return (
         <ConfigProvider locale={enUs}>
             <ProConfigProvider dark>
@@ -274,3 +290,5 @@ export default () => {
         </ConfigProvider>
     );
 };
+
+export default SignInWrapper;

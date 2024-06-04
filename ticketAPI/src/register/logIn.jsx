@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { auth } from '../firebase/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import Logo from '../components/menuPage_Components/Logo';
 import {
   AlipayOutlined,
@@ -21,7 +23,6 @@ import { Button, Divider, Space, Tabs, message, theme } from 'antd';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-
 const estilosIcone = {
   color: 'rgba(0, 0, 0, 0.2)',
   fontSize: '18px',
@@ -33,6 +34,16 @@ const LogIn = () => {
   const [videoUrl, setVideoUrl] = useState('');
   const [tipoLogin, setTipoLogin] = useState('phone');
   const { token } = theme.useToken();
+
+  const signIn = ({ username, password }) => {
+    signInWithEmailAndPassword(auth, username, password)
+      .then((userCredential) => {
+        console.log('Usuário logado:', userCredential.user);
+      })
+      .catch((error) => {
+        console.error('Erro ao logar:', error);
+      });
+  };
 
   useEffect(() => {
     const fetchVideo = async () => {
@@ -74,6 +85,7 @@ const LogIn = () => {
         }}
       >
         <LoginFormPage
+          onFinish={signIn}
           backgroundVideoUrl={videoUrl}
           logo={<Logo />}
           title="ticketAPI"
@@ -176,9 +188,7 @@ const LogIn = () => {
                 <Button>
                   <span> Ainda não tenho uma conta</span>
                 </Button>
-
               </Link>
-
             </div>
           }
         >
