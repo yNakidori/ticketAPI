@@ -7,7 +7,7 @@
 }
 
 .mb-24 {
-    margin-bottom: 15px;
+    margin-bottom: 24px;
 }
 
 .equal-height-row {
@@ -27,4 +27,29 @@
 
 .equal-height-col .ant-card {
     flex-grow: 1;
+}
+
+.settings-list {
+    padding-left: 0;
+    list-style: none;
+
+    .list-header {
+        margin-top: 0;
+    }
+
+    li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+
+        span {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .text-muted {
+            color: #888;
+        }
+    }
 }

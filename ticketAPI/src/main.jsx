@@ -10,6 +10,8 @@ import FlowPage from './pages/flowPage/flowPage.jsx';
 import ConfigPage from './pages/configPage/configPage.jsx';
 import ChatPage from './pages/chatsPage/chatPage.jsx';
 import HomePage from './pages/homePage/homePage.jsx';
+import TeamsPage from './components/configPage_Components/teamsPage.jsx';
+import ProjectsPage from './components/configPage_Components/projectsPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -49,6 +51,14 @@ const router = createBrowserRouter([
   {
     path: '/homePage',
     element: <HomePage />,
+  },
+  {
+    path: '/teamsPage',
+    element: <TeamsPage />,
+  },
+  {
+    path: '/projectsPage',
+    element: <ProjectsPage />,
   }
 ]);
 

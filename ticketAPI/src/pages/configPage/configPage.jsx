@@ -14,7 +14,6 @@ import project3 from "../../assets/images/home-decor-3.jpeg";
 import './configPage.scss';
 
 const ConfigPage = () => {
-
     const [imageURL, setImageURL] = useState(false);
     const [, setLoading] = useState(false);
 
@@ -49,25 +48,6 @@ const ConfigPage = () => {
         }
     };
 
-    const pencil = (
-        <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path
-                d="M13.5858 3.58579C14.3668 2.80474 15.6332 2.80474 16.4142 3.58579C17.1953 4.36683 17.1953 5.63316 16.4142 6.41421L15.6213 7.20711L12.7929 4.37868L13.5858 3.58579Z"
-                className="fill-gray-7"
-            ></path>
-            <path
-                d="M11.3787 5.79289L3 14.1716V17H5.82842L14.2071 8.62132L11.3787 5.79289Z"
-                className="fill-gray-7"
-            ></path>
-        </svg>
-    );
-
     const uploadButton = (
         <div className="ant-upload-text font-semibold text-dark">
             <VerticalAlignTopOutlined style={{ width: 20, color: "#000" }} />
@@ -76,52 +56,17 @@ const ConfigPage = () => {
     );
 
     const data = [
-        {
-            title: "Sophie B.",
-            avatar: convesionImg,
-            description: "Hi! I need more information…",
-        },
-        {
-            title: "Anne Marie",
-            avatar: convesionImg2,
-            description: "Awesome work, can you…",
-        },
-        {
-            title: "Ivan",
-            avatar: convesionImg3,
-            description: "About files I can…",
-        },
-        {
-            title: "Peterson",
-            avatar: convesionImg4,
-            description: "Have a great afternoon…",
-        },
-        {
-            title: "Nick Daniel",
-            avatar: convesionImg5,
-            description: "Hi! I need more information…",
-        },
+        { title: "Sophie B.", avatar: convesionImg, description: "Hi! I need more information…" },
+        { title: "Anne Marie", avatar: convesionImg2, description: "Awesome work, can you…" },
+        { title: "Ivan", avatar: convesionImg3, description: "About files I can…" },
+        { title: "Peterson", avatar: convesionImg4, description: "Have a great afternoon…" },
+        { title: "Nick Daniel", avatar: convesionImg5, description: "Hi! I need more information…" },
     ];
 
     const project = [
-        {
-            img: project1,
-            titlesub: "Project #1",
-            title: "Modern",
-            description: "As Uber works through a huge amount of internal management turmoil.",
-        },
-        {
-            img: project2,
-            titlesub: "Project #2",
-            title: "Scandinavian",
-            description: "Music is something that every person has his or her own specific opinion about.",
-        },
-        {
-            img: project3,
-            titlesub: "Project #3",
-            title: "Minimalist",
-            description: "Different people have different taste, and various types of music, Zimbali Resort",
-        },
+        { img: project1, titlesub: "Project #1", title: "Modern", description: "As Uber works through a huge amount of internal management turmoil." },
+        { img: project2, titlesub: "Project #2", title: "Scandinavian", description: "Music is something that every person has his or her own specific opinion about." },
+        { img: project3, titlesub: "Project #3", title: "Minimalist", description: "Different people have different taste, and various types of music, Zimbali Resort" },
     ];
 
     return (
@@ -129,33 +74,28 @@ const ConfigPage = () => {
             <>
                 <div className='sec-1'>
                     <Card className="card-profile-head">
-                        <div className="card-body" style={{ display: "flex" }}></div>
-                        <div className="card-title">
-                            <Row justify="space-between" align="left" gutter={[24, 0]}>
-                                <Col span={24} md={12} className="col-info">
-                                    <Avatar.Group>
-                                        <Avatar size={74} shape="square" src={profilavatar} />
-
-                                    </Avatar.Group>
-                                    <div className="avatar-info">
-                                        <h4 className="font-semibold m-0">Sarah Jacob</h4>
-                                        <p>CEO / Co-Founder</p>
-                                    </div>
-                                </Col>
-                                <Col span={24} md={12} className="col-radio">
-                                    <Radio.Group defaultValue="a">
-                                        <Radio.Button value="a">OVERVIEW</Radio.Button>
-                                        <Radio.Button value="b">TEAMS</Radio.Button>
-                                        <Radio.Button value="c">PROJECTS</Radio.Button>
-                                    </Radio.Group>
-                                </Col>
-                            </Row>
-                        </div>
+                        <Row justify="space-between" align="middle" gutter={[24, 0]}>
+                            <Col span={24} md={12} className="col-info">
+                                <Avatar.Group>
+                                    <Avatar size={74} shape="square" src={profilavatar} />
+                                </Avatar.Group>
+                                <div className="avatar-info">
+                                    <h4 className="font-semibold m-0">Sarah Jacob</h4>
+                                    <p>CEO / Co-Founder</p>
+                                </div>
+                            </Col>
+                            <Col span={24} md={12} className="col-radio">
+                                <Radio.Group defaultValue="a">
+                                    <Radio.Button value="a">OVERVIEW</Radio.Button>
+                                    <Radio.Button value="b">TEAMS</Radio.Button>
+                                    <Radio.Button value="c">PROJECTS</Radio.Button>
+                                </Radio.Group>
+                            </Col>
+                        </Row>
                     </Card>
                 </div>
 
                 <Row gutter={[24, 0]} className='equal-height-row'>
-
                     <Col span={24} md={8} className="mb-24 equal-height-col">
                         <Card
                             bordered={false}
@@ -202,7 +142,24 @@ const ConfigPage = () => {
                             bordered={false}
                             title={<h6 className="font-semibold m-0">Profile Information</h6>}
                             className="header-solid h-full card-profile-information"
-                            extra={<Button type="link">{pencil}</Button>}
+                            extra={<Button type="link">
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 20 20"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M13.5858 3.58579C14.3668 2.80474 15.6332 2.80474 16.4142 3.58579C17.1953 4.36683 17.1953 5.63316 16.4142 6.41421L15.6213 7.20711L12.7929 4.37868L13.5858 3.58579Z"
+                                        className="fill-gray-7"
+                                    ></path>
+                                    <path
+                                        d="M11.3787 5.79289L3 14.1716V17H5.82842L14.2071 8.62132L11.3787 5.79289Z"
+                                        className="fill-gray-7"
+                                    ></path>
+                                </svg>
+                            </Button>}
                             bodyStyle={{ paddingTop: 0, paddingBottom: 16 }}
                         >
                             <p className="text-dark">
@@ -236,6 +193,7 @@ const ConfigPage = () => {
                             </Descriptions>
                         </Card>
                     </Col>
+
                     <Col span={24} md={8} className="mb-24 equal-height-col">
                         <Card
                             bordered={false}
@@ -261,6 +219,7 @@ const ConfigPage = () => {
                         </Card>
                     </Col>
                 </Row>
+
                 <Card
                     bordered={false}
                     className="header-solid mb-24"
