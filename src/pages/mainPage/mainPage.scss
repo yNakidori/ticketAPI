@@ -1,0 +1,73 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.App {
+  text-align: center;
+}
+
+.particles canvas {
+  z-index: -1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.bg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #1e3c72, #2a5298);
+}
+
+.login-box {
+  background-color: #2e2e2e;
+  padding: 125px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 100%;
+  max-width: 550px;
+}
+
+.logo-box {
+  display: flex;
+  justify-items: center;
+  justify-content: center;
+}
+
+.logo {
+  width: 480px;
+}
+
+.login-button {
+  margin-top: 20px;
+}
+
+.MuiTextField-root {
+  background-color: #1c1c1c;
+  color: #fff;
+}
+
+.MuiInputBase-input {
+  color: #fff;
+}
+
+.MuiFormLabel-root {
+  color: #bbb;
+}
+
+.MuiOutlinedInput-root {
+  fieldset {
+    border-color: #555;
+  }
+  &:hover fieldset {
+    border-color: #777;
+  }
+  &.Mui-focused fieldset {
+    border-color: #1e90ff;
+  }
+}
