@@ -13,18 +13,20 @@ import { ConfigProvider } from "antd";
 import enUs from "antd/lib/locale/en_US";
 import { Button, Tabs, theme } from "antd";
 import "./logIn.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const LogIn = () => {
   const [videoUrl, setVideoUrl] = useState("");
   const [tipoLogin, setTipoLogin] = useState("phone");
   const { token } = theme.useToken();
+  const navigate = useNavigate();
 
   const signIn = ({ username, password }) => {
     signInWithEmailAndPassword(auth, username, password)
       .then((userCredential) => {
         console.log("Usuário logado:", userCredential.user);
+        navigate("/homePage");
       })
       .catch((error) => {
         console.error("Erro ao logar:", error);
@@ -73,7 +75,7 @@ const LogIn = () => {
         <LoginFormPage
           onFinish={signIn}
           backgroundVideoUrl={videoUrl}
-          title="GRUPOSPO"
+          title=""
           containerStyle={{
             backgroundColor: "rgba(0, 0, 0,0.65)",
             backdropFilter: "blur(4px)",
@@ -113,22 +115,16 @@ const LogIn = () => {
                 alignItems: "center",
                 flexDirection: "column",
               }}
-            >
-              <Link to="/signIn">
-                <Button style={{ marginTop: "15px" }}>
-                  <span> Ainda não tenho uma conta</span>
-                </Button>
-              </Link>
-            </div>
+            ></div>
           }
         >
+          <img className="logo" src={Logo} />
           <Tabs
             centered
             activeKey={tipoLogin}
             onChange={(activeKey) => setTipoLogin(activeKey)}
           >
             <Tabs.TabPane key={"account"} tab={"Login com Usuário e Senha"} />
-            <Tabs.TabPane key={"phone"} tab={"Login com Celular"} />
           </Tabs>
           {tipoLogin === "account" && (
             <>
@@ -176,73 +172,7 @@ const LogIn = () => {
               />
             </>
           )}
-          {tipoLogin === "phone" && (
-            <>
-              <h1>Em desenvolvimento</h1>
-              {/**
-               *               <ProFormText
-                fieldProps={{
-                  size: "large",
-                  prefix: (
-                    <MobileOutlined
-                      style={{
-                        color: token.colorText,
-                      }}
-                      className={"prefixIcon"}
-                    />
-                  ),
-                }}
-                name="mobile"
-                placeholder={"Número de Celular"}
-                rules={[
-                  {
-                    required: true,
-                    message: "Por favor, insira o número de celular!",
-                  },
-                  {
-                    pattern: /^1\d{10}$/,
-                    message: "Formato do número de celular incorreto!",
-                  },
-                ]}
-              />
-              <ProFormCaptcha
-                fieldProps={{
-                  size: "large",
-                  prefix: (
-                    <LockOutlined
-                      style={{
-                        color: token.colorText,
-                      }}
-                      className={"prefixIcon"}
-                    />
-                  ),
-                }}
-                captchaProps={{
-                  size: "large",
-                }}
-                placeholder={"Por favor, insira o código de verificação"}
-                captchaTextRender={(timing, count) => {
-                  if (timing) {
-                    return `${count} ${"Reenviar código"}`;
-                  }
-                  return "Reenviar código";
-                }}
-                name="captcha"
-                rules={[
-                  {
-                    required: true,
-                    message: "Por favor, insira o código de verificação!",
-                  },
-                ]}
-                onGetCaptcha={async () => {
-                  message.success(
-                    "Código de verificação enviado! Código: 1234"
-                  );
-                }}
-              />
-               */}
-            </>
-          )}
+
           <div
             style={{
               marginBlockEnd: 24,
