@@ -22,7 +22,6 @@ const MenuList = ({ darkTheme }) => {
 
       <Menu.Item key="activity" icon={<AppstoreOutlined />}>
         <Link to="/equipPage">Equipamentos</Link>
-        Equipamentos
       </Menu.Item>
 
       <Menu.Item key="problems" icon={<WechatWorkOutlined />}>

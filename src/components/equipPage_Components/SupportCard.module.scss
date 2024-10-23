@@ -1,0 +1,29 @@
+$support-card-bg: #f7f7f7;
+$support-card-hover: #f0f0f0;
+$border-radius: 12px;
+$text-color: #0070c9;
+
+.support-card {
+  background-color: $support-card-bg;
+  border-radius: $border-radius;
+  padding: 20px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: $support-card-hover;
+  }
+
+  .icon-container {
+    font-size: 24px;
+    margin-bottom: 12px;
+    color: #333;
+  }
+
+  .title {
+    font-size: 16px;
+    color: $text-color;
+    font-weight: 600;
+  }
+}

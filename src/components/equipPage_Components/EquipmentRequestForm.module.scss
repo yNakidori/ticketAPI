@@ -1,0 +1,59 @@
+$form-background: #f9f9f9;
+$primary-color: #1890ff;
+$border-radius: 8px;
+$form-padding: 20px;
+$title-color: #333;
+$label-color: #595959;
+
+.form-container {
+  background-color: $form-background;
+  padding: $form-padding;
+  border-radius: $border-radius;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 0 auto;
+
+  h2 {
+    text-align: center;
+    color: $title-color;
+    margin-bottom: 20px;
+  }
+
+  .ant-form-item {
+    .ant-form-item-label {
+      label {
+        color: $label-color;
+        font-weight: 600;
+      }
+    }
+
+    .ant-input,
+    .ant-select-selector,
+    .ant-input-number,
+    .ant-picker {
+      border-radius: $border-radius;
+    }
+  }
+
+  .form-actions {
+    text-align: center;
+
+    .ant-btn-primary {
+      background-color: $primary-color;
+      border-color: $primary-color;
+      border-radius: $border-radius;
+      padding: 10px 20px;
+      font-size: 16px;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: darken($primary-color, 10%);
+        border-color: darken($primary-color, 10%);
+      }
+
+      .anticon {
+        margin-right: 8px;
+      }
+    }
+  }
+}

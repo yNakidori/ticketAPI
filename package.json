@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@ant-design/pro-components": "^2.7.9",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^6.1.5",
     "@tsparticles/all": "^3.5.0",
     "@tsparticles/react": "^3.0.0",
     "ant": "^0.2.0",

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { Form, Input, Button, Select, Radio } from "antd";
-import { SearchOutlined, SendOutlined } from "@ant-design/icons";
-import axios from "axios";
+import React from "react";
+import { Form, Input, Button, Select, Upload } from "antd";
+import { SendOutlined, UploadOutlined } from "@ant-design/icons";
 import styles from "./FormTicket.module.scss";
+
+const { TextArea } = Input;
 
 const FormTicket = () => {
   const [form] = Form.useForm();
@@ -19,67 +20,61 @@ const FormTicket = () => {
     <div className={styles["form-container"]}>
       <Form
         form={form}
-        name="basic"
+        layout="vertical"
+        name="ticketForm"
         initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
       >
         <Form.Item
-          label="Solicitante"
-          name="solicitante"
-          rules={[{ required: true, message: "Please input your name!" }]}
-        >
-          <Input.TextArea />
-        </Form.Item>
-
-        <Form.Item
-          label="Assunto"
-          name="assunto"
-          rules={[{ required: true, message: "Please input the subject!" }]}
-        >
-          <Input.TextArea />
-        </Form.Item>
-
-        <Form.Item
-          label="Email"
-          name="email"
-          rules={[{ required: true, message: "Please input your email!" }]}
-        >
-          <Input.TextArea />
-        </Form.Item>
-
-        <Form.Item
-          label="Descrição"
-          name="descricao"
-          rules={[{ required: true, message: "Please input the description!" }]}
-        >
-          <Input.TextArea />
-        </Form.Item>
-
-        <Form.Item
-          label="Imagens"
-          name="imagens"
+          label="Criador"
+          name="creator"
           rules={[
-            { required: true, message: "Select an image showing the problem!" },
+            { required: true, message: "Por favor, insira o nome do criador!" },
           ]}
         >
-          <Input.TextArea />
+          <Input placeholder="Nome do criador" />
         </Form.Item>
 
         <Form.Item
-          label="System"
-          name="system"
-          rules={[{ required: true, message: "Select the system!" }]}
+          label="Grupo"
+          name="group"
+          rules={[{ required: true, message: "Por favor, selecione o grupo!" }]}
         >
-          <Radio.Group onChange={(e) => setFeedback(e.target.value)}>
-            <Radio value={1}>WebApp</Radio>
-            <Radio value={2}>WebTr</Radio>
-          </Radio.Group>
+          <Select placeholder="Selecione o grupo">
+            <Select.Option value="suporte">Suporte</Select.Option>
+            <Select.Option value="financeiro">Financeiro</Select.Option>
+            <Select.Option value="ti">TI</Select.Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          label="Cidade"
+          name="city"
+          rules={[{ required: true, message: "Por favor, insira a cidade!" }]}
+        >
+          <Input placeholder="Cidade" />
+        </Form.Item>
+
+        <Form.Item
+          label="Problema"
+          name="issue"
+          rules={[
+            { required: true, message: "Por favor, descreva o problema!" },
+          ]}
+        >
+          <TextArea rows={3} placeholder="Descrição do problema" />
+        </Form.Item>
+
+        <Form.Item label="Imagens" name="images">
+          <Upload multiple={true} listType="picture" beforeUpload={() => false}>
+            <Button icon={<UploadOutlined />}>Upload</Button>
+          </Upload>
         </Form.Item>
 
         <Form.Item className={styles["form-actions"]}>
           <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-            Submit
+            Enviar
           </Button>
         </Form.Item>
       </Form>
