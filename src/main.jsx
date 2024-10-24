@@ -9,10 +9,8 @@ import MenuPage from "./pages/menuPage/menuPage.jsx";
 import FlowPage from "./pages/flowPage/flowPage.jsx";
 import ConfigPage from "./pages/configPage/configPage.jsx";
 import HomePage from "./pages/homePage/homePage.jsx";
-import TeamsPage from "./components/configPage_Components/teamsPage.jsx";
 import ProblemsPage from "./pages/problemsPage/problemsPage.jsx";
 import EquipPage from "./pages/equipPage/equipPage.jsx";
-import ProjectsPage from "./components/configPage_Components/projectsPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -50,20 +48,12 @@ const router = createBrowserRouter([
     element: <HomePage />,
   },
   {
-    path: "/teamsPage",
-    element: <TeamsPage />,
-  },
-  {
     path: "/problemsPage",
     element: <ProblemsPage />,
   },
   {
     path: "/equipPage",
     element: <EquipPage />,
-  },
-  {
-    path: "/projectsPage",
-    element: <ProjectsPage />,
   },
 ]);
 

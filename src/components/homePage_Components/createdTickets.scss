@@ -1,12 +1,11 @@
 .tickets-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .tickets-scroll-container {
-    max-height: 400px;
-    overflow-y: auto;
-    overflow-x: hidden;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }

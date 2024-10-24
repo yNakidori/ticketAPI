@@ -26,7 +26,7 @@ const HomePage = () => {
         <Row gutter={[20, 20]}>
           <Col span={24}>
             <div className="section">
-              <h2>Tickets da Equipe</h2>
+              <h2 className="tittle">Tickets da Equipe</h2>
               <TicketsCriados />
             </div>
           </Col>

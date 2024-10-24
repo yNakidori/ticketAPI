@@ -1,47 +1,49 @@
 @keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(204, 204, 255, 0.7);
-    }
+  0% {
+    box-shadow: 0 0 0 0 rgba(204, 204, 255, 0.7);
+  }
 
-    70% {
-        box-shadow: 0 0 0 10px rgba(204, 204, 255, 0);
-    }
+  70% {
+    box-shadow: 0 0 0 10px rgba(204, 204, 255, 0);
+  }
 
-    100% {
-        box-shadow: 0 0 0 0 rgba(204, 204, 255, 0);
-    }
+  100% {
+    box-shadow: 0 0 0 0 rgba(204, 204, 255, 0);
+  }
 }
 
-
+.tittle {
+  margin-bottom: 20px;
+}
 
 .section {
-    min-width: 75vw;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    position: relative;
-    transition: box-shadow 0.3s ease;
+  min-width: 75vw;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  position: relative;
+  transition: box-shadow 0.3s ease;
 
-    &:hover {
-        animation: pulse 1.5s infinite;
-    }
+  &:hover {
+    animation: pulse 1.5s infinite;
+  }
 }
 
 .section h2 {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 .message-card {
-    transition: transform 0.3s ease;
+  transition: transform 0.3s ease;
 
-    &:hover {
-        transform: translateY(-5px);
-        animation: pulse 1.5s infinite;
-    }
+  &:hover {
+    transform: translateY(-5px);
+    animation: pulse 1.5s infinite;
+  }
 }
 
 .modal-1 {
-    text-align: feft;
-    font: 'San Francisco', Helvetica, Arial, san-serif;
+  text-align: feft;
+  font: "San Francisco", Helvetica, Arial, san-serif;
 }
