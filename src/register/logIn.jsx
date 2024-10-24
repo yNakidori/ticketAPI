@@ -37,7 +37,7 @@ const LogIn = () => {
     const fetchVideo = async () => {
       try {
         const response = await axios.get(
-          "https://api.pexels.com/videos/search?query=tech&per_page=50",
+          "https://api.pexels.com/videos/search?query=logistichub&per_page=50",
           {
             headers: {
               Authorization: import.meta.env.VITE_PEXELS_API_KEY,

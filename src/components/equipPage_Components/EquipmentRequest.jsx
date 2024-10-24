@@ -49,6 +49,11 @@ const EquipmentRequestForm = () => {
             <Option value="teclado">Teclado</Option>
             <Option value="mouse">Mouse</Option>
             <Option value="impressora">Impressora</Option>
+            <Option value="rastreador">Rastreador</Option>
+            <Option value="leitor">Leitor</Option>
+            <Option value="camera">Câmera</Option>
+            <Option value="scanner">Scanner</Option>
+            <Option value="suporte">Suporte para monitor</Option>
             <Option value="outro">Outro</Option>
           </Select>
         </Form.Item>

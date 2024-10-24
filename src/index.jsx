@@ -7,7 +7,7 @@ import LogIn from "./register/logIn";
 import SignIn from "./register/signIn";
 import MenuPage from "./pages/mainPage/menuPage";
 import TeamsPage from "./components/configPage_Components/teamsPage";
-import Problemspage from "./pages/problemsPage/problemsPage";
+import ProblemsPage from "./pages/problemsPage/problemsPage";
 import ProjectsPage from "./components/configPage_Components/projectsPage";
 import EquipPage from "./pages/equipPage/equipPage";
 
