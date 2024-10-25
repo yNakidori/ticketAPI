@@ -1,4 +1,3 @@
-// pages/ConfigPage.js
 import React, { useState } from "react";
 import MainLayout from "../../components/mainLayout";
 import ProfileHeader from "../../components/configPage_Components/ProfileHeader";
@@ -41,6 +40,7 @@ const ConfigPage = () => {
 
   return (
     <MainLayout>
+      {/** 
       <ProfileHeader imageURL={imageURL} fullName={formData.fullName} />
       <Row gutter={[24, 0]} className="equal-height-row">
         <Col span={24} md={12} className="mb-24 equal-height-col">
@@ -70,8 +70,8 @@ const ConfigPage = () => {
         newGroup={newGroup}
         setNewGroup={setNewGroup}
       />
-
       <UserEdit />
+       */}
       <ChatComponent />
     </MainLayout>
   );
