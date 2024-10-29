@@ -1,0 +1,48 @@
+.chatList {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: transparent;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  background-color: rgba(17, 25, 40, 0.7);
+  padding: 5px 10px;
+  border-radius: 15px;
+  width: 100%;
+}
+
+.searchIcon {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  opacity: 0.7;
+}
+
+input {
+  flex: 1;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 14px;
+  padding-left: 5px;
+  opacity: 0.8;
+}
+
+.plusIcon {
+  width: 24px;
+  height: 24px;
+  margin-left: 10px;
+  cursor: pointer;
+  opacity: 0.8;
+}

@@ -1,12 +1,12 @@
-import React from 'react'
-import SideBar from '../../components/menuPage_Components/sideBar'
+import React from "react";
+import SideBar from "../../components/menuPage_Components/sideBar";
 
 const MenuPage = () => {
-    return (
-        <div >
-            <SideBar />
-        </div >
-    )
-}
+  return (
+    <div className="main-area">
+      <SideBar />
+    </div>
+  );
+};
 
 export default MenuPage;

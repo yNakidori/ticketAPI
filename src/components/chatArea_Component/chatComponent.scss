@@ -1,3 +1,17 @@
+.main {
+  display: flex;
+  margin-left: 13%;
+  align-items: center;
+}
+
+.master {
+  align-items: center;
+  height: 50%;
+  width: 50%;
+  background-color: #050300;
+  border-radius: 12px;
+}
+
 .container {
   height: 93vh;
   width: 80vw;

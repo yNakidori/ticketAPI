@@ -1,2 +1,37 @@
 .userInfo {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user h2 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.icons img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 }
