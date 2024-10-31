@@ -3,6 +3,8 @@
   border-left: 1px solid #2f3a4f;
   border-right: 1px solid #2f3a4f;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .chat .top {
@@ -26,9 +28,22 @@
   object-fit: cover;
 }
 
-.chat .top .icons img {
-  width: 20px;
-  height: 20px;
+.chat .icons img,
+.chat .bottom .icons img,
+.chat .bottom .emoji img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.icons {
+  display: flex;
+  gap: 20px;
+}
+
+.center {
+  padding: 20px;
+  flex: 1;
 }
 
 .chat .bottom {
@@ -38,6 +53,7 @@
   justify-content: space-between;
   border-top: 1px solid #2f3a4f;
   gap: 20px;
+  margin-top: auto;
 }
 
 .chat .bottom input {
@@ -47,6 +63,25 @@
   outline: none;
   color: white;
   padding: 20px;
-  border: 10px;
+  border-radius: 10px;
   font-size: 16px;
+}
+
+.chat .bottom .emoji {
+  position: relative;
+}
+
+.chat .bottom .emoji .picker {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+}
+
+.chat .bottom .sendButton {
+  background-color: #5183fe;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
