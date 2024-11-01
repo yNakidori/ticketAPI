@@ -1,112 +1,31 @@
-.discord-chat {
-  width: 100%;
-  max-width: 350px;
-  background-color: #2f3136;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 10px;
-  border-radius: 8px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
-@media (max-width: 768px) {
-  .discord-chat {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.search-bar .search-input {
-  background-color: #202225;
-  border: none;
-  color: #b9bbbe;
-  margin-bottom: 15px;
-}
-
-.menu-sections {
-  display: flex;
-  flex-direction: column;
-  padding: 10px 0;
-}
-
-.menu-item {
-  padding: 5px 0;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.menu-item:hover {
-  color: #7289da;
-}
-
-.friends-list {
-  flex: 1;
-  overflow-y: auto;
-}
-
-.friends-header {
-  display: flex;
-  justify-content: space-between;
-  padding: 5px 0;
-  color: #b9bbbe;
-}
-
-.friend-item {
+.body {
+  background-image: url("../../assets/chat/background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 15px;
+  height: 100vh;
+  width: 89vw;
+  color: white;
   display: flex;
   align-items: center;
-  padding: 5px 0;
-  cursor: pointer;
+  justify-content: center;
 }
 
-.friend-item:hover {
-  background-color: #3a3c43;
-}
-
-.friend-info {
-  margin-left: 10px;
-}
-
-.friend-name {
-  font-size: 14px;
-}
-
-.friend-status {
-  font-size: 12px;
-  color: #b9bbbe;
-}
-
-.friend-status.online {
-  color: #43b581;
-}
-
-.friend-status.offline {
-  color: #747f8d;
-}
-
-.user-status {
+.chat-container {
+  height: 90vh;
+  width: 83vw;
+  background-color: rgba(165, 181, 211, 0.61);
+  backdrop-filter: blur(19px) saturate(180%);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
   display: flex;
-  align-items: center;
-  padding: 10px 0;
-  border-top: 1px solid #3a3c43;
-}
-
-.user-info {
-  margin-left: 10px;
-  flex: 1;
-}
-
-.username {
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.status {
-  font-size: 12px;
-  color: #b9bbbe;
-}
-
-.settings-icon {
-  cursor: pointer;
-  font-size: 18px;
 }
