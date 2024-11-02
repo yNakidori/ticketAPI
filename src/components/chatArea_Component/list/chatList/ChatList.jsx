@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Avatar from "../../../../assets/chat/avatar.png";
 import Search from "../../../../assets/chat/search.png";
 import Plus from "../../../../assets/chat/plus.png";
 import Minus from "../../../../assets/chat/minus.png";
@@ -22,6 +23,34 @@ const ChatList = () => {
           className={`plusIcon ${addMode ? "minus-icon" : "plus-icon"}`}
           onClick={handleIconClick}
         />
+      </div>
+      <div className="chat-item">
+        <img src={Avatar} alt="" className="chat-profile" />
+        <div className="chat-texts">
+          <span>Jane Doe</span>
+          <p>HEllo</p>
+        </div>
+      </div>
+      <div className="chat-item">
+        <img src={Avatar} alt="" className="chat-profile" />
+        <div className="chat-texts">
+          <span>Jane Doe</span>
+          <p>HEllo</p>
+        </div>
+      </div>
+      <div className="chat-item">
+        <img src={Avatar} alt="" className="chat-profile" />
+        <div className="chat-texts">
+          <span>Jane Doe</span>
+          <p>HEllo</p>
+        </div>
+      </div>
+      <div className="chat-item">
+        <img src={Avatar} alt="" className="chat-profile" />
+        <div className="chat-texts">
+          <span className="chat-name">Jane Doe</span>
+          <p className="chat-preview">HEllo</p>
+        </div>
       </div>
     </div>
   );
