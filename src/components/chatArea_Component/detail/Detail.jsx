@@ -9,7 +9,7 @@ const Detail = () => {
   return (
     <div className="detail">
       <div className="detail-user">
-        <img src={Avatar} alt="Avatar" />
+        <img src={Avatar} alt="Avatar" className="detail-profile-pic" />
         <h2>Jane Doe</h2>
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
       </div>
@@ -17,22 +17,45 @@ const Detail = () => {
         <div className="detail-option">
           <div className="detail-title">
             <span>Chat Settings</span>
-            <img src={ArrowUp} alt="Arrow Up" />
+            <img src={ArrowUp} alt="Arrow Up" className="detail-arrow-up" />
           </div>
           <div className="detail-title">
             <span>Privacy & Help</span>
-            <img src={ArrowUp} alt="Arrow Up" />
+            <img src={ArrowUp} alt="Arrow Up" className="detail-arrow-up" />
           </div>
           <div className="detail-title">
             <span>Shared photos</span>
-            <img src={ArrowDown} alt="ArroDown" />
+            <img src={ArrowDown} alt="ArroDown" className="detail-arrow-down" />
           </div>
           <div className="detail-photos">
             <div className="detail-photo-item">
-              <img src={Avatar} alt="Avatar" />
-              <span>photo</span>
+              <div className="detail-photo-detail">
+                <img src={Avatar} alt="Avatar" />
+                <span>photo</span>
+              </div>
+              <img src={Download} alt="Download" />
             </div>
-            <img src={Download} alt="Download" />
+            <div className="detail-photo-item">
+              <div className="detail-photo-detail">
+                <img src={Avatar} alt="Avatar" />
+                <span>photo</span>
+              </div>
+              <img src={Download} alt="Download" />
+            </div>
+            <div className="detail-photo-item">
+              <div className="detail-photo-detail">
+                <img src={Avatar} alt="Avatar" />
+                <span>photo</span>
+              </div>
+              <img src={Download} alt="Download" />
+            </div>
+            <div className="detail-photo-item">
+              <div className="detail-photo-detail">
+                <img src={Avatar} alt="Avatar" />
+                <span>photo</span>
+              </div>
+              <img src={Download} alt="Download" />
+            </div>
           </div>
           <div className="detail-title">
             <span>Shared Files</span>
@@ -40,6 +63,7 @@ const Detail = () => {
           </div>
         </div>
         <button>Block User</button>
+        <button className="logout-button">Logout</button>
       </div>
     </div>
   );

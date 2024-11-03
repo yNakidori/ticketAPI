@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import AddUser from "../chatList/addUser_components/addUser";
 import Avatar from "../../../../assets/chat/avatar.png";
 import Search from "../../../../assets/chat/search.png";
 import Plus from "../../../../assets/chat/plus.png";
@@ -52,6 +53,7 @@ const ChatList = () => {
           <p className="chat-preview">HEllo</p>
         </div>
       </div>
+      {addMode && <AddUser />}
     </div>
   );
 };

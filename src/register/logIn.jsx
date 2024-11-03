@@ -15,6 +15,9 @@ import { Button, Tabs, theme } from "antd";
 import "./logIn.scss";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Notification from "../components/notification/notificaiton";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import para estilizar o toast
 
 const LogIn = () => {
   const [videoUrl, setVideoUrl] = useState("");
@@ -30,6 +33,7 @@ const LogIn = () => {
       })
       .catch((error) => {
         console.error("Erro ao logar:", error);
+        toast.warn("Usuário ou senha inválidos");
       });
   };
 
@@ -190,6 +194,7 @@ const LogIn = () => {
             </a>
           </div>
         </LoginFormPage>
+        <Notification />
       </div>
     </ConfigProvider>
   );
