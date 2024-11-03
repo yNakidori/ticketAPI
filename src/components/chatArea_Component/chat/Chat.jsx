@@ -7,6 +7,7 @@ import Emoji from "../../.././assets/chat/emoji.png";
 import Img from "../../.././assets/chat/img.png";
 import Camera from "../../../assets/chat/camera.png";
 import Mic from "../../../assets/chat/mic.png";
+import Placeholder from "../../../assets/chat/placeholder.jpeg";
 import "./Chat.scss";
 import EmojiPicker from "emoji-picker-react";
 
@@ -71,6 +72,11 @@ const Chat = () => {
         </div>
         <div className="message-center-own">
           <div className="message-texts">
+            <img
+              src={Placeholder}
+              alt="placeholder"
+              className="chat-send-img"
+            />
             <p className="chat-description">Lorem ipsum dolor sit amet .</p>
             <span className="chat-contact">1 min ago</span>
           </div>
