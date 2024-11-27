@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, List, Button } from "antd";
 
-const UserManagement = ({ users, onAddUserClick }) => (
+const UserManagement = ({ users, onAddUserClick, onUserAction }) => (
   <Card
     bordered={false}
     title={<h6 className="font-semibold m-0">User Management</h6>}
@@ -11,7 +11,22 @@ const UserManagement = ({ users, onAddUserClick }) => (
     <List
       dataSource={users}
       renderItem={(item) => (
-        <List.Item>
+        <List.Item
+          actions={[
+            <Button onClick={() => onUserAction("disable", item)}>
+              Disable
+            </Button>,
+            <Button onClick={() => onUserAction("delete", item)}>
+              Delete
+            </Button>,
+            <Button onClick={() => onUserAction("resetPassword", item)}>
+              Reset Password
+            </Button>,
+            <Button onClick={() => onUserAction("addToGroup", item)}>
+              Add to Group
+            </Button>,
+          ]}
+        >
           {item.name} - {item.email}
         </List.Item>
       )}

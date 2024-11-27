@@ -1,0 +1,45 @@
+.add-user-modal {
+  .ant-modal-header {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: #3c3c3c;
+  }
+
+  .add-user-form {
+    .form-item {
+      margin-bottom: 20px;
+
+      .form-input,
+      .ant-input-password {
+        border: 1px solid #d9d9d9;
+        border-radius: 6px;
+        padding: 10px 12px;
+        transition: border-color 0.3s;
+
+        &:hover {
+          border-color: #40a9ff;
+        }
+
+        &:focus {
+          border-color: #1890ff;
+          box-shadow: 0 0 3px rgba(24, 144, 255, 0.5);
+        }
+      }
+    }
+
+    .form-button {
+      width: 100%;
+      background-color: #1890ff;
+      color: #fff;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #40a9ff;
+      }
+    }
+  }
+}

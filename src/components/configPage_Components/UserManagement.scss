@@ -1,0 +1,19 @@
+.add-user-modal {
+  .ant-list-item {
+    display: flex;
+    justify-content: space-between;
+
+    .ant-btn-link {
+      padding: 0;
+      margin-left: 8px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .ant-btn-danger {
+      color: #ff4d4f;
+    }
+  }
+}

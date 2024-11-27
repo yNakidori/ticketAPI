@@ -40,7 +40,6 @@ const ConfigPage = () => {
 
   return (
     <MainLayout>
-      {/** 
       <ProfileHeader imageURL={imageURL} fullName={formData.fullName} />
       <Row gutter={[24, 0]} className="equal-height-row">
         <Col span={24} md={12} className="mb-24 equal-height-col">
@@ -71,7 +70,6 @@ const ConfigPage = () => {
         setNewGroup={setNewGroup}
       />
       <UserEdit />
-       */}
       <ChatComponent />
     </MainLayout>
   );
