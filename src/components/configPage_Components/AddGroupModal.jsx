@@ -13,7 +13,6 @@ const AddGroupModal = ({ visible, onOk, onCancel }) => {
     setLoading(true);
 
     try {
-      // Criar um ID único para o grupo
       const groupId = Date.now().toString();
       await setDoc(doc(db, "groups", groupId), {
         name,
@@ -69,6 +68,14 @@ const AddGroupModal = ({ visible, onOk, onCancel }) => {
             <Select.Option value="read">Read</Select.Option>
             <Select.Option value="write">Write</Select.Option>
             <Select.Option value="delete">Delete</Select.Option>
+            <Select.Option value="chamados">Chamados</Select.Option>
+            <Select.Option value="equipamentos">
+              Solicitação de equipamentos
+            </Select.Option>
+            <Select.Option value="problemas">Problemas</Select.Option>
+            <Select.Option value="flow">Flow</Select.Option>
+            <Select.Option value="Inventario">Inventario</Select.Option>
+            <Select.Option value="configuracoes">Configurações</Select.Option>
           </Select>
         </Form.Item>
         <Form.Item>

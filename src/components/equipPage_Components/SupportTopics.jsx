@@ -9,9 +9,9 @@ import styles from "./SupportTopics.module.scss";
 
 const SupportTopics = () => {
   const topics = [
-    { icon: <LockOutlined />, title: "Esqueceu a senha da Conta Apple" },
-    { icon: <ToolOutlined />, title: "Reparo da Apple" },
-    { icon: <FileTextOutlined />, title: "Assinaturas e cobrança" },
+    { icon: <LockOutlined />, title: "Esqueceu a senha de alguma conta?" },
+    { icon: <ToolOutlined />, title: "Reparo de equipamentos" },
+    { icon: <FileTextOutlined />, title: "Solicitação de acessos" },
   ];
 
   return (
