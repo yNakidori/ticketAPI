@@ -1,53 +1,59 @@
-import React from "react";
-import { Card, List, Button, Popconfirm } from "antd";
+import React, { useState, useEffect } from "react";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { db } from "../../firebase/firebase";
+import AddGroupModal from "./AddGroupModal";
+import GroupManagement from "./GroupManagement";
 
-const GroupManagement = ({
-  groups,
-  onAddGroupClick,
-  onEditGroup,
-  onDeleteGroup,
-}) => (
-  <Card
-    bordered={false}
-    title={<h6 className="font-semibold m-0">Group Management</h6>}
-    className="header-solid h-full"
-    extra={<Button onClick={onAddGroupClick}>Add Group</Button>}
-  >
-    <List
-      dataSource={groups}
-      renderItem={(item) => (
-        <List.Item
-          actions={[
-            <Button type="link" onClick={() => onEditGroup(item)}>
-              Edit
-            </Button>,
-            <Popconfirm
-              title="Are you sure you want to delete this group?"
-              onConfirm={() => onDeleteGroup(item.id)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button type="link" danger>
-                Delete
-              </Button>
-            </Popconfirm>,
-          ]}
-        >
-          <List.Item.Meta
-            title={<span>{item.name}</span>}
-            description={
-              <>
-                <p>{item.description}</p>
-                <p>
-                  <strong>Permissions:</strong> {item.permissions.join(", ")}
-                </p>
-              </>
-            }
-          />
-        </List.Item>
-      )}
-    />
-  </Card>
-);
+const GroupManager = () => {
+  const [groups, setGroups] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-export default GroupManagement;
+  const fetchGroups = async () => {
+    const querySnapshot = await getDocs(collection(db, "groups"));
+    const groupList = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setGroups(groupList);
+  };
+
+  const handleAddGroupClick = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleAddGroupSuccess = () => {
+    setIsModalVisible(false);
+    fetchGroups(); // Atualizar lista de grupos
+  };
+
+  const handleDeleteGroup = async (groupId) => {
+    try {
+      await deleteDoc(doc(db, "groups", groupId));
+      fetchGroups();
+    } catch (error) {
+      console.error("Erro ao deletar grupo:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchGroups();
+  }, []);
+
+  return (
+    <>
+      <GroupManagement
+        groups={groups}
+        onAddGroupClick={handleAddGroupClick}
+        onEditGroup={(group) => console.log("Editar grupo:", group)}
+        onDeleteGroup={handleDeleteGroup}
+      />
+      <AddGroupModal
+        visible={isModalVisible}
+        onOk={handleAddGroupSuccess}
+        onCancel={() => setIsModalVisible(false)}
+      />
+    </>
+  );
+};
+
+export default GroupManager;
