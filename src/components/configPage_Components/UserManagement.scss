@@ -1,7 +1,24 @@
 .add-user-modal {
   .ant-list-item {
     display: flex;
+    flex-wrap: wrap; // Permite que os elementos se ajustem em telas menores
     justify-content: space-between;
+    align-items: center; // Alinha os itens verticalmente
+
+    .ant-list-item-meta {
+      flex: 1; // Garante que o conteúdo ocupe mais espaço
+    }
+
+    .ant-list-item-meta-title {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .ant-list-item-meta-description {
+      font-size: 0.875rem;
+      color: #595959; // Cor suave para a descrição
+    }
 
     .ant-btn-link {
       padding: 0;
@@ -9,11 +26,21 @@
 
       &:hover {
         text-decoration: underline;
+        color: #40a9ff; // Azul suave no hover
       }
     }
 
     .ant-btn-danger {
       color: #ff4d4f;
+
+      &:hover {
+        background-color: #ffccc7; // Adiciona um fundo suave no hover
+      }
+    }
+
+    .ant-tag {
+      font-size: 0.75rem; // Deixa o tag menor e mais discreto
+      margin-top: 4px; // Dá espaço entre o tag e os textos
     }
   }
 }

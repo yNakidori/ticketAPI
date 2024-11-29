@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Modal, Form, Input, Button } from "antd";
-import { auth, db } from "../../firebase/firebase"; // Adicionando Firestore
+import { auth, db } from "../../firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setDoc, doc } from "firebase/firestore"; // Para salvar os dados no Firestore
+import { setDoc, doc } from "firebase/firestore";
 import "./AddUserModal.scss";
 
 const AddUserModal = ({ visible, onOk, onCancel }) => {
@@ -14,14 +14,12 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
     setLoading(true);
 
     try {
-      // Criação do usuário no Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
 
-      // Adicionando informações extras ao Firestore
       const user = userCredential.user;
       await setDoc(doc(db, "users", user.uid), {
         name,
@@ -32,8 +30,8 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
       });
 
       console.log("Usuário criado e salvo no Firestore:", user);
-      onOk(); // Fecha o modal
-      form.resetFields(); // Limpa os campos do formulário
+      onOk();
+      form.resetFields();
     } catch (error) {
       console.error("Erro ao criar usuário:", error);
     } finally {
