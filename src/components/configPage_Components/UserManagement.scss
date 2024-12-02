@@ -44,3 +44,11 @@
     }
   }
 }
+
+.user-management-card {
+  .list-container {
+    max-height: 300px; // Defina a altura máxima do container
+    overflow-y: auto; // Adiciona rolagem vertical
+    padding-right: 8px;
+  }
+}

@@ -8,7 +8,7 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-//import "./GroupManagement.scss";
+import "./GroupManagement.scss";
 
 const GroupManagement = ({ onAddGroupClick }) => {
   const [groups, setGroups] = useState([]);
@@ -53,38 +53,40 @@ const GroupManagement = ({ onAddGroupClick }) => {
         </Button>
       }
     >
-      <List
-        dataSource={groups}
-        renderItem={(group) => (
-          <List.Item
-            actions={[
-              <Button type="link" onClick={() => handleEditGroup(group)}>
-                Edit
-              </Button>,
-              <Popconfirm
-                title="Are you sure you want to delete this group?"
-                onConfirm={() => handleDeleteGroup(group.id)}
-                okText="Yes"
-                cancelText="No"
-              >
-                <Button type="link" danger>
-                  Delete
-                </Button>
-              </Popconfirm>,
-            ]}
-          >
-            <List.Item.Meta
-              title={group.name}
-              description={
-                <>
-                  <p>{group.description}</p>
-                  <p>Permissions: {group.permissions.join(", ")}</p>
-                </>
-              }
-            />
-          </List.Item>
-        )}
-      />
+      <div className="list-container">
+        <List
+          dataSource={groups}
+          renderItem={(group) => (
+            <List.Item
+              actions={[
+                <Button type="link" onClick={() => handleEditGroup(group)}>
+                  Edit
+                </Button>,
+                <Popconfirm
+                  title="Are you sure you want to delete this group?"
+                  onConfirm={() => handleDeleteGroup(group.id)}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Button type="link" danger>
+                    Delete
+                  </Button>
+                </Popconfirm>,
+              ]}
+            >
+              <List.Item.Meta
+                title={group.name}
+                description={
+                  <>
+                    <p>{group.description}</p>
+                    <p>Permissions: {group.permissions.join(", ")}</p>
+                  </>
+                }
+              />
+            </List.Item>
+          )}
+        />
+      </div>
     </Card>
   );
 };

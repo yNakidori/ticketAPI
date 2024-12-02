@@ -29,7 +29,7 @@ const LogIn = () => {
     signInWithEmailAndPassword(auth, username, password)
       .then((userCredential) => {
         console.log("Usuário logado:", userCredential.user);
-        navigate("/homePage");
+        navigate("/configPage");
       })
       .catch((error) => {
         console.error("Erro ao logar:", error);
