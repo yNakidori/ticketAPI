@@ -11,6 +11,7 @@ import ConfigPage from "./pages/configPage/configPage.jsx";
 import HomePage from "./pages/homePage/homePage.jsx";
 import ProblemsPage from "./pages/problemsPage/problemsPage.jsx";
 import EquipPage from "./pages/equipPage/equipPage.jsx";
+import InventoryPage from "./pages/inventoryPage/inventoryPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,14 @@ const router = createBrowserRouter([
   {
     path: "/equipPage",
     element: <EquipPage />,
+  },
+  {
+    path: "/configPage",
+    element: <ConfigPage />,
+  },
+  {
+    path: "inventoryPage",
+    element: <InventoryPage />,
   },
 ]);
 

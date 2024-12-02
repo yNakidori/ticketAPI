@@ -1,0 +1,27 @@
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 10px 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  .navbar-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    transition: color 0.3s;
+
+    .icon {
+      font-size: 24px;
+      color: #000;
+    }
+
+    &.active .icon {
+      color: #ff0000; // Vermelho para o item ativo
+    }
+  }
+}

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Modal, Form, Input, Button } from "antd";
-import { auth, db } from "../../firebase/firebase"; // Adicionando Firestore
+import InputMask from "react-input-mask";
+import { auth, db } from "../../firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setDoc, doc } from "firebase/firestore"; // Para salvar os dados no Firestore
+import { setDoc, doc } from "firebase/firestore";
 import "./AddUserModal.scss";
 
 const AddUserModal = ({ visible, onOk, onCancel }) => {
@@ -14,14 +15,12 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
     setLoading(true);
 
     try {
-      // Criação do usuário no Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
 
-      // Adicionando informações extras ao Firestore
       const user = userCredential.user;
       await setDoc(doc(db, "users", user.uid), {
         name,
@@ -32,8 +31,8 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
       });
 
       console.log("Usuário criado e salvo no Firestore:", user);
-      onOk(); // Fecha o modal
-      form.resetFields(); // Limpa os campos do formulário
+      onOk();
+      form.resetFields();
     } catch (error) {
       console.error("Erro ao criar usuário:", error);
     } finally {
@@ -70,6 +69,10 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
           rules={[
             { required: true, message: "Please enter your email" },
             { type: "email", message: "Please enter a valid email" },
+            {
+              pattern: /^[a-zA-Z0-9._%+-]+@grupospo\.com\.br$/,
+              message: "Email must be from the @grupospo.com.br domain",
+            },
           ]}
         >
           <Input className="form-input" placeholder="Enter your email" />
@@ -91,21 +94,32 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
           className="form-item"
           rules={[
             { required: true, message: "Please enter your phone number" },
-            {
-              pattern: /^\d{10,15}$/,
-              message: "Please enter a valid phone number",
-            },
           ]}
         >
-          <Input className="form-input" placeholder="Enter your phone number" />
+          <InputMask
+            mask="(99) 99999-9999"
+            className="form-input"
+            placeholder="(DDD) 00000-0000"
+          >
+            {(inputProps) => <Input {...inputProps} />}
+          </InputMask>
         </Form.Item>
         <Form.Item
           name="city"
           label="City"
           className="form-item"
-          rules={[{ required: true, message: "Please enter your city" }]}
+          rules={[
+            { required: true, message: "Please enter your city" },
+            {
+              len: 3,
+              message: "City must be exactly 3 characters (e.g., SP, RJ, MG)",
+            },
+          ]}
         >
-          <Input className="form-input" placeholder="Enter your city" />
+          <Input
+            className="form-input"
+            placeholder="Enter city abbreviation (e.g., SP)"
+          />
         </Form.Item>
         <Form.Item>
           <Button
