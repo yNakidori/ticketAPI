@@ -1,11 +1,37 @@
-.tickets-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
+.ticket-card {
+  .ant-card-meta-title {
+    font-size: 14px;
+    font-weight: bold;
+  }
 
-.tickets-scroll-container {
-  max-height: 400px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  .ant-card-meta-description {
+    font-size: 12px;
+  }
+
+  .status-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+  }
+
+  &.urgent .status-badge {
+    background-color: red;
+  }
+  &.critical .status-badge {
+    background-color: darkred;
+  }
+  &.high .status-badge {
+    background-color: orange;
+  }
+  &.medium .status-badge {
+    background-color: gold;
+  }
+  &.low .status-badge {
+    background-color: green;
+  }
 }
