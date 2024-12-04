@@ -1,57 +1,27 @@
 .navbar {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%; /* A barra ocupa 90% da largura da tela */
-  max-width: 900px; /* Limita a largura da barra */
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  padding: 15px 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 10px 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
-  &__menu {
+  .navbar-item {
     display: flex;
-    justify-content: space-between; /* Espaça os itens uniformemente */
-    align-items: center; /* Centraliza verticalmente */
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  &__item {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centraliza os ícones e os textos */
-    gap: 5px; /* Espaço entre o ícone e o texto */
-    color: #7a7a7a;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: color 0.3s;
 
-    &:hover {
-      color: #7f56d9;
+    .icon {
+      font-size: 24px;
+      color: #000;
     }
 
-    &--center {
-      background: linear-gradient(135deg, #7f56d9, #9b70ff);
-      color: #ffffff;
-      border-radius: 50%;
-      padding: 15px;
-      transform: translateY(-20%);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    &.active .icon {
+      color: #ff0000; // Vermelho para o item ativo
     }
-  }
-
-  &__icon {
-    font-size: 20px; /* Ícones maiores */
-  }
-
-  &__icon--plus {
-    font-size: 28px;
-  }
-
-  &__label {
-    font-size: 14px;
-    font-weight: 500;
   }
 }

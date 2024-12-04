@@ -1,17 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Form, Input, Upload, Button, message } from "antd";
 import { VerticalAlignTopOutlined } from "@ant-design/icons";
 import profilavatar from "../../assets/images/face-1.jpg";
+import { auth, db } from "../../firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
-const UserEdit = ({ userData, onSave }) => {
-  const [imageURL, setImageURL] = useState(userData?.avatar || profilavatar);
+const UserEdit = ({ onSave }) => {
+  const [user, setUser] = useState(null);
+  const [imageURL, setImageURL] = useState(profilavatar);
   const [, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: userData?.fullName || "Sarah Emily Jacob",
-    email: userData?.email || "placeholder",
-    mobile: userData?.mobile || "(44) 123 1234 123",
-    location: userData?.location || "USA",
+    fullName: "",
+    email: "",
+    mobile: "",
+    location: "",
   });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      onAuthStateChanged(auth, async (currentUser) => {
+        if (currentUser) {
+          const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setFormData({
+              fullName: userData.name || "",
+              email: currentUser.email,
+              mobile: userData.phone || "",
+              location: userData.city || "",
+            });
+            setImageURL(userData.avatar || profilavatar);
+          } else {
+            message.error("Não foi possível carregar os dados do usuário.");
+          }
+          setUser(currentUser);
+        }
+      });
+    };
+
+    fetchUserData();
+  }, []);
 
   const getBase64 = (img, callback) => {
     const reader = new FileReader();
@@ -50,8 +79,12 @@ const UserEdit = ({ userData, onSave }) => {
   };
 
   const handleFormSubmit = () => {
-    onSave({ ...formData, avatar: imageURL });
-    message.success("Perfil atualizado com sucesso!");
+    if (user) {
+      onSave({ ...formData, avatar: imageURL });
+      message.success("Perfil atualizado com sucesso!");
+    } else {
+      message.error("Não foi possível salvar as alterações.");
+    }
   };
 
   const uploadButton = (
@@ -82,12 +115,19 @@ const UserEdit = ({ userData, onSave }) => {
                   onChange={handleInputChange}
                 />
               </Form.Item>
-              <Form.Item label="Email">
+              <Form.Item
+                label="Email"
+                extra={
+                  <span style={{ color: "#888" }}>
+                    O email não pode ser alterado.
+                  </span>
+                }
+              >
                 <Input
                   name="email"
                   value={formData.email}
-                  onChange={handleInputChange}
                   disabled
+                  style={{ backgroundColor: "#f5f5f5", cursor: "not-allowed" }}
                 />
               </Form.Item>
               <Form.Item label="Telefone">
@@ -110,7 +150,6 @@ const UserEdit = ({ userData, onSave }) => {
                   listType="picture-card"
                   className="avatar-uploader"
                   showUploadList={false}
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                   beforeUpload={beforeUpload}
                   onChange={handleChange}
                 >

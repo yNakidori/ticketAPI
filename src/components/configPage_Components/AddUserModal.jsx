@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Form, Input, Button } from "antd";
+import InputMask from "react-input-mask";
 import { auth, db } from "../../firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
@@ -68,6 +69,10 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
           rules={[
             { required: true, message: "Please enter your email" },
             { type: "email", message: "Please enter a valid email" },
+            {
+              pattern: /^[a-zA-Z0-9._%+-]+@grupospo\.com\.br$/,
+              message: "Email must be from the @grupospo.com.br domain",
+            },
           ]}
         >
           <Input className="form-input" placeholder="Enter your email" />
@@ -89,21 +94,32 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
           className="form-item"
           rules={[
             { required: true, message: "Please enter your phone number" },
-            {
-              pattern: /^\d{10,15}$/,
-              message: "Please enter a valid phone number",
-            },
           ]}
         >
-          <Input className="form-input" placeholder="Enter your phone number" />
+          <InputMask
+            mask="(99) 99999-9999"
+            className="form-input"
+            placeholder="(DDD) 00000-0000"
+          >
+            {(inputProps) => <Input {...inputProps} />}
+          </InputMask>
         </Form.Item>
         <Form.Item
           name="city"
           label="City"
           className="form-item"
-          rules={[{ required: true, message: "Please enter your city" }]}
+          rules={[
+            { required: true, message: "Please enter your city" },
+            {
+              len: 3,
+              message: "City must be exactly 3 characters (e.g., SP, RJ, MG)",
+            },
+          ]}
         >
-          <Input className="form-input" placeholder="Enter your city" />
+          <Input
+            className="form-input"
+            placeholder="Enter city abbreviation (e.g., SP)"
+          />
         </Form.Item>
         <Form.Item>
           <Button
