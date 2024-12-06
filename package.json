@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "npx kill-port 5173 && vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "stop": "npx kill-port 5173"
   },
   "dependencies": {
     "@ant-design/pro-components": "^2.7.9",
@@ -20,13 +21,14 @@
     "antd": "^5.17.2",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.4.7",
     "emoji-picker-react": "^4.12.0",
     "firebase": "^10.12.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.2.0",
     "react-icons": "^5.3.0",
+    "react-input-mask": "^2.0.4",
     "react-lottie": "^1.2.4",
     "react-router-dom": "^6.23.0",
     "react-spotify-web-playback": "^0.14.4",

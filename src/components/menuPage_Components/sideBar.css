@@ -45,4 +45,5 @@
 .toggle {
   color: #fed000;
   margin-left: 15px;
+  cursor: not-allowed;
 }

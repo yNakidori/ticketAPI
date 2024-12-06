@@ -8,7 +8,7 @@ import upload from "../../firebase/upload";
 import { UploadOutlined } from "@ant-design/icons";
 import "./AddUserModal.scss";
 
-const AddUserModal = ({ visible, onOk, onCancel }) => {
+const AddSupportPointModal = ({ visible, onOk, onCancel }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
@@ -55,67 +55,76 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
   };
 
   const handleFileChange = (info) => {
-    const fileList = info.fileList.slice(-1); // Allow only one file
+    const fileList = info.fileList.slice(-1);
     const latestFile = fileList[0]?.originFileObj;
     setFile(latestFile);
   };
 
   return (
     <Modal
-      title="Add User"
+      title="Adicionar Ponto de Apoio"
       visible={visible}
       onCancel={onCancel}
       footer={null}
-      className="add-user-modal"
+      className="add-sp-modal"
     >
       <Form
         form={form}
         layout="vertical"
-        className="add-user-form"
+        className="add-sp-form"
         onFinish={handleSignIn}
       >
         <Form.Item
-          name="name"
-          label="Name"
-          className="form-item"
-          rules={[{ required: true, message: "Please enter your name" }]}
-        >
-          <Input className="form-input" placeholder="Enter your name" />
-        </Form.Item>
-        <Form.Item
-          name="email"
-          label="Email"
+          name="cityname"
+          label="Cityname"
           className="form-item"
           rules={[
-            { required: true, message: "Please enter your email" },
-            { type: "email", message: "Please enter a valid email" },
-            {
-              pattern: /^[a-zA-Z0-9._%+-]+@grupospo\.com\.br$/,
-              message: "Email must be from the @grupospo.com.br domain",
-            },
+            { required: true, message: "Informe a cidade do ponto de apoio" },
           ]}
         >
-          <Input className="form-input" placeholder="Enter your email" />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          label="Password"
-          className="form-item"
-          rules={[{ required: true, message: "Please enter your password" }]}
-        >
-          <Input.Password
+          <Input
             className="form-input"
-            placeholder="Enter your password"
+            placeholder="Digite o nome da cidade do ponto de apoio"
           />
         </Form.Item>
         <Form.Item
-          name="phone"
-          label="Phone"
+          name="abbreviation"
+          label="Abbreviation"
           className="form-item"
           rules={[
-            { required: true, message: "Please enter your phone number" },
+            {
+              required: true,
+              message: "Por favor informe uma abeviação para o ponto de apoio",
+            },
+            {
+              len: 3,
+              message:
+                "City must be exactly 3 characters (e.g., SPO, CPS, MGM)",
+            },
           ]}
         >
+          <Input
+            className="form-input"
+            placeholder="Informe uma abreviação para o ponto de apoio (e.g., SPO)"
+          />
+        </Form.Item>
+        <Form.Item
+          name="owner"
+          label="Owner"
+          className="form-item"
+          rules={[
+            {
+              required: true,
+              message: "Por favor informe um responsavel para o ponto de apoio",
+            },
+          ]}
+        >
+          <Input.Password
+            className="form-input"
+            placeholder="Digite o nome do responsavel pelo ponto de apoio"
+          />
+        </Form.Item>
+        <Form.Item name="supphone" label="Supphone" className="form-item">
           <InputMask
             mask="(99) 99999-9999"
             className="form-input"
@@ -124,33 +133,6 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
             {(inputProps) => <Input {...inputProps} />}
           </InputMask>
         </Form.Item>
-        <Form.Item
-          name="city"
-          label="City"
-          className="form-item"
-          rules={[
-            { required: true, message: "Please enter your city" },
-            {
-              len: 3,
-              message: "City must be exactly 3 characters (e.g., SP, RJ, MG)",
-            },
-          ]}
-        >
-          <Input
-            className="form-input"
-            placeholder="Enter city abbreviation (e.g., SP)"
-          />
-        </Form.Item>
-        <Form.Item label="Avatar" className="form-item">
-          <Upload
-            accept="image/*"
-            maxCount={1}
-            onChange={handleFileChange}
-            beforeUpload={() => false} // Prevent auto-upload
-          >
-            <Button icon={<UploadOutlined />}>Upload Avatar</Button>
-          </Upload>
-        </Form.Item>
         <Form.Item>
           <Button
             type="primary"
@@ -158,7 +140,7 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
             loading={loading}
             className="form-button"
           >
-            {loading ? "Creating User..." : "Create User"}
+            {loading ? "Criando ponto de apoio..." : "Criar ponto de apoio"}
           </Button>
         </Form.Item>
       </Form>
@@ -166,4 +148,4 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
   );
 };
 
-export default AddUserModal;
+export default AddSupportPointModal;

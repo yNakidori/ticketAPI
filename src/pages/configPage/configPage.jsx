@@ -7,6 +7,7 @@ import AddUserModal from "../../components/configPage_Components/AddUserModal";
 import AddGroupModal from "../../components/configPage_Components/AddGroupModal";
 import profilavatar from "../../assets/images/face-1.jpg";
 import UserEdit from "../../components/configPage_Components/UserEdit";
+import SupportPointEdit from "../../components/configPage_Components/SupportPointsEdit";
 import ChatComponent from "../../components/chatArea_Component/chatComponent";
 import "./configPage.scss";
 import { message, Row, Col } from "antd";
@@ -41,6 +42,10 @@ const ConfigPage = () => {
   return (
     <MainLayout>
       <ProfileHeader imageURL={imageURL} fullName={formData.fullName} />
+      <div className="chat-component">
+        <ChatComponent />
+      </div>
+
       <Row gutter={[24, 0]} className="equal-height-row">
         <Col span={24} md={12} className="mb-24 equal-height-col">
           <UserManagement
@@ -69,8 +74,14 @@ const ConfigPage = () => {
         newGroup={newGroup}
         setNewGroup={setNewGroup}
       />
-      <UserEdit />
-      <ChatComponent />
+      <Row gutter={[24, 0]} className="equal-height-row">
+        <Col span={24} md={12} className="mb-24 equal-height-col">
+          <UserEdit />
+        </Col>
+        <Col span={24} md={12} className="mb-24 equal-height-col">
+          <SupportPointEdit />
+        </Col>
+      </Row>
     </MainLayout>
   );
 };
