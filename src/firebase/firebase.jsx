@@ -4,21 +4,13 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC6Kkom2jxYK_2lOqIP8mkXwFJPldusMaw",
-
-  authDomain: "ticketapi-22560.firebaseapp.com",
-
-  databaseURL: "https://ticketapi-22560-default-rtdb.firebaseio.com",
-
-  projectId: "ticketapi-22560",
-
-  storageBucket: "ticketapi-22560.firebasestorage.app",
-
-  messagingSenderId: "1012018632340",
-
-  appId: "1:1012018632340:web:198f16bf550878321a8681",
-
-  measurementId: "G-7J7KCS7CDX",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
