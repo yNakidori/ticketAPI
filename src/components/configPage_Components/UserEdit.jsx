@@ -96,83 +96,73 @@ const UserEdit = ({ onSave }) => {
 
   return (
     <div>
-      <Row gutter={[24, 0]} className="equal-height-row">
-        <Col span={24} md={12} className="mb-24 equal-height-col">
-          <Card
-            bordered={false}
-            title={
-              <h6 className="font-semibold m-0">
-                Editar Informações do Perfil
-              </h6>
+      <Card
+        bordered={false}
+        title={
+          <h6 className="font-semibold m-0">Editar Informações do Perfil</h6>
+        }
+        className="header-solid h-full"
+      >
+        <Form layout="vertical" onFinish={handleFormSubmit}>
+          <Form.Item label="Nome Completo">
+            <Input
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleInputChange}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Email"
+            extra={
+              <span style={{ color: "#888" }}>
+                O email não pode ser alterado.
+              </span>
             }
-            className="header-solid h-full"
           >
-            <Form layout="vertical" onFinish={handleFormSubmit}>
-              <Form.Item label="Nome Completo">
-                <Input
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleInputChange}
-                />
-              </Form.Item>
-              <Form.Item
-                label="Email"
-                extra={
-                  <span style={{ color: "#888" }}>
-                    O email não pode ser alterado.
-                  </span>
-                }
-              >
-                <Input
-                  name="email"
-                  value={formData.email}
-                  disabled
-                  style={{ backgroundColor: "#f5f5f5", cursor: "not-allowed" }}
-                />
-              </Form.Item>
-              <Form.Item label="Telefone">
-                <Input
-                  name="mobile"
-                  value={formData.mobile}
-                  onChange={handleInputChange}
-                />
-              </Form.Item>
-              <Form.Item label="Localização">
-                <Input
-                  name="location"
-                  value={formData.location}
-                  onChange={handleInputChange}
-                />
-              </Form.Item>
-              <Form.Item label="Foto de Perfil">
-                <Upload
-                  name="avatar"
-                  listType="picture-card"
-                  className="avatar-uploader"
-                  showUploadList={false}
-                  beforeUpload={beforeUpload}
-                  onChange={handleChange}
-                >
-                  {imageURL ? (
-                    <img
-                      src={imageURL}
-                      alt="avatar"
-                      style={{ width: "100%" }}
-                    />
-                  ) : (
-                    uploadButton
-                  )}
-                </Upload>
-              </Form.Item>
-              <Form.Item>
-                <Button type="primary" htmlType="submit">
-                  Salvar Alterações
-                </Button>
-              </Form.Item>
-            </Form>
-          </Card>
-        </Col>
-      </Row>
+            <Input
+              name="email"
+              value={formData.email}
+              disabled
+              style={{ backgroundColor: "#f5f5f5", cursor: "not-allowed" }}
+            />
+          </Form.Item>
+          <Form.Item label="Telefone">
+            <Input
+              name="mobile"
+              value={formData.mobile}
+              onChange={handleInputChange}
+            />
+          </Form.Item>
+          <Form.Item label="Localização">
+            <Input
+              name="location"
+              value={formData.location}
+              onChange={handleInputChange}
+            />
+          </Form.Item>
+          <Form.Item label="Foto de Perfil">
+            <Upload
+              name="avatar"
+              listType="picture-card"
+              className="avatar-uploader"
+              showUploadList={false}
+              beforeUpload={beforeUpload}
+              onChange={handleChange}
+            >
+              {imageURL ? (
+                <img src={imageURL} alt="avatar" style={{ width: "100%" }} />
+              ) : (
+                uploadButton
+              )}
+            </Upload>
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Salvar Alterações
+            </Button>
+          </Form.Item>
+        </Form>
+      </Card>
     </div>
   );
 };
