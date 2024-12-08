@@ -12,6 +12,7 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
+  const [bannerFile, setBannerFile] = useState(null);
 
   const handleSignIn = async (values) => {
     const { name, email, password, phone, city } = values;
@@ -32,6 +33,12 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
         avatarUrl = await upload(file);
       }
 
+      // Upload banner if a file is provided
+      let bannerUrl = "";
+      if (bannerFile) {
+        bannerUrl = await upload(bannerFile);
+      }
+
       // Save user data in Firestore
       await setDoc(doc(db, "users", user.uid), {
         name,
@@ -40,12 +47,14 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
         email,
         uid: user.uid,
         avatar: avatarUrl, // Save the avatar URL (empty if no file uploaded)
+        banner: bannerUrl, // Save the banner URL (empty if no file uploaded)
       });
 
       message.success("User created successfully!");
       onOk();
       form.resetFields();
       setFile(null); // Reset the file state
+      setBannerFile(null); // Reset the banner file state
     } catch (error) {
       console.error("Error creating user:", error);
       message.error("Failed to create user. Please try again.");
@@ -58,6 +67,12 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
     const fileList = info.fileList.slice(-1); // Allow only one file
     const latestFile = fileList[0]?.originFileObj;
     setFile(latestFile);
+  };
+
+  const handleBannerChange = (info) => {
+    const fileList = info.fileList.slice(-1); // Allow only one file
+    const latestFile = fileList[0]?.originFileObj;
+    setBannerFile(latestFile);
   };
 
   return (
@@ -149,6 +164,16 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
             beforeUpload={() => false} // Prevent auto-upload
           >
             <Button icon={<UploadOutlined />}>Upload Avatar</Button>
+          </Upload>
+        </Form.Item>
+        <Form.Item label="Banner" className="form-item">
+          <Upload
+            accept="image/*"
+            maxCount={1}
+            onChange={handleBannerChange}
+            beforeUpload={() => false} // Prevent auto-upload
+          >
+            <Button icon={<UploadOutlined />}>Upload Banner</Button>
           </Upload>
         </Form.Item>
         <Form.Item>
