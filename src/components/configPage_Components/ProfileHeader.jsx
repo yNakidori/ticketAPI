@@ -1,32 +1,41 @@
-import React, { useState } from "react";
-import { Row, Col, Card, Avatar, Upload, Button, message } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import upload from "../../firebase/upload";
+import React, { useState, useEffect } from "react";
+import { Row, Col, Card, Avatar } from "antd";
+import { auth, db } from "../../firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
-const ProfileHeader = ({ imageURL, fullName, initialBannerURL }) => {
-  const [bannerURL, setBannerURL] = useState(initialBannerURL);
-  const [loading, setLoading] = useState(false);
+const ProfileHeader = () => {
+  const [data, setData] = useState({
+    fullName: "",
+    imageURL: "",
+    bannerURL: "",
+  });
 
-  const handleBannerUpload = async (file) => {
-    try {
-      setLoading(true);
-      const uploadedBannerURL = await upload(file);
-      setBannerURL(uploadedBannerURL);
-      message.success("Banner atualizado com sucesso!");
-    } catch (error) {
-      console.error("Erro ao fazer upload do banner:", error);
-      message.error("Falha ao atualizar o banner. Tente novamente.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      onAuthStateChanged(auth, async (currentUser) => {
+        if (currentUser) {
+          try {
+            const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+            if (userDoc.exists()) {
+              const userData = userDoc.data();
+              setData({
+                fullName: userData.name || "",
+                imageURL: userData.avatar || "",
+                bannerURL: userData.banner || "",
+              });
+            } else {
+              console.error("Usuário não encontrado no banco de dados.");
+            }
+          } catch (error) {
+            console.error("Erro ao buscar dados do usuário:", error);
+          }
+        }
+      });
+    };
 
-  const handleFileChange = (info) => {
-    const file = info.fileList[0]?.originFileObj;
-    if (file) {
-      handleBannerUpload(file);
-    }
-  };
+    fetchUserData();
+  }, []);
 
   return (
     <div className="sec-1">
@@ -37,34 +46,13 @@ const ProfileHeader = ({ imageURL, fullName, initialBannerURL }) => {
             position: "relative",
             width: "100%",
             height: "200px",
-            backgroundImage: `url(${bannerURL || ""})`,
+            backgroundImage: `url(${data.bannerURL || ""})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
             borderRadius: "8px",
           }}
-        >
-          <Upload
-            accept="image/*"
-            maxCount={1}
-            onChange={handleFileChange}
-            beforeUpload={() => false}
-          >
-            <Button
-              type="default"
-              icon={<UploadOutlined />}
-              loading={loading}
-              style={{
-                position: "absolute",
-                top: "10px",
-                right: "10px",
-                zIndex: 10,
-              }}
-            >
-              {loading ? "Enviando..." : "Alterar Banner"}
-            </Button>
-          </Upload>
-        </div>
+        />
         <Row
           justify="center"
           align="middle"
@@ -74,14 +62,14 @@ const ProfileHeader = ({ imageURL, fullName, initialBannerURL }) => {
           <Col>
             <Avatar
               size={74}
-              src={imageURL}
+              src={data.imageURL}
               style={{ border: "3px solid white" }}
             />
           </Col>
         </Row>
         <Row justify="center" style={{ marginTop: "10px" }}>
           <Col>
-            <h4 className="font-semibold m-0">{fullName}</h4>
+            <h4 className="font-semibold m-0">{data.fullName}</h4>
           </Col>
         </Row>
       </Card>

@@ -38,9 +38,7 @@ const SupportPointsEdit = () => {
   return (
     <Card
       bordered={false}
-      title={
-        <h6 className="font-semibold m-0">Gerenciamento de Pontos de Apoio</h6>
-      }
+      title={<h6 className="font-semibold m-0">Pontos de Apoio</h6>}
       className="support-point-management-card"
       extra={
         <Button type="primary" onClick={() => setIsModalVisible(true)}>

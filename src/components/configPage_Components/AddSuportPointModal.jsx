@@ -1,63 +1,42 @@
 import React, { useState } from "react";
-import { Modal, Form, Input, Button, Upload, message } from "antd";
+import { Modal, Form, Input, Button, message } from "antd";
 import InputMask from "react-input-mask";
-import { auth, db } from "../../firebase/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { db } from "../../firebase/firebase";
 import { setDoc, doc } from "firebase/firestore";
-import upload from "../../firebase/upload";
-import { UploadOutlined } from "@ant-design/icons";
-import "./AddUserModal.scss";
 
 const AddSupportPointModal = ({ visible, onOk, onCancel }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [file, setFile] = useState(null);
 
+  // Função para enviar os dados ao Firestore
   const handleSignIn = async (values) => {
-    const { name, email, password, phone, city } = values;
     setLoading(true);
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      // Gere um ID único para o documento
+      const docId = `${values.abbreviation}_${Date.now()}`;
 
-      const user = userCredential.user;
+      // Dados a serem enviados
+      const data = {
+        cityname: values.cityname,
+        abbreviation: values.abbreviation,
+        owner: values.owner,
+        supphone: values.supphone || "", // Valor opcional
+        createdAt: new Date().toISOString(),
+      };
 
-      // Upload avatar if a file is provided
-      let avatarUrl = "";
-      if (file) {
-        avatarUrl = await upload(file);
-      }
+      // Crie ou atualize o documento no Firestore
+      await setDoc(doc(db, "supportPoints", docId), data);
 
-      // Save user data in Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        name,
-        phone,
-        city,
-        email,
-        uid: user.uid,
-        avatar: avatarUrl, // Save the avatar URL (empty if no file uploaded)
-      });
-
-      message.success("User created successfully!");
-      onOk();
+      message.success("Ponto de apoio criado com sucesso!");
       form.resetFields();
-      setFile(null); // Reset the file state
+      if (onOk) onOk(); // Chame o callback se necessário
     } catch (error) {
-      console.error("Error creating user:", error);
-      message.error("Failed to create user. Please try again.");
+      console.error("Erro ao criar o ponto de apoio:", error);
+      message.error("Ocorreu um erro ao criar o ponto de apoio.");
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleFileChange = (info) => {
-    const fileList = info.fileList.slice(-1);
-    const latestFile = fileList[0]?.originFileObj;
-    setFile(latestFile);
   };
 
   return (
@@ -119,7 +98,7 @@ const AddSupportPointModal = ({ visible, onOk, onCancel }) => {
             },
           ]}
         >
-          <Input.Password
+          <Input
             className="form-input"
             placeholder="Digite o nome do responsavel pelo ponto de apoio"
           />
