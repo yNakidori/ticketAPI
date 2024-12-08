@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { Modal, Form, Input, Button, Upload, message } from "antd";
+import React, { useState, useEffect } from "react";
+import { Modal, Form, Input, Button, Upload, message, Select } from "antd";
 import InputMask from "react-input-mask";
 import { auth, db } from "../../firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, collection, getDocs } from "firebase/firestore";
 import upload from "../../firebase/upload";
 import { UploadOutlined } from "@ant-design/icons";
 import "./AddUserModal.scss";
@@ -13,6 +13,26 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
   const [bannerFile, setBannerFile] = useState(null);
+  const [supportPoints, setSupportPoints] = useState([]);
+
+  useEffect(() => {
+    const fetchSupportPoints = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "supportPoints"));
+        const points = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          abbreviation: doc.data().abbreviation,
+          cityname: doc.data().cityname,
+        }));
+        setSupportPoints(points);
+      } catch (error) {
+        console.error("Erro ao buscar pontos de apoio:", error);
+        message.error("Erro ao carregar pontos de apoio.");
+      }
+    };
+
+    fetchSupportPoints();
+  }, []);
 
   const handleSignIn = async (values) => {
     const { name, email, password, phone, city } = values;
@@ -141,19 +161,16 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
         </Form.Item>
         <Form.Item
           name="city"
-          label="City"
+          label="Support Point"
           className="form-item"
-          rules={[
-            { required: true, message: "Please enter your city" },
-            {
-              len: 3,
-              message: "City must be exactly 3 characters (e.g., SP, RJ, MG)",
-            },
-          ]}
+          rules={[{ required: true, message: "Please select a support point" }]}
         >
-          <Input
-            className="form-input"
-            placeholder="Enter city abbreviation (e.g., SP)"
+          <Select
+            placeholder="Select a support point"
+            options={supportPoints.map((point) => ({
+              value: point.abbreviation,
+              label: `${point.cityname} (${point.abbreviation})`,
+            }))}
           />
         </Form.Item>
         <Form.Item label="Avatar" className="form-item">

@@ -22,56 +22,91 @@ import "./UserManagement.scss";
 const UserManagement = ({ onAddUserClick }) => {
   const [users, setUsers] = useState([]);
   const [groups, setGroups] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [supportPoints, setSupportPoints] = useState([]);
+  const [isGroupModalVisible, setIsGroupModalVisible] = useState(false);
+  const [isSupportPointModalVisible, setIsSupportPointModalVisible] =
+    useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedGroups, setSelectedGroups] = useState([]);
+  const [selectedSupportPoint, setSelectedSupportPoint] = useState([]);
 
-  // Recupera usuários do Firestore em tempo real
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
+    const unsubscribeUsers = onSnapshot(collection(db, "users"), (snapshot) => {
       const usersData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
       setUsers(usersData);
     });
-    return () => unsubscribe();
+
+    const unsubscribeGroups = onSnapshot(
+      collection(db, "groups"),
+      (snapshot) => {
+        const groupsData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          name: doc.data().name,
+        }));
+        setGroups(groupsData);
+      }
+    );
+
+    const unsubscribeSupportPoints = onSnapshot(
+      collection(db, "supportPoints"),
+      (snapshot) => {
+        const supportPointsData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          cityname: doc.data().cityname,
+          abbreviation: doc.data().abbreviation,
+        }));
+        setSupportPoints(supportPointsData);
+      }
+    );
+
+    return () => {
+      unsubscribeUsers();
+      unsubscribeGroups();
+      unsubscribeSupportPoints();
+    };
   }, []);
 
-  // Recupera grupos do Firestore em tempo real
-  useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "groups"), (snapshot) => {
-      const groupsData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        name: doc.data().name,
-      }));
-      setGroups(groupsData);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  // Função para gerenciar grupos do usuário
   const handleManageGroup = (user) => {
     setSelectedUser(user);
     setSelectedGroups(user.groups || []);
-    setIsModalVisible(true);
+    setIsGroupModalVisible(true);
   };
 
-  // Função para salvar grupos do usuário
+  const handleManageSupportPoint = (user) => {
+    setSelectedUser(user);
+    setSelectedSupportPoint(user.supportPoints || []);
+    setIsSupportPointModalVisible(true);
+  };
+
   const handleSaveGroups = async () => {
     try {
       await updateDoc(doc(db, "users", selectedUser.id), {
         groups: selectedGroups,
       });
       message.success("Grupos atualizados com sucesso!");
-      setIsModalVisible(false);
+      setIsGroupModalVisible(false);
     } catch (error) {
       console.error("Erro ao atualizar grupos:", error);
       message.error("Erro ao atualizar grupos.");
     }
   };
 
-  // Função para desativar usuário
+  const handleSaveSupportPoint = async () => {
+    try {
+      await updateDoc(doc(db, "users", selectedUser.id), {
+        supportPoints: selectedSupportPoint,
+      });
+      message.success("Ponto de apoio atualizado com sucesso!");
+      setIsSupportPointModalVisible(false);
+    } catch (error) {
+      console.error("Erro ao atualizar ponto de apoio:", error);
+      message.error("Erro ao atualizar ponto de apoio.");
+    }
+  };
+
   const handleDeactivateUser = async (userId) => {
     try {
       await updateDoc(doc(db, "users", userId), { active: false });
@@ -82,7 +117,6 @@ const UserManagement = ({ onAddUserClick }) => {
     }
   };
 
-  // Função para excluir usuário
   const handleDeleteUser = async (userId) => {
     try {
       await deleteDoc(doc(db, "users", userId));
@@ -112,6 +146,12 @@ const UserManagement = ({ onAddUserClick }) => {
               actions={[
                 <Button type="link" onClick={() => handleManageGroup(user)}>
                   Manage Group
+                </Button>,
+                <Button
+                  type="link"
+                  onClick={() => handleManageSupportPoint(user)}
+                >
+                  Manage Support Point
                 </Button>,
                 <Popconfirm
                   title="Are you sure you want to deactivate this user?"
@@ -158,12 +198,11 @@ const UserManagement = ({ onAddUserClick }) => {
         />
       </div>
 
-      {/* Modal para gerenciar grupos */}
       <Modal
         title={`Manage Groups for ${selectedUser?.name}`}
-        visible={isModalVisible}
+        visible={isGroupModalVisible}
         onOk={handleSaveGroups}
-        onCancel={() => setIsModalVisible(false)}
+        onCancel={() => setIsGroupModalVisible(false)}
         okText="Save"
         cancelText="Cancel"
       >
@@ -177,6 +216,28 @@ const UserManagement = ({ onAddUserClick }) => {
           {groups.map((group) => (
             <Select.Option key={group.id} value={group.name}>
               {group.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </Modal>
+
+      <Modal
+        title={`Manage Support Point for ${selectedUser?.name}`}
+        visible={isSupportPointModalVisible}
+        onOk={handleSaveSupportPoint}
+        onCancel={() => setIsSupportPointModalVisible(false)}
+        okText="Save"
+        cancelText="Cancel"
+      >
+        <Select
+          value={selectedSupportPoint}
+          onChange={(value) => setSelectedSupportPoint(value)}
+          style={{ width: "100%" }}
+          placeholder="Select support point"
+        >
+          {supportPoints.map((point) => (
+            <Select.Option key={point.id} value={point.abbreviation}>
+              {point.cityname}
             </Select.Option>
           ))}
         </Select>
