@@ -24,8 +24,8 @@ const MenuList = ({ darkTheme }) => {
         <Link to="/equipPage">Equipamentos</Link>
       </Menu.Item>
 
-      <Menu.Item key="problems" icon={<WechatWorkOutlined />}>
-        <Link to="/problemsPage">Problemas</Link>
+      <Menu.Item key="inventory" icon={<WechatWorkOutlined />}>
+        <Link to="/inventoryPage">Inventario</Link>
       </Menu.Item>
 
       <Menu.Item key="spotify" icon={<SpotifyOutlined />}>

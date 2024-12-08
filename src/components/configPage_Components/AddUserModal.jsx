@@ -1,14 +1,38 @@
-import React, { useState } from "react";
-import { Modal, Form, Input, Button } from "antd";
+import React, { useState, useEffect } from "react";
+import { Modal, Form, Input, Button, Upload, message, Select } from "antd";
 import InputMask from "react-input-mask";
 import { auth, db } from "../../firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, collection, getDocs } from "firebase/firestore";
+import upload from "../../firebase/upload";
+import { UploadOutlined } from "@ant-design/icons";
 import "./AddUserModal.scss";
 
 const AddUserModal = ({ visible, onOk, onCancel }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState(null);
+  const [bannerFile, setBannerFile] = useState(null);
+  const [supportPoints, setSupportPoints] = useState([]);
+
+  useEffect(() => {
+    const fetchSupportPoints = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "supportPoints"));
+        const points = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          abbreviation: doc.data().abbreviation,
+          cityname: doc.data().cityname,
+        }));
+        setSupportPoints(points);
+      } catch (error) {
+        console.error("Erro ao buscar pontos de apoio:", error);
+        message.error("Erro ao carregar pontos de apoio.");
+      }
+    };
+
+    fetchSupportPoints();
+  }, []);
 
   const handleSignIn = async (values) => {
     const { name, email, password, phone, city } = values;
@@ -22,22 +46,53 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
       );
 
       const user = userCredential.user;
+
+      // Upload avatar if a file is provided
+      let avatarUrl = "";
+      if (file) {
+        avatarUrl = await upload(file);
+      }
+
+      // Upload banner if a file is provided
+      let bannerUrl = "";
+      if (bannerFile) {
+        bannerUrl = await upload(bannerFile);
+      }
+
+      // Save user data in Firestore
       await setDoc(doc(db, "users", user.uid), {
         name,
         phone,
         city,
         email,
         uid: user.uid,
+        avatar: avatarUrl, // Save the avatar URL (empty if no file uploaded)
+        banner: bannerUrl, // Save the banner URL (empty if no file uploaded)
       });
 
-      console.log("Usuário criado e salvo no Firestore:", user);
+      message.success("User created successfully!");
       onOk();
       form.resetFields();
+      setFile(null); // Reset the file state
+      setBannerFile(null); // Reset the banner file state
     } catch (error) {
-      console.error("Erro ao criar usuário:", error);
+      console.error("Error creating user:", error);
+      message.error("Failed to create user. Please try again.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleFileChange = (info) => {
+    const fileList = info.fileList.slice(-1); // Allow only one file
+    const latestFile = fileList[0]?.originFileObj;
+    setFile(latestFile);
+  };
+
+  const handleBannerChange = (info) => {
+    const fileList = info.fileList.slice(-1); // Allow only one file
+    const latestFile = fileList[0]?.originFileObj;
+    setBannerFile(latestFile);
   };
 
   return (
@@ -106,20 +161,37 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
         </Form.Item>
         <Form.Item
           name="city"
-          label="City"
+          label="Support Point"
           className="form-item"
-          rules={[
-            { required: true, message: "Please enter your city" },
-            {
-              len: 3,
-              message: "City must be exactly 3 characters (e.g., SP, RJ, MG)",
-            },
-          ]}
+          rules={[{ required: true, message: "Please select a support point" }]}
         >
-          <Input
-            className="form-input"
-            placeholder="Enter city abbreviation (e.g., SP)"
+          <Select
+            placeholder="Select a support point"
+            options={supportPoints.map((point) => ({
+              value: point.abbreviation,
+              label: `${point.cityname} (${point.abbreviation})`,
+            }))}
           />
+        </Form.Item>
+        <Form.Item label="Avatar" className="form-item">
+          <Upload
+            accept="image/*"
+            maxCount={1}
+            onChange={handleFileChange}
+            beforeUpload={() => false} // Prevent auto-upload
+          >
+            <Button icon={<UploadOutlined />}>Upload Avatar</Button>
+          </Upload>
+        </Form.Item>
+        <Form.Item label="Banner" className="form-item">
+          <Upload
+            accept="image/*"
+            maxCount={1}
+            onChange={handleBannerChange}
+            beforeUpload={() => false} // Prevent auto-upload
+          >
+            <Button icon={<UploadOutlined />}>Upload Banner</Button>
+          </Upload>
         </Form.Item>
         <Form.Item>
           <Button
