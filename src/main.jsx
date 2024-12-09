@@ -12,6 +12,7 @@ import HomePage from "./pages/homePage/homePage.jsx";
 import ProblemsPage from "./pages/problemsPage/problemsPage.jsx";
 import EquipPage from "./pages/equipPage/equipPage.jsx";
 import InventoryPage from "./pages/inventoryPage/inventoryPage.jsx";
+import ProtectedRoute from "./ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -34,7 +35,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/menuPage",
-    element: <MenuPage />,
+    element: (
+      <ProtectedRoute>
+        <MenuPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/flowPage",
@@ -42,7 +47,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/configPage",
-    element: <ConfigPage />,
+    element: (
+      <ProtectedRoute>
+        <ConfigPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/homePage",

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import MainLayout from "../../components/mainLayout";
-import TicketsCriados from "../../components/homePage_Components/createdTickets";
+import TicketList from "../../components/homePage_Components/TicketList";
 import TicketsPessoais from "../../components/homePage_Components/personalTickets";
-import { Row, Col, Modal } from "antd"; // Importe Modal do Ant Design
+import { Row, Col, Modal } from "antd";
 import Lottie from "react-lottie";
 import addAnimation from "../../components/lottieFiles_Components/AddLogo.json";
 import FormTicket from "../../components/homePage_Components/formTicket";
@@ -27,7 +27,7 @@ const HomePage = () => {
           <Col span={24}>
             <div className="section">
               <h2 className="tittle">Tickets da Equipe</h2>
-              <TicketsCriados />
+              <TicketList />
             </div>
           </Col>
           <Col span={24}>

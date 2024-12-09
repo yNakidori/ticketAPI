@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Card, Form, Input, Upload, Button, message } from "antd";
+import { Card, Form, Input, Upload, Button, message } from "antd";
 import { VerticalAlignTopOutlined } from "@ant-design/icons";
-import profilavatar from "../../assets/images/face-1.jpg";
+import profilavatar from "../../assets/images/pfp.jpg";
 import { auth, db } from "../../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
