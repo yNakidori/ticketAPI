@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import MainLayout from "../../components/mainLayout";
 import TicketList from "../../components/homePage_Components/TicketList";
-import TicketsPessoais from "../../components/homePage_Components/personalTickets";
+import UserTickets from "../../components/homePage_Components/UserTickets";
 import { Row, Col, Modal } from "antd";
 import Lottie from "react-lottie";
 import addAnimation from "../../components/lottieFiles_Components/AddLogo.json";
@@ -33,7 +33,7 @@ const HomePage = () => {
           <Col span={24}>
             <div className="section">
               <h2>Meus Tickets</h2>
-              <TicketsPessoais />
+              <UserTickets />
             </div>
           </Col>
         </Row>
