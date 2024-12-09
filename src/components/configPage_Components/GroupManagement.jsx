@@ -45,11 +45,11 @@ const GroupManagement = ({ onAddGroupClick }) => {
   return (
     <Card
       bordered={false}
-      title={<h6 className="font-semibold m-0">Group Management</h6>}
+      title={<h6 className="font-semibold m-0">Grupos</h6>}
       className="group-management-card"
       extra={
         <Button type="primary" onClick={onAddGroupClick}>
-          Add Group
+          Criar grupo
         </Button>
       }
     >
@@ -60,16 +60,16 @@ const GroupManagement = ({ onAddGroupClick }) => {
             <List.Item
               actions={[
                 <Button type="link" onClick={() => handleEditGroup(group)}>
-                  Edit
+                  Editar
                 </Button>,
                 <Popconfirm
-                  title="Are you sure you want to delete this group?"
+                  title="Realmente gostaria de deletar esse grupo?"
                   onConfirm={() => handleDeleteGroup(group.id)}
-                  okText="Yes"
-                  cancelText="No"
+                  okText="Sim"
+                  cancelText="Não"
                 >
                   <Button type="link" danger>
-                    Delete
+                    Deletar
                   </Button>
                 </Popconfirm>,
               ]}

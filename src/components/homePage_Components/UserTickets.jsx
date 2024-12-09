@@ -1,191 +1,167 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  List,
   Card,
-  Tag,
+  List,
   Button,
-  Tooltip,
-  Modal,
-  message,
   Popconfirm,
+  message,
+  Tag,
+  Modal,
+  Image,
 } from "antd";
-import {
-  CheckOutlined,
-  DeleteOutlined,
-  PaperClipOutlined,
-} from "@ant-design/icons";
+import { db, auth } from "../../firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   collection,
   query,
   where,
-  onSnapshot,
+  getDocs,
   updateDoc,
-  doc,
   deleteDoc,
+  doc,
 } from "firebase/firestore";
-import { db, auth } from "../../firebase/firebase";
 
 const UserTickets = () => {
   const [tickets, setTickets] = useState([]);
-  const [attachmentsModal, setAttachmentsModal] = useState({
-    visible: false,
-    attachments: [],
-  });
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedImages, setSelectedImages] = useState([]);
 
-  // Função para exibir modal com anexos
-  const handleViewAttachments = (attachments) => {
-    setAttachmentsModal({ visible: true, attachments });
-  };
-
-  // Fechar o modal de anexos
-  const handleCloseAttachments = () => {
-    setAttachmentsModal({ visible: false, attachments: [] });
-  };
-
-  // Obter tickets criados pelo usuário logado
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        const userTicketsQuery = query(
-          collection(db, "tickets"),
-          where("creatorEmail", "==", user.email)
-        );
+    const fetchUserTickets = async () => {
+      onAuthStateChanged(auth, async (currentUser) => {
+        if (currentUser) {
+          try {
+            const ticketsQuery = query(
+              collection(db, "tickets"),
+              where("creatorId", "==", currentUser.uid)
+            );
+            const ticketsSnapshot = await getDocs(ticketsQuery);
+            const ticketsData = ticketsSnapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            setTickets(ticketsData);
+          } catch (error) {
+            console.error("Erro ao carregar os tickets:", error);
+            message.error(`Erro ao carregar os tickets: ${error.message}`);
+          }
+        }
+      });
+    };
 
-        onSnapshot(userTicketsQuery, (snapshot) => {
-          const userTickets = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setTickets(userTickets);
-        });
-      }
-    });
-
-    return () => unsubscribe();
+    fetchUserTickets();
   }, []);
 
-  // Função para marcar o ticket como concluído
-  const handleMarkComplete = async (ticketId) => {
-    try {
-      const ticketRef = doc(db, "tickets", ticketId);
-      await updateDoc(ticketRef, { status: "SOLVED" });
-      message.success("Ticket marcado como concluído!");
-    } catch (error) {
-      console.error("Erro ao marcar como concluído:", error);
-      message.error("Não foi possível marcar o ticket como concluído.");
-    }
-  };
-
-  // Função para excluir o ticket
   const handleDeleteTicket = async (ticketId) => {
     try {
-      const ticketRef = doc(db, "tickets", ticketId);
-      await deleteDoc(ticketRef);
+      await deleteDoc(doc(db, "tickets", ticketId));
       message.success("Ticket excluído com sucesso!");
+      setTickets((prev) => prev.filter((ticket) => ticket.id !== ticketId));
     } catch (error) {
       console.error("Erro ao excluir o ticket:", error);
-      message.error("Não foi possível excluir o ticket.");
+      message.error(`Erro ao excluir o ticket: ${error.message}`);
     }
   };
 
-  // Mapeamento de cores por status
-  const statusColors = {
-    NEW: "blue",
-    SOLVED: "green",
-    "ON HOLD": "orange",
-    CRITICAL: "red",
+  const handleMarkAsCompleted = async (ticketId) => {
+    try {
+      const ticketRef = doc(db, "tickets", ticketId);
+      await updateDoc(ticketRef, { status: "completed" });
+      message.success("Ticket marcado como concluído!");
+      setTickets((prev) =>
+        prev.map((ticket) =>
+          ticket.id === ticketId ? { ...ticket, status: "completed" } : ticket
+        )
+      );
+    } catch (error) {
+      console.error("Erro ao atualizar o ticket:", error);
+      message.error(`Erro ao marcar como concluído: ${error.message}`);
+    }
+  };
+
+  const showImages = (images) => {
+    setSelectedImages(images || []);
+    setIsModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+    setSelectedImages([]);
   };
 
   return (
     <>
-      <List
-        itemLayout="vertical"
-        dataSource={tickets}
-        renderItem={(ticket) => (
-          <Card
-            title={
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span>{`#${ticket.id} - ${ticket.title || "Ticket"}`}</span>
-                <Tag color={statusColors[ticket.status]}>{ticket.status}</Tag>
-              </div>
-            }
-            extra={<small>{`Criado em: ${ticket.createdAt}`}</small>}
-            style={{ marginBottom: 16 }}
-          >
-            {/* Descrição do ticket */}
-            <p>{ticket.description}</p>
-
-            {/* Detalhes do ticket */}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              {/* Categoria e Prioridade */}
-              <div>
-                <Tag color="blue">{ticket.category}</Tag>
-                <Tag color={ticket.priority === "CRITICAL" ? "red" : "gold"}>
-                  {ticket.priority}
-                </Tag>
-                <small
-                  style={{ marginLeft: 8 }}
-                >{`Vencimento: ${ticket.dueDate}`}</small>
-              </div>
-
-              {/* Botões de Ação */}
-              <div>
-                <Tooltip title="Marcar como Concluído">
-                  <Button
-                    type="link"
-                    icon={<CheckOutlined />}
-                    onClick={() => handleMarkComplete(ticket.id)}
-                    disabled={ticket.status === "SOLVED"}
-                  />
-                </Tooltip>
-                <Tooltip title="Excluir">
-                  <Popconfirm
-                    title="Tem certeza que deseja excluir este ticket?"
-                    onConfirm={() => handleDeleteTicket(ticket.id)}
-                    okText="Sim"
-                    cancelText="Não"
-                  >
-                    <Button type="link" danger icon={<DeleteOutlined />} />
-                  </Popconfirm>
-                </Tooltip>
-                <Tooltip title="Ver Anexos">
-                  <Button
-                    type="link"
-                    icon={<PaperClipOutlined />}
-                    onClick={() =>
-                      handleViewAttachments(ticket.attachments || [])
-                    }
-                    disabled={
-                      !ticket.attachments || ticket.attachments.length === 0
-                    }
-                  />
-                </Tooltip>
-              </div>
-            </div>
-          </Card>
-        )}
-      />
-
-      {/* Modal para exibir anexos */}
-      <Modal
-        visible={attachmentsModal.visible}
-        title="Anexos"
-        footer={null}
-        onCancel={handleCloseAttachments}
+      <Card
+        bordered={false}
+        title={<h6 className="font-semibold m-0">Meus Tickets</h6>}
+        className="header-solid h-full"
       >
-        {attachmentsModal.attachments.map((url, index) => (
-          <div key={index} style={{ marginBottom: 8 }}>
-            <a href={url} target="_blank" rel="noopener noreferrer">
-              {`Anexo ${index + 1}`}
-            </a>
+        <List
+          itemLayout="vertical"
+          dataSource={tickets}
+          renderItem={(ticket) => (
+            <List.Item
+              actions={[
+                <Popconfirm
+                  title="Tem certeza que deseja excluir este ticket?"
+                  onConfirm={() => handleDeleteTicket(ticket.id)}
+                  okText="Sim"
+                  cancelText="Não"
+                >
+                  <Button type="link" danger>
+                    Excluir
+                  </Button>
+                </Popconfirm>,
+                <Button
+                  type="link"
+                  onClick={() => handleMarkAsCompleted(ticket.id)}
+                  disabled={ticket.status === "completed"}
+                >
+                  {ticket.status === "completed"
+                    ? "Concluído"
+                    : "Marcar como Concluído"}
+                </Button>,
+                <Button
+                  type="link"
+                  onClick={() => showImages(ticket.attachments)}
+                >
+                  Ver Anexos
+                </Button>,
+              ]}
+            >
+              <List.Item.Meta
+                title={<span>{ticket.description}</span>}
+                description={
+                  <>
+                    <p>Grupo: {ticket.group}</p>
+                    <Tag
+                      color={ticket.status === "completed" ? "blue" : "green"}
+                    >
+                      {ticket.status === "completed" ? "Concluído" : "Aberto"}
+                    </Tag>
+                  </>
+                }
+              />
+            </List.Item>
+          )}
+        />
+      </Card>
+
+      <Modal
+        visible={isModalVisible}
+        footer={null}
+        onCancel={closeModal}
+        title="Imagens Anexadas"
+      >
+        {selectedImages.length > 0 ? (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+            {selectedImages.map((img, index) => (
+              <Image key={index} src={img} alt={`attachment-${index}`} />
+            ))}
           </div>
-        ))}
+        ) : (
+          <p>Sem anexos disponíveis.</p>
+        )}
       </Modal>
     </>
   );
