@@ -1,156 +1,183 @@
-import React, { useEffect, useState } from "react";
-import { Form, Input, Select, Button, message, Upload } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import { db, storage, auth } from "../../firebase/firebase";
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  List,
+  Button,
+  Popconfirm,
+  message,
+  Tag,
+  Modal,
+  Image,
+} from "antd";
+import { db, auth } from "../../firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   collection,
-  onSnapshot,
-  addDoc,
   query,
   where,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  doc,
 } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { onAuthStateChanged } from "firebase/auth";
 
-const { TextArea } = Input;
+const TicketsList = () => {
+  const [tickets, setTickets] = useState([]);
+  const [userGroup, setUserGroup] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedImages, setSelectedImages] = useState([]);
 
-const FormTicket = () => {
-  const [form] = Form.useForm();
-  const [userInfo, setUserInfo] = useState(null);
-  const [groups, setGroups] = useState([]);
-  const [uploading, setUploading] = useState(false);
-
-  // Obter dados do usuário logado
+  // Carregar o grupo do usuário logado
   useEffect(() => {
-    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const userQuery = query(
-          collection(db, "users"),
-          where("email", "==", user.email)
-        );
-        onSnapshot(userQuery, (snapshot) => {
-          if (!snapshot.empty) {
-            const userData = snapshot.docs[0].data();
-            setUserInfo({
-              name: userData.name,
-              email: userData.email,
-              group: userData.group || null, // Assumindo que o grupo está no Firestore
-            });
-            form.setFieldsValue({
-              creatorName: userData.name,
-              creatorEmail: userData.email,
-              group: userData.group,
-            });
-          }
-        });
-      }
-    });
-
-    const unsubscribeGroups = onSnapshot(
-      collection(db, "groups"),
-      (snapshot) => {
-        const groupsData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          name: doc.data().name,
-        }));
-        setGroups(groupsData);
-      }
-    );
-
-    return () => {
-      unsubscribeAuth();
-    };
-  }, [form]);
-
-  // Lógica para envio do formulário
-  const onFinish = async (values) => {
-    setUploading(true);
-    try {
-      // Upload de anexos ao Firebase Storage
-      const attachmentUrls = await Promise.all(
-        (values.attachments?.fileList || []).map(async (file) => {
-          const storageRef = ref(storage, `tickets/${file.name}`);
-          const uploadTask = uploadBytesResumable(
-            storageRef,
-            file.originFileObj
+    const fetchUserGroup = async () => {
+      onAuthStateChanged(auth, async (currentUser) => {
+        if (currentUser) {
+          const userDoc = await getDocs(
+            query(collection(db, "users"), where("uid", "==", currentUser.uid))
           );
-          await new Promise((resolve, reject) => {
-            uploadTask.on(
-              "state_changed",
-              null,
-              (error) => reject(error),
-              () => resolve()
-            );
-          });
-          return await getDownloadURL(storageRef);
-        })
-      );
-
-      // Salvar o ticket no Firestore
-      await addDoc(collection(db, "tickets"), {
-        creatorName: values.creatorName,
-        creatorEmail: values.creatorEmail,
-        group: values.group,
-        description: values.description,
-        attachments: attachmentUrls,
-        createdAt: new Date(),
+          if (!userDoc.empty) {
+            const userData = userDoc.docs[0].data();
+            setUserGroup(userData.groups[0]);
+          } else {
+            message.error("Grupo do usuário não encontrado.");
+          }
+        }
       });
+    };
 
-      message.success("Ticket criado com sucesso!");
-      form.resetFields();
+    fetchUserGroup();
+  }, []);
+
+  // Carregar os tickets do grupo
+  useEffect(() => {
+    const fetchTickets = async () => {
+      if (userGroup) {
+        const ticketsQuery = query(
+          collection(db, "tickets"),
+          where("group", "==", userGroup)
+        );
+        const ticketsSnapshot = await getDocs(ticketsQuery);
+        const ticketsData = ticketsSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setTickets(ticketsData);
+      }
+    };
+
+    fetchTickets();
+  }, [userGroup]);
+
+  // Excluir ticket
+  const handleDeleteTicket = async (ticketId) => {
+    try {
+      await deleteDoc(doc(db, "tickets", ticketId));
+      message.success("Ticket excluído com sucesso!");
+      setTickets((prev) => prev.filter((ticket) => ticket.id !== ticketId));
     } catch (error) {
-      console.error("Erro ao criar o ticket:", error);
-      message.error("Falha ao criar o ticket.");
-    } finally {
-      setUploading(false);
+      console.error("Erro ao excluir o ticket:", error);
+      message.error("Erro ao excluir o ticket.");
     }
   };
 
+  // Marcar ticket como concluído
+  const handleMarkAsCompleted = async (ticketId) => {
+    try {
+      const ticketRef = doc(db, "tickets", ticketId);
+      await updateDoc(ticketRef, { status: "completed" });
+      message.success("Ticket marcado como concluído!");
+      setTickets((prev) =>
+        prev.map((ticket) =>
+          ticket.id === ticketId ? { ...ticket, status: "completed" } : ticket
+        )
+      );
+    } catch (error) {
+      console.error("Erro ao atualizar o ticket:", error);
+      message.error("Erro ao marcar como concluído.");
+    }
+  };
+
+  // Mostrar imagens anexadas
+  const showImages = (images) => {
+    setSelectedImages(images || []);
+    setIsModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+    setSelectedImages([]);
+  };
+
   return (
-    <Form form={form} layout="vertical" onFinish={onFinish}>
-      <Form.Item label="Nome do Criador" name="creatorName">
-        <Input readOnly placeholder="Nome do usuário logado" />
-      </Form.Item>
-
-      <Form.Item label="E-mail do Criador" name="creatorEmail">
-        <Input readOnly placeholder="E-mail do usuário logado" />
-      </Form.Item>
-
-      <Form.Item
-        label="Grupo"
-        name="group"
-        rules={[{ required: true, message: "Selecione o grupo!" }]}
+    <>
+      <Card
+        bordered={false}
+        title={<h6 className="font-semibold m-0">Tickets do Grupo</h6>}
+        className="header-solid h-full"
       >
-        <Select placeholder="Selecione o grupo" disabled={!!userInfo?.group}>
-          {groups.map((group) => (
-            <Select.Option key={group.id} value={group.name}>
-              {group.name}
-            </Select.Option>
+        <List
+          itemLayout="vertical"
+          dataSource={tickets}
+          renderItem={(ticket) => (
+            <List.Item
+              actions={[
+                <Popconfirm
+                  title="Tem certeza que deseja excluir este ticket?"
+                  onConfirm={() => handleDeleteTicket(ticket.id)}
+                  okText="Sim"
+                  cancelText="Não"
+                >
+                  <Button type="link" danger>
+                    Excluir
+                  </Button>
+                </Popconfirm>,
+                <Button
+                  type="link"
+                  onClick={() => handleMarkAsCompleted(ticket.id)}
+                  disabled={ticket.status === "completed"}
+                >
+                  {ticket.status === "completed"
+                    ? "Concluído"
+                    : "Marcar como Concluído"}
+                </Button>,
+                <Button type="link" onClick={() => showImages(ticket.images)}>
+                  Ver Anexos
+                </Button>,
+              ]}
+            >
+              <List.Item.Meta
+                title={<span>{ticket.title}</span>}
+                description={
+                  <>
+                    <p>{ticket.description}</p>
+                    <Tag
+                      color={ticket.status === "completed" ? "blue" : "green"}
+                    >
+                      {ticket.status === "completed" ? "Concluído" : "Aberto"}
+                    </Tag>
+                  </>
+                }
+              />
+            </List.Item>
+          )}
+        />
+      </Card>
+
+      {/* Modal para exibir as imagens anexadas */}
+      <Modal
+        visible={isModalVisible}
+        footer={null}
+        onCancel={closeModal}
+        title="Imagens Anexadas"
+      >
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+          {selectedImages.map((img, index) => (
+            <Image key={index} src={img} alt={`attachment-${index}`} />
           ))}
-        </Select>
-      </Form.Item>
-
-      <Form.Item
-        label="Descrição do Problema"
-        name="description"
-        rules={[{ required: true, message: "Descreva o problema!" }]}
-      >
-        <TextArea rows={4} placeholder="Detalhe o problema" />
-      </Form.Item>
-
-      <Form.Item label="Anexos" name="attachments">
-        <Upload multiple listType="picture" beforeUpload={() => false}>
-          <Button icon={<UploadOutlined />}>Upload</Button>
-        </Upload>
-      </Form.Item>
-
-      <Form.Item>
-        <Button type="primary" htmlType="submit" loading={uploading}>
-          Criar Ticket
-        </Button>
-      </Form.Item>
-    </Form>
+        </div>
+      </Modal>
+    </>
   );
 };
 
-export default FormTicket;
+export default TicketsList;

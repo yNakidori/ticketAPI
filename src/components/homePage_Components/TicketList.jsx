@@ -1,150 +1,183 @@
-import React, { useEffect, useState } from "react";
-import { Table, Button, message, Modal } from "antd";
-import { db, auth } from "../../firebase/firebase"; // Certifique-se de importar o auth também
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  List,
+  Button,
+  Popconfirm,
+  message,
+  Tag,
+  Modal,
+  Image,
+} from "antd";
+import { db, auth } from "../../firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   collection,
   query,
   where,
-  onSnapshot,
-  doc,
+  getDocs,
   updateDoc,
   deleteDoc,
+  doc,
 } from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
 
-const TicketList = () => {
+const TicketsList = () => {
   const [tickets, setTickets] = useState([]);
-  const [userInfo, setUserInfo] = useState(null);
+  const [userGroup, setUserGroup] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedImages, setSelectedImages] = useState([]);
 
+  // Carregar o grupo do usuário logado
   useEffect(() => {
-    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        // Obter informações do usuário logado
-        const userQuery = query(
-          collection(db, "users"),
-          where("email", "==", user.email)
-        );
-
-        onSnapshot(userQuery, (snapshot) => {
-          if (!snapshot.empty) {
-            const userData = snapshot.docs[0].data();
-            setUserInfo({
-              name: userData.name,
-              email: userData.email,
-              group: userData.group || null,
-            });
+    const fetchUserGroup = async () => {
+      onAuthStateChanged(auth, async (currentUser) => {
+        if (currentUser) {
+          const userDoc = await getDocs(
+            query(collection(db, "users"), where("uid", "==", currentUser.uid))
+          );
+          if (!userDoc.empty) {
+            const userData = userDoc.docs[0].data();
+            setUserGroup(userData.groups[0]);
+          } else {
+            message.error("Grupo do usuário não encontrado.");
           }
-        });
+        }
+      });
+    };
 
-        // Obter tickets relacionados ao grupo do usuário
+    fetchUserGroup();
+  }, []);
+
+  // Carregar os tickets do grupo
+  useEffect(() => {
+    const fetchTickets = async () => {
+      if (userGroup) {
         const ticketsQuery = query(
           collection(db, "tickets"),
-          where("group", "==", userInfo?.group)
+          where("group", "==", userGroup)
         );
-
-        onSnapshot(ticketsQuery, (snapshot) => {
-          const ticketsData = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setTickets(ticketsData);
-        });
+        const ticketsSnapshot = await getDocs(ticketsQuery);
+        const ticketsData = ticketsSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setTickets(ticketsData);
       }
-    });
-
-    return () => {
-      unsubscribeAuth();
     };
-  }, [userInfo]);
 
-  const markAsCompleted = async (ticketId) => {
-    try {
-      const ticketRef = doc(db, "tickets", ticketId);
-      await updateDoc(ticketRef, {
-        status: "completed",
-      });
-      message.success("Ticket marcado como concluído!");
-    } catch (error) {
-      console.error("Erro ao marcar o ticket como concluído:", error);
-      message.error("Erro ao marcar o ticket.");
-    }
-  };
+    fetchTickets();
+  }, [userGroup]);
 
-  const deleteTicket = async (ticketId) => {
+  // Excluir ticket
+  const handleDeleteTicket = async (ticketId) => {
     try {
       await deleteDoc(doc(db, "tickets", ticketId));
-      message.success("Ticket deletado com sucesso!");
+      message.success("Ticket excluído com sucesso!");
+      setTickets((prev) => prev.filter((ticket) => ticket.id !== ticketId));
     } catch (error) {
-      console.error("Erro ao deletar o ticket:", error);
-      message.error("Erro ao deletar o ticket.");
+      console.error("Erro ao excluir o ticket:", error);
+      message.error("Erro ao excluir o ticket.");
     }
   };
 
-  const columns = [
-    {
-      title: "Criador",
-      dataIndex: "creatorName",
-      key: "creatorName",
-    },
-    {
-      title: "E-mail",
-      dataIndex: "creatorEmail",
-      key: "creatorEmail",
-    },
-    {
-      title: "Grupo",
-      dataIndex: "group",
-      key: "group",
-    },
-    {
-      title: "Descrição",
-      dataIndex: "description",
-      key: "description",
-    },
-    {
-      title: "Data de Criação",
-      dataIndex: "createdAt",
-      key: "createdAt",
-      render: (text) => new Date(text.seconds * 1000).toLocaleString(),
-    },
-    {
-      title: "Ações",
-      key: "actions",
-      render: (_, record) => (
-        <div>
-          <Button
-            type="link"
-            onClick={() => markAsCompleted(record.id)}
-            disabled={record.status === "completed"}
-          >
-            Marcar como concluído
-          </Button>
-          <Button
-            type="link"
-            danger
-            onClick={() => {
-              Modal.confirm({
-                title: "Tem certeza?",
-                content: "Você deseja realmente deletar este ticket?",
-                onOk: () => deleteTicket(record.id),
-              });
-            }}
-          >
-            Deletar
-          </Button>
-        </div>
-      ),
-    },
-  ];
+  // Marcar ticket como concluído
+  const handleMarkAsCompleted = async (ticketId) => {
+    try {
+      const ticketRef = doc(db, "tickets", ticketId);
+      await updateDoc(ticketRef, { status: "completed" });
+      message.success("Ticket marcado como concluído!");
+      setTickets((prev) =>
+        prev.map((ticket) =>
+          ticket.id === ticketId ? { ...ticket, status: "completed" } : ticket
+        )
+      );
+    } catch (error) {
+      console.error("Erro ao atualizar o ticket:", error);
+      message.error("Erro ao marcar como concluído.");
+    }
+  };
+
+  // Mostrar imagens anexadas
+  const showImages = (images) => {
+    setSelectedImages(images || []);
+    setIsModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+    setSelectedImages([]);
+  };
 
   return (
-    <Table
-      dataSource={tickets}
-      columns={columns}
-      rowKey="id"
-      pagination={{ pageSize: 5 }}
-    />
+    <>
+      <Card
+        bordered={false}
+        title={<h6 className="font-semibold m-0">Tickets do Grupo</h6>}
+        className="header-solid h-full"
+      >
+        <List
+          itemLayout="vertical"
+          dataSource={tickets}
+          renderItem={(ticket) => (
+            <List.Item
+              actions={[
+                <Popconfirm
+                  title="Tem certeza que deseja excluir este ticket?"
+                  onConfirm={() => handleDeleteTicket(ticket.id)}
+                  okText="Sim"
+                  cancelText="Não"
+                >
+                  <Button type="link" danger>
+                    Excluir
+                  </Button>
+                </Popconfirm>,
+                <Button
+                  type="link"
+                  onClick={() => handleMarkAsCompleted(ticket.id)}
+                  disabled={ticket.status === "completed"}
+                >
+                  {ticket.status === "completed"
+                    ? "Concluído"
+                    : "Marcar como Concluído"}
+                </Button>,
+                <Button type="link" onClick={() => showImages(ticket.images)}>
+                  Ver Anexos
+                </Button>,
+              ]}
+            >
+              <List.Item.Meta
+                title={<span>{ticket.title}</span>}
+                description={
+                  <>
+                    <p>{ticket.description}</p>
+                    <Tag
+                      color={ticket.status === "completed" ? "blue" : "green"}
+                    >
+                      {ticket.status === "completed" ? "Concluído" : "Aberto"}
+                    </Tag>
+                  </>
+                }
+              />
+            </List.Item>
+          )}
+        />
+      </Card>
+
+      {/* Modal para exibir as imagens anexadas */}
+      <Modal
+        visible={isModalVisible}
+        footer={null}
+        onCancel={closeModal}
+        title="Imagens Anexadas"
+      >
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+          {selectedImages.map((img, index) => (
+            <Image key={index} src={img} alt={`attachment-${index}`} />
+          ))}
+        </div>
+      </Modal>
+    </>
   );
 };
 
-export default TicketList;
+export default TicketsList;
