@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainLayout from "../../components/mainLayout";
 import ProfileHeader from "../../components/configPage_Components/ProfileHeader";
 import UserManagement from "../../components/configPage_Components/UserManagement";
@@ -9,78 +9,127 @@ import profilavatar from "../../assets/images/face-1.jpg";
 import UserEdit from "../../components/configPage_Components/UserEdit";
 import SupportPointEdit from "../../components/configPage_Components/SupportPointsEdit";
 import ChatComponent from "../../components/chatArea_Component/chatComponent";
-import "./configPage.scss";
+import { getAuth } from "firebase/auth";
+import { getDoc, doc } from "firebase/firestore";
+import { db } from "../../firebase/firebase";
 import { message, Row, Col } from "antd";
+import "./configPage.scss";
 
 const ConfigPage = () => {
-  const [imageURL, setImageURL] = useState(profilavatar);
-  const [formData] = useState({
-    fullName: "Sarah Emily Jacob",
-  });
+  const [user, setUser] = useState(null); // Dados do usuário logado
+  const [hasPermission, setHasPermission] = useState(false); // Permissão do grupo
+  const [isLoading, setIsLoading] = useState(true); // Estado de carregamento
+  const [isUserModalVisible, setIsUserModalVisible] = useState(false); // Modal de usuários
+  const [isGroupModalVisible, setIsGroupModalVisible] = useState(false); // Modal de grupos
 
-  const [users, setUsers] = useState([]);
-  const [groups, setGroups] = useState([]);
-  const [isUserModalVisible, setIsUserModalVisible] = useState(false);
-  const [isGroupModalVisible, setIsGroupModalVisible] = useState(false);
-  const [newUser, setNewUser] = useState({ name: "", email: "" });
-  const [newGroup, setNewGroup] = useState({ name: "", description: "" });
-
+  // Funções para gerenciar usuários e grupos
   const handleAddUser = () => {
-    setUsers([...users, newUser]);
-    setNewUser({ name: "", email: "" });
+    message.success("Usuário adicionado com sucesso!");
     setIsUserModalVisible(false);
-    message.success("User added successfully");
   };
 
   const handleAddGroup = () => {
-    setGroups([...groups, newGroup]);
-    setNewGroup({ name: "", description: "" });
+    message.success("Grupo adicionado com sucesso!");
     setIsGroupModalVisible(false);
-    message.success("Group added successfully");
   };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const auth = getAuth();
+        const currentUser = auth.currentUser;
+
+        if (currentUser) {
+          const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setUser(userData);
+
+            // Verifica se o usuário pertence ao grupo "TI"
+            setHasPermission(userData.groups?.includes("TI"));
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao carregar os dados do usuário:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  if (isLoading) {
+    return <p>Carregando...</p>; // Exibe um loading enquanto os dados são carregados
+  }
 
   return (
     <MainLayout>
-      <ProfileHeader imageURL={imageURL} fullName={formData.fullName} />
+      {/* Cabeçalho do perfil */}
+      <ProfileHeader
+        imageURL={profilavatar}
+        fullName={user ? user.name : "Usuário"}
+      />
+
+      {/* Componente de chat */}
       <div className="chat-component">
         <ChatComponent />
       </div>
 
+      {/* Renderiza os elementos da página */}
       <Row gutter={[24, 0]} className="equal-height-row">
-        <Col span={24} md={12} className="mb-24 equal-height-col">
-          <UserManagement
-            users={users}
-            onAddUserClick={() => setIsUserModalVisible(true)}
-          />
-        </Col>
-        <Col span={24} md={12} className="mb-24 equal-height-col">
-          <GroupManagement
-            groups={groups}
-            onAddGroupClick={() => setIsGroupModalVisible(true)}
-          />
-        </Col>
+        {hasPermission && (
+          <>
+            {/* Gerenciamento de usuários */}
+            <Col span={24} md={12} className="mb-24 equal-height-col">
+              <UserManagement
+                users={user?.users || []}
+                onAddUserClick={() => setIsUserModalVisible(true)}
+              />
+            </Col>
+
+            {/* Gerenciamento de grupos */}
+            <Col span={24} md={12} className="mb-24 equal-height-col">
+              <GroupManagement
+                groups={user?.groups || []}
+                onAddGroupClick={() => setIsGroupModalVisible(true)}
+              />
+            </Col>
+
+            {/* Modais */}
+            <AddUserModal
+              visible={isUserModalVisible}
+              onOk={handleAddUser}
+              onCancel={() => setIsUserModalVisible(false)}
+            />
+            <AddGroupModal
+              visible={isGroupModalVisible}
+              onOk={handleAddGroup}
+              onCancel={() => setIsGroupModalVisible(false)}
+            />
+          </>
+        )}
+
+        {!hasPermission && (
+          <Col span={24}>
+            <p>
+              Você não tem permissão para acessar as configurações de usuários
+              ou grupos. Utilize outras funcionalidades disponíveis.
+            </p>
+          </Col>
+        )}
       </Row>
-      <AddUserModal
-        visible={isUserModalVisible}
-        onOk={handleAddUser}
-        onCancel={() => setIsUserModalVisible(false)}
-        newUser={newUser}
-        setNewUser={setNewUser}
-      />
-      <AddGroupModal
-        visible={isGroupModalVisible}
-        onOk={handleAddGroup}
-        onCancel={() => setIsGroupModalVisible(false)}
-        newGroup={newGroup}
-        setNewGroup={setNewGroup}
-      />
+
+      {/* Editar usuários e pontos de apoio */}
       <Row gutter={[24, 0]} className="equal-height-row">
         <Col span={24} md={12} className="mb-24 equal-height-col">
           <UserEdit />
         </Col>
-        <Col span={24} md={12} className="mb-24 equal-height-col">
-          <SupportPointEdit />
-        </Col>
+        {hasPermission && (
+          <Col span={24} md={12} className="mb-24 equal-height-col">
+            <SupportPointEdit />
+          </Col>
+        )}
       </Row>
     </MainLayout>
   );

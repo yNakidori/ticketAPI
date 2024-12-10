@@ -180,7 +180,7 @@ const UserManagement = ({ onAddUserClick }) => {
                 description={
                   <>
                     <p>Phone: {user.phone}</p>
-                    <p>City: {user.city}</p>
+                    <p>City: {user.supportPoints}</p>
                     <Tag color={user.active ? "green" : "red"}>
                       {user.active ? "Active" : "Inactive"}
                     </Tag>
@@ -222,7 +222,7 @@ const UserManagement = ({ onAddUserClick }) => {
       </Modal>
 
       <Modal
-        title={`Altere o ponto de aoio de ${selectedUser?.name}`}
+        title={`Altere o ponto de apoio de ${selectedUser?.name}`}
         visible={isSupportPointModalVisible}
         onOk={handleSaveSupportPoint}
         onCancel={() => setIsSupportPointModalVisible(false)}
