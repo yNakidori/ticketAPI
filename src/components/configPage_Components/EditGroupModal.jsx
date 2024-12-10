@@ -1,31 +1,24 @@
 import React, { useState } from "react";
 import { Modal, Form, Input, Button, Select } from "antd";
 import { db } from "../../firebase/firebase";
-import { setDoc, doc } from "firebase/firestore";
-//import "./AddGroupModal.scss";
+import { updateDoc, doc } from "firebase/firestore";
 
-const AddGroupModal = ({ visible, onOk, onCancel }) => {
+const EditGroupModal = ({ visible, group, onCancel, onSave }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-  const handleAddGroup = async (values) => {
+  const handleEditGroup = async (values) => {
     const { name, description, permissions } = values;
     setLoading(true);
 
     try {
-      const groupId = Date.now().toString();
-      await setDoc(doc(db, "groups", groupId), {
-        name,
-        description,
-        permissions,
-        createdAt: new Date().toISOString(),
-      });
-
-      console.log("Grupo criado e salvo no Firestore");
-      onOk();
+      const groupDoc = doc(db, "groups", group.id);
+      await updateDoc(groupDoc, { name, description, permissions });
+      onSave();
       form.resetFields();
+      console.log("Grupo atualizado com sucesso!");
     } catch (error) {
-      console.error("Erro ao criar grupo:", error);
+      console.log("Error ao atualizar permissões de grupos", error);
     } finally {
       setLoading(false);
     }
@@ -33,17 +26,16 @@ const AddGroupModal = ({ visible, onOk, onCancel }) => {
 
   return (
     <Modal
-      title="Add Group"
+      title="Editar Grupo"
       visible={visible}
       onCancel={onCancel}
       footer={null}
-      className="add-group-modal"
     >
       <Form
         form={form}
         layout="vertical"
-        className="add-group-form"
-        onFinish={handleAddGroup}
+        initialValues={group}
+        onFinish={handleEditGroup}
       >
         <Form.Item
           name="name"
@@ -59,7 +51,7 @@ const AddGroupModal = ({ visible, onOk, onCancel }) => {
             { required: true, message: "Informe uma descrição para o grupo" },
           ]}
         >
-          <Input.TextArea rows={4} placeholder="Infome a descrição" />
+          <Input.TextArea rows={4} placeholder="Informe a descrição" />
         </Form.Item>
         <Form.Item
           name="permissions"
@@ -74,18 +66,13 @@ const AddGroupModal = ({ visible, onOk, onCancel }) => {
               Solicitação de equipamentos
             </Select.Option>
             <Select.Option value="flow">Flow</Select.Option>
-            <Select.Option value="Inventario">Inventario</Select.Option>
+            <Select.Option value="Inventario">Inventário</Select.Option>
             <Select.Option value="configuracoes">Configurações</Select.Option>
           </Select>
         </Form.Item>
         <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={loading}
-            className="form-button"
-          >
-            {loading ? "Creating Group..." : "Criar grupo"}
+          <Button type="primary" htmlType="submit" loading={loading}>
+            {loading ? "Atualizando..." : "Salvar alterações"}
           </Button>
         </Form.Item>
       </Form>
@@ -93,4 +80,4 @@ const AddGroupModal = ({ visible, onOk, onCancel }) => {
   );
 };
 
-export default AddGroupModal;
+export default EditGroupModal;

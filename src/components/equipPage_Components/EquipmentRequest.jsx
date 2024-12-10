@@ -1,21 +1,88 @@
-import React from "react";
-import { Form, Input, Button, Select, DatePicker, InputNumber } from "antd";
+import React, { useEffect, useState } from "react";
+import { Form, Input, Select, Button, message, InputNumber } from "antd";
 import { SendOutlined } from "@ant-design/icons";
+import {
+  collection,
+  addDoc,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+import { db, auth } from "../../firebase/firebase";
 import styles from "./EquipmentRequestForm.module.scss";
+import { onAuthStateChanged } from "firebase/auth";
 
 const { TextArea } = Input;
 const { Option } = Select;
 
 const EquipmentRequestForm = () => {
   const [form] = Form.useForm();
+  const [userInfo, setUserInfo] = useState(null);
+  const [equipmentRequests, setEquipmentRequests] = useState([]);
+  const [uploading, setUploading] = useState(false);
 
-  const onFinish = (values) => {
-    console.log("Received values:", values);
-    // Adicione a lógica para enviar os dados para o servidor
-  };
+  useEffect(() => {
+    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userQuery = query(
+          collection(db, "users"),
+          where("email", "==", user.email)
+        );
+        onSnapshot(userQuery, (snapshot) => {
+          if (!snapshot.empty) {
+            const userData = snapshot.docs[0].data();
+            setUserInfo({
+              name: userData.name,
+              email: userData.email,
+              group: userData.group || null,
+            });
+            form.setFieldsValue({
+              nomeSolicitante: userData.name,
+              emailSolicitante: userData.email,
+            });
+          }
+        });
+      }
+    });
 
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    const unsubscribeEquipmentRequests = onSnapshot(
+      collection(db, "equipmentRequests"),
+      (snapshot) => {
+        const requestsData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setEquipmentRequests(requestsData);
+      }
+    );
+
+    return () => {
+      unsubscribeAuth();
+      unsubscribeEquipmentRequests();
+    };
+  }, [form]);
+
+  const onFinish = async (values) => {
+    if (!userInfo) {
+      message.error("Erro: Usuário não autenticado.");
+      return;
+    }
+    setUploading(true);
+    try {
+      const newEquipmentRequest = {
+        ...values,
+        creatorId: userInfo.email,
+        status: "Pendente",
+        createdAt: new Date(),
+      };
+      await addDoc(collection(db, "equipmentRequests"), newEquipmentRequest);
+      message.success("Solicitação enviada com sucesso!");
+      form.resetFields();
+    } catch (error) {
+      console.error("Erro ao enviar a solicitação:", error);
+      message.error(`Erro ao enviar a solicitação: ${error.message}`);
+    }
+    setUploading(false);
   };
 
   return (
@@ -26,14 +93,21 @@ const EquipmentRequestForm = () => {
         name="equipmentRequest"
         layout="vertical"
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
       >
         <Form.Item
           label="Nome do Solicitante"
           name="nomeSolicitante"
           rules={[{ required: true, message: "Por favor, insira seu nome!" }]}
         >
-          <Input placeholder="Digite seu nome completo" />
+          <Input readOnly placeholder="Nome do usuário logado" />
+        </Form.Item>
+
+        <Form.Item
+          label="E-mail do Solicitante"
+          name="emailSolicitante"
+          rules={[{ required: true, message: "Por favor, insira seu e-mail!" }]}
+        >
+          <Input readOnly placeholder="E-mail do usuário logado" />
         </Form.Item>
 
         <Form.Item
@@ -49,11 +123,6 @@ const EquipmentRequestForm = () => {
             <Option value="teclado">Teclado</Option>
             <Option value="mouse">Mouse</Option>
             <Option value="impressora">Impressora</Option>
-            <Option value="rastreador">Rastreador</Option>
-            <Option value="leitor">Leitor</Option>
-            <Option value="camera">Câmera</Option>
-            <Option value="scanner">Scanner</Option>
-            <Option value="suporte">Suporte para monitor</Option>
             <Option value="outro">Outro</Option>
           </Select>
         </Form.Item>
@@ -73,11 +142,17 @@ const EquipmentRequestForm = () => {
         </Form.Item>
 
         <Form.Item
-          label="Data Necessária"
-          name="dataNecessaria"
-          rules={[{ required: true, message: "Selecione a data necessária!" }]}
+          label="Urgência"
+          name="urgencia"
+          rules={[
+            { required: true, message: "Selecione o nível de urgência!" },
+          ]}
         >
-          <DatePicker style={{ width: "100%" }} />
+          <Select placeholder="Selecione o nível de urgência">
+            <Option value="alta">Alta</Option>
+            <Option value="media">Média</Option>
+            <Option value="baixa">Baixa</Option>
+          </Select>
         </Form.Item>
 
         <Form.Item
@@ -86,7 +161,7 @@ const EquipmentRequestForm = () => {
           rules={[
             {
               required: true,
-              message: "Descreva a necessidade do equipamento!",
+              message: "Descreva a finalidade do equipamento!",
             },
           ]}
         >
@@ -96,8 +171,13 @@ const EquipmentRequestForm = () => {
           />
         </Form.Item>
 
-        <Form.Item className={styles["form-actions"]}>
-          <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            icon={<SendOutlined />}
+            loading={uploading}
+          >
             Solicitar Equipamento
           </Button>
         </Form.Item>

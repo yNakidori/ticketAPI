@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import MainLayout from "../../components/mainLayout";
 import TicketList from "../../components/homePage_Components/TicketList";
 import UserTickets from "../../components/homePage_Components/UserTickets";
-import { Row, Col, Modal } from "antd";
+import { Row, Col, Modal, Card } from "antd";
 import Lottie from "react-lottie";
 import addAnimation from "../../components/lottieFiles_Components/AddLogo.json";
 import FormTicket from "../../components/homePage_Components/formTicket";
@@ -23,20 +23,25 @@ const HomePage = () => {
   return (
     <MainLayout>
       <div className="homepage">
-        <Row gutter={[20, 20]}>
-          <Col span={24}>
-            <div className="section">
-              <h2 className="tittle">Tickets da Equipe</h2>
-              <TicketList />
-            </div>
-          </Col>
-          <Col span={24}>
-            <div className="section">
-              <h2>Meus Tickets</h2>
-              <UserTickets />
-            </div>
-          </Col>
-        </Row>
+        <Card className="group-tickets-container">
+          <Row gutter={[20, 20]}>
+            <Col span={24}>
+              <div className="section">
+                <TicketList />
+              </div>
+            </Col>
+          </Row>
+        </Card>
+        <Card>
+          <Row gutter={[20, 20]}>
+            <Col span={24}>
+              <div className="group-tickets-container">
+                <UserTickets />
+              </div>
+            </Col>
+          </Row>
+        </Card>
+
         <div
           style={{
             position: "fixed",

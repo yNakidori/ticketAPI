@@ -23,23 +23,31 @@ import {
 
 const TicketsList = () => {
   const [tickets, setTickets] = useState([]);
-  const [userGroup, setUserGroup] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
+  const [userGroup, setUserGroup] = useState(null);
 
-  // Carregar o grupo do usuário logado
+  // Carregar o grupo do usuário
   useEffect(() => {
     const fetchUserGroup = async () => {
       onAuthStateChanged(auth, async (currentUser) => {
         if (currentUser) {
-          const userDoc = await getDocs(
-            query(collection(db, "users"), where("uid", "==", currentUser.uid))
-          );
-          if (!userDoc.empty) {
-            const userData = userDoc.docs[0].data();
-            setUserGroup(userData.groups[0]);
-          } else {
-            message.error("Grupo do usuário não encontrado.");
+          try {
+            const userDoc = await getDocs(
+              query(
+                collection(db, "users"),
+                where("uid", "==", currentUser.uid)
+              )
+            );
+            if (!userDoc.empty) {
+              const userData = userDoc.docs[0].data();
+              setUserGroup(userData.groups[0]); // Considerando o primeiro grupo
+            } else {
+              message.error("Grupo do usuário não encontrado.");
+            }
+          } catch (error) {
+            console.error("Erro ao carregar o grupo do usuário:", error);
+            message.error(`Erro ao carregar o grupo: ${error.message}`);
           }
         }
       });
@@ -48,27 +56,31 @@ const TicketsList = () => {
     fetchUserGroup();
   }, []);
 
-  // Carregar os tickets do grupo
+  // Carregar os tickets
   useEffect(() => {
     const fetchTickets = async () => {
       if (userGroup) {
-        const ticketsQuery = query(
-          collection(db, "tickets"),
-          where("group", "==", userGroup)
-        );
-        const ticketsSnapshot = await getDocs(ticketsQuery);
-        const ticketsData = ticketsSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setTickets(ticketsData);
+        try {
+          const ticketsQuery = query(
+            collection(db, "tickets"),
+            where("group", "==", userGroup)
+          );
+          const ticketsSnapshot = await getDocs(ticketsQuery);
+          const ticketsData = ticketsSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setTickets(ticketsData);
+        } catch (error) {
+          console.error("Erro ao carregar os tickets:", error);
+          message.error(`Erro ao carregar os tickets: ${error.message}`);
+        }
       }
     };
 
     fetchTickets();
   }, [userGroup]);
 
-  // Excluir ticket
   const handleDeleteTicket = async (ticketId) => {
     try {
       await deleteDoc(doc(db, "tickets", ticketId));
@@ -76,11 +88,10 @@ const TicketsList = () => {
       setTickets((prev) => prev.filter((ticket) => ticket.id !== ticketId));
     } catch (error) {
       console.error("Erro ao excluir o ticket:", error);
-      message.error("Erro ao excluir o ticket.");
+      message.error(`Erro ao excluir o ticket: ${error.message}`);
     }
   };
 
-  // Marcar ticket como concluído
   const handleMarkAsCompleted = async (ticketId) => {
     try {
       const ticketRef = doc(db, "tickets", ticketId);
@@ -93,11 +104,10 @@ const TicketsList = () => {
       );
     } catch (error) {
       console.error("Erro ao atualizar o ticket:", error);
-      message.error("Erro ao marcar como concluído.");
+      message.error(`Erro ao marcar como concluído: ${error.message}`);
     }
   };
 
-  // Mostrar imagens anexadas
   const showImages = (images) => {
     setSelectedImages(images || []);
     setIsModalVisible(true);
@@ -140,16 +150,19 @@ const TicketsList = () => {
                     ? "Concluído"
                     : "Marcar como Concluído"}
                 </Button>,
-                <Button type="link" onClick={() => showImages(ticket.images)}>
+                <Button
+                  type="link"
+                  onClick={() => showImages(ticket.attachments)}
+                >
                   Ver Anexos
                 </Button>,
               ]}
             >
               <List.Item.Meta
-                title={<span>{ticket.title}</span>}
+                title={<span>{ticket.description}</span>}
                 description={
                   <>
-                    <p>{ticket.description}</p>
+                    <p>Grupo: {ticket.group}</p>
                     <Tag
                       color={ticket.status === "completed" ? "blue" : "green"}
                     >
@@ -163,18 +176,21 @@ const TicketsList = () => {
         />
       </Card>
 
-      {/* Modal para exibir as imagens anexadas */}
       <Modal
         visible={isModalVisible}
         footer={null}
         onCancel={closeModal}
         title="Imagens Anexadas"
       >
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-          {selectedImages.map((img, index) => (
-            <Image key={index} src={img} alt={`attachment-${index}`} />
-          ))}
-        </div>
+        {selectedImages.length > 0 ? (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+            {selectedImages.map((img, index) => (
+              <Image key={index} src={img} alt={`attachment-${index}`} />
+            ))}
+          </div>
+        ) : (
+          <p>Sem anexos disponíveis.</p>
+        )}
       </Modal>
     </>
   );
