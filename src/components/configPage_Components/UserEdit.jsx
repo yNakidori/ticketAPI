@@ -4,11 +4,13 @@ import { VerticalAlignTopOutlined } from "@ant-design/icons";
 import profilavatar from "../../assets/images/pfp.jpg";
 import { auth, db } from "../../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import upload from "../../firebase/upload"; // Importação do helper de upload
 
 const UserEdit = ({ onSave }) => {
   const [user, setUser] = useState(null);
   const [imageURL, setImageURL] = useState(profilavatar);
+  const [bannerURL, setBannerURL] = useState(null);
   const [, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -16,6 +18,8 @@ const UserEdit = ({ onSave }) => {
     mobile: "",
     location: "",
   });
+  const [file, setFile] = useState(null);
+  const [bannerFile, setBannerFile] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -31,6 +35,7 @@ const UserEdit = ({ onSave }) => {
               location: userData.city || "",
             });
             setImageURL(userData.avatar || profilavatar);
+            setBannerURL(userData.banner || null);
           } else {
             message.error("Não foi possível carregar os dados do usuário.");
           }
@@ -60,28 +65,55 @@ const UserEdit = ({ onSave }) => {
     return isJpgOrPng && isLt2M;
   };
 
-  const handleChange = (info) => {
-    if (info.file.status === "uploading") {
-      setLoading(true);
-      return;
-    }
-    if (info.file.status === "done") {
-      getBase64(info.file.originFileObj, (imageUrl) => {
-        setLoading(false);
+  const handleFileChange = (info) => {
+    const fileList = info.fileList.slice(-1); // Allow only one file
+    const latestFile = fileList[0]?.originFileObj;
+    setFile(latestFile);
+    if (latestFile) {
+      getBase64(latestFile, (imageUrl) => {
         setImageURL(imageUrl);
       });
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const handleBannerChange = (info) => {
+    const fileList = info.fileList.slice(-1); // Allow only one file
+    const latestFile = fileList[0]?.originFileObj;
+    setBannerFile(latestFile);
+    if (latestFile) {
+      getBase64(latestFile, (imageUrl) => {
+        setBannerURL(imageUrl);
+      });
+    }
   };
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = async () => {
     if (user) {
-      onSave({ ...formData, avatar: imageURL });
+      let avatarUrl = imageURL;
+      let bannerUrl = bannerURL;
+
+      // Upload avatar if a file is provided
+      if (file) {
+        avatarUrl = await upload(file);
+      }
+
+      // Upload banner if a file is provided
+      if (bannerFile) {
+        bannerUrl = await upload(bannerFile);
+      }
+
+      // Update user data in Firestore
+      await updateDoc(doc(db, "users", user.uid), {
+        name: formData.fullName,
+        phone: formData.mobile,
+        city: formData.location,
+        email: formData.email,
+        avatar: avatarUrl,
+        banner: bannerUrl,
+      });
+
       message.success("Perfil atualizado com sucesso!");
+      onSave({ ...formData, avatar: avatarUrl, banner: bannerUrl });
     } else {
       message.error("Não foi possível salvar as alterações.");
     }
@@ -108,7 +140,9 @@ const UserEdit = ({ onSave }) => {
             <Input
               name="fullName"
               value={formData.fullName}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                setFormData({ ...formData, fullName: e.target.value })
+              }
             />
           </Form.Item>
           <Form.Item
@@ -130,14 +164,18 @@ const UserEdit = ({ onSave }) => {
             <Input
               name="mobile"
               value={formData.mobile}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                setFormData({ ...formData, mobile: e.target.value })
+              }
             />
           </Form.Item>
           <Form.Item label="Localização">
             <Input
               name="location"
               value={formData.location}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                setFormData({ ...formData, location: e.target.value })
+              }
             />
           </Form.Item>
           <Form.Item label="Foto de Perfil">
@@ -147,10 +185,26 @@ const UserEdit = ({ onSave }) => {
               className="avatar-uploader"
               showUploadList={false}
               beforeUpload={beforeUpload}
-              onChange={handleChange}
+              onChange={handleFileChange}
             >
               {imageURL ? (
                 <img src={imageURL} alt="avatar" style={{ width: "100%" }} />
+              ) : (
+                uploadButton
+              )}
+            </Upload>
+          </Form.Item>
+          <Form.Item label="Banner">
+            <Upload
+              name="banner"
+              listType="picture-card"
+              className="banner-uploader"
+              showUploadList={false}
+              beforeUpload={beforeUpload}
+              onChange={handleBannerChange}
+            >
+              {bannerURL ? (
+                <img src={bannerURL} alt="banner" style={{ width: "100%" }} />
               ) : (
                 uploadButton
               )}
