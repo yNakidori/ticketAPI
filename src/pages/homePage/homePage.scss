@@ -47,3 +47,15 @@
   text-align: feft;
   font: "San Francisco", Helvetica, Arial, san-serif;
 }
+
+.group-tickets-container {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+
+.group-user-tickets {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 15px;
+}

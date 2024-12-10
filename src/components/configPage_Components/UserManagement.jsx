@@ -130,11 +130,11 @@ const UserManagement = ({ onAddUserClick }) => {
   return (
     <Card
       bordered={false}
-      title={<h6 className="font-semibold m-0">User Management</h6>}
+      title={<h6 className="font-semibold m-0">Usuarios</h6>}
       className="user-management-card"
       extra={
         <Button type="primary" onClick={onAddUserClick}>
-          Add User
+          Adicionar usuarios
         </Button>
       }
     >
@@ -145,32 +145,32 @@ const UserManagement = ({ onAddUserClick }) => {
             <List.Item
               actions={[
                 <Button type="link" onClick={() => handleManageGroup(user)}>
-                  Manage Group
+                  Alterar grupos
                 </Button>,
                 <Button
                   type="link"
                   onClick={() => handleManageSupportPoint(user)}
                 >
-                  Manage Support Point
+                  Alterar ponto de apoio
                 </Button>,
                 <Popconfirm
-                  title="Are you sure you want to deactivate this user?"
+                  title="Realmente deseja desativar esse usuario?"
                   onConfirm={() => handleDeactivateUser(user.id)}
-                  okText="Yes"
-                  cancelText="No"
+                  okText="Sim"
+                  cancelText="Não, quero voltar"
                 >
                   <Button type="link" danger>
-                    Deactivate
+                    Desativar
                   </Button>
                 </Popconfirm>,
                 <Popconfirm
-                  title="Are you sure you want to delete this user?"
+                  title="Realmente deseja cancelar esse usuario?"
                   onConfirm={() => handleDeleteUser(user.id)}
-                  okText="Yes"
-                  cancelText="No"
+                  okText="Sim"
+                  cancelText="Não, quero voltar"
                 >
                   <Button type="link" danger>
-                    Delete
+                    Deletar
                   </Button>
                 </Popconfirm>,
               ]}
@@ -199,7 +199,7 @@ const UserManagement = ({ onAddUserClick }) => {
       </div>
 
       <Modal
-        title={`Manage Groups for ${selectedUser?.name}`}
+        title={`Altere o grupo de ${selectedUser?.name}`}
         visible={isGroupModalVisible}
         onOk={handleSaveGroups}
         onCancel={() => setIsGroupModalVisible(false)}
@@ -222,7 +222,7 @@ const UserManagement = ({ onAddUserClick }) => {
       </Modal>
 
       <Modal
-        title={`Manage Support Point for ${selectedUser?.name}`}
+        title={`Altere o ponto de aoio de ${selectedUser?.name}`}
         visible={isSupportPointModalVisible}
         onOk={handleSaveSupportPoint}
         onCancel={() => setIsSupportPointModalVisible(false)}

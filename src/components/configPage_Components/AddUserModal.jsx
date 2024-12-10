@@ -111,44 +111,54 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
       >
         <Form.Item
           name="name"
-          label="Name"
+          label="Nome"
           className="form-item"
-          rules={[{ required: true, message: "Please enter your name" }]}
+          rules={[
+            { required: true, message: "Por favor digite o nome do usuario" },
+          ]}
         >
-          <Input className="form-input" placeholder="Enter your name" />
+          <Input className="form-input" placeholder="Nome do usuario" />
         </Form.Item>
         <Form.Item
           name="email"
           label="Email"
           className="form-item"
           rules={[
-            { required: true, message: "Please enter your email" },
-            { type: "email", message: "Please enter a valid email" },
+            { required: true, message: "Por favor informe o email do usuario" },
+            { type: "email", message: "Digite um email valido" },
             {
               pattern: /^[a-zA-Z0-9._%+-]+@grupospo\.com\.br$/,
-              message: "Email must be from the @grupospo.com.br domain",
+              message: "Email deev fazer parte do dominio: @grupospo.com.br",
             },
           ]}
         >
-          <Input className="form-input" placeholder="Enter your email" />
+          <Input
+            className="form-input"
+            placeholder="Insira o email do usuario"
+          />
         </Form.Item>
         <Form.Item
           name="password"
-          label="Password"
+          label="Senha"
           className="form-item"
-          rules={[{ required: true, message: "Please enter your password" }]}
+          rules={[
+            { required: true, message: "Por favor informe a senha do usuario" },
+          ]}
         >
           <Input.Password
             className="form-input"
-            placeholder="Enter your password"
+            placeholder="Informe a senha do usuario"
           />
         </Form.Item>
         <Form.Item
           name="phone"
-          label="Phone"
+          label="Telefone"
           className="form-item"
           rules={[
-            { required: true, message: "Please enter your phone number" },
+            {
+              required: true,
+              message: "Por favor informe um telefone valido para contato",
+            },
           ]}
         >
           <InputMask
@@ -161,12 +171,14 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
         </Form.Item>
         <Form.Item
           name="city"
-          label="Support Point"
+          label="Ponto de apoio"
           className="form-item"
-          rules={[{ required: true, message: "Please select a support point" }]}
+          rules={[
+            { required: true, message: "Por favor defina um ponto de apoio" },
+          ]}
         >
           <Select
-            placeholder="Select a support point"
+            placeholder="Escolha um ponto de apoio"
             options={supportPoints.map((point) => ({
               value: point.abbreviation,
               label: `${point.cityname} (${point.abbreviation})`,
@@ -200,7 +212,7 @@ const AddUserModal = ({ visible, onOk, onCancel }) => {
             loading={loading}
             className="form-button"
           >
-            {loading ? "Creating User..." : "Create User"}
+            {loading ? "Creating User..." : "Criar usuario"}
           </Button>
         </Form.Item>
       </Form>

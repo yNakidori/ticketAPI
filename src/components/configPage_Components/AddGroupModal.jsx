@@ -47,32 +47,32 @@ const AddGroupModal = ({ visible, onOk, onCancel }) => {
       >
         <Form.Item
           name="name"
-          label="Group Name"
-          rules={[{ required: true, message: "Please enter the group name" }]}
+          label="Nome do grupo"
+          rules={[{ required: true, message: "Defina o nome do grupo" }]}
         >
-          <Input placeholder="Enter group name" />
+          <Input placeholder="Defina um nome para o grupo" />
         </Form.Item>
         <Form.Item
           name="description"
-          label="Description"
-          rules={[{ required: true, message: "Please enter a description" }]}
+          label="Descrição"
+          rules={[
+            { required: true, message: "Informe uma descrição para o grupo" },
+          ]}
         >
-          <Input.TextArea rows={4} placeholder="Enter a description" />
+          <Input.TextArea rows={4} placeholder="Infome a descrição" />
         </Form.Item>
         <Form.Item
           name="permissions"
-          label="Permissions"
-          rules={[{ required: true, message: "Please select permissions" }]}
+          label="Permissões"
+          rules={[
+            { required: true, message: "Escolha as permissões do grupo" },
+          ]}
         >
-          <Select mode="multiple" placeholder="Select permissions">
-            <Select.Option value="read">Read</Select.Option>
-            <Select.Option value="write">Write</Select.Option>
-            <Select.Option value="delete">Delete</Select.Option>
+          <Select mode="multiple" placeholder="Escolha as permissões do grupo">
             <Select.Option value="chamados">Chamados</Select.Option>
             <Select.Option value="equipamentos">
               Solicitação de equipamentos
             </Select.Option>
-            <Select.Option value="problemas">Problemas</Select.Option>
             <Select.Option value="flow">Flow</Select.Option>
             <Select.Option value="Inventario">Inventario</Select.Option>
             <Select.Option value="configuracoes">Configurações</Select.Option>
@@ -85,7 +85,7 @@ const AddGroupModal = ({ visible, onOk, onCancel }) => {
             loading={loading}
             className="form-button"
           >
-            {loading ? "Creating Group..." : "Create Group"}
+            {loading ? "Creating Group..." : "Criar grupo"}
           </Button>
         </Form.Item>
       </Form>
