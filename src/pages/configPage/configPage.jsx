@@ -14,6 +14,7 @@ import { getDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { message, Row, Col } from "antd";
 import "./configPage.scss";
+import EquipmentRequestsList from "../../components/configPage_Components/EquipmentRequestsList";
 
 const ConfigPage = () => {
   const [user, setUser] = useState(null); // Dados do usuário logado
@@ -131,6 +132,15 @@ const ConfigPage = () => {
           </Col>
         )}
       </Row>
+
+      {/* Renderiza o componente de solicitações de equipamentos apenas para o grupo "TI" */}
+      {hasPermission && (
+        <Row gutter={[24, 0]} className="equal-height-row">
+          <Col span={24}>
+            <EquipmentRequestsList />
+          </Col>
+        </Row>
+      )}
     </MainLayout>
   );
 };
