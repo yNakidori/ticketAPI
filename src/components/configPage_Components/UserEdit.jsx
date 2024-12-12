@@ -5,7 +5,7 @@ import profilavatar from "../../assets/images/pfp.jpg";
 import { auth, db } from "../../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import upload from "../../firebase/upload"; // Importação do helper de upload
+import upload from "../../firebase/upload";
 
 const UserEdit = ({ onSave }) => {
   const [user, setUser] = useState(null);
