@@ -1,40 +1,75 @@
-import React, { useState } from "react";
-import { Form, Input, Button, Select, message, InputNumber } from "antd";
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../firebase/firebase";
+import React, { useState, useEffect } from "react";
+import { Form, Input, Button, message, Select, InputNumber } from "antd";
+import { db, auth } from "../../firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc, addDoc, collection } from "firebase/firestore";
 import "./ProductForm.scss";
 
 const { Option } = Select;
 
-const ProductForm = ({ onSuccess }) => {
+const ProductForm = ({ onSave }) => {
+  const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [userCity, setUserCity] = useState("");
 
-  const onFinish = async (values) => {
+  useEffect(() => {
+    const fetchUserCity = async () => {
+      onAuthStateChanged(auth, async (currentUser) => {
+        if (currentUser) {
+          const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setUserCity(userData.city || "");
+          } else {
+            console.log("Não foi possível carregar os dados do usuário.");
+          }
+        }
+      });
+    };
+
+    fetchUserCity();
+  }, []);
+
+  const handleFormSubmit = async (values) => {
     setLoading(true);
     try {
-      const dataToSave = {
-        ...values,
-        nome: values.nome.toUpperCase(), // Convertendo o nome para maiúsculas
-        data: new Date().toISOString(),
-      };
-      await addDoc(collection(db, "products"), dataToSave);
-      message.success("Produto adicionado com sucesso!");
-      onSuccess();
+      const { name, quantity, description, supplier, price, type } = values;
+
+      // Salvando no Firebase
+      await addDoc(collection(db, "products"), {
+        name,
+        quantity: parseInt(quantity, 10),
+        description,
+        supplier,
+        price,
+        type,
+        sector: userCity, // Cidade do usuário como setor/unidade
+        createdAt: new Date(),
+      });
+
+      message.success("Produto cadastrado com sucesso!");
+      form.resetFields();
+      onSave && onSave();
     } catch (error) {
-      console.log("Erro ao adicionar produto", error);
-      message.error("Erro ao adicionar produto!");
+      message.error("Erro ao cadastrar produto!");
+      console.error("Erro ao cadastrar o produto:", error);
     } finally {
       setLoading(false);
+      window.location.reload();
     }
   };
 
   return (
     <div className="product-form-container">
-      <h1>Cadastrar Produto</h1>
-      <Form layout="vertical" onFinish={onFinish} className="product-form">
+      <Form
+        layout="vertical"
+        form={form}
+        onFinish={handleFormSubmit}
+        className="product-form"
+      >
         <Form.Item
           label="Tipo"
-          name="tipo"
+          name="type"
           rules={[{ required: true, message: "Por favor, selecione o tipo!" }]}
         >
           <Select placeholder="Selecione o tipo">
@@ -72,7 +107,7 @@ const ProductForm = ({ onSuccess }) => {
         </Form.Item>
         <Form.Item
           label="Nome do Produto"
-          name="nome"
+          name="name"
           rules={[
             { required: true, message: "Por favor, insira o nome do produto!" },
           ]}
@@ -81,7 +116,7 @@ const ProductForm = ({ onSuccess }) => {
         </Form.Item>
         <Form.Item
           label="Quantidade"
-          name="quantidade"
+          name="quantity"
           rules={[
             { required: true, message: "Por favor, insira a quantidade!" },
           ]}
@@ -94,25 +129,24 @@ const ProductForm = ({ onSuccess }) => {
         </Form.Item>
         <Form.Item
           label="Descrição"
-          name="descricao"
+          name="description"
           rules={[
             { required: true, message: "Por favor, insira a descrição!" },
           ]}
         >
           <Input.TextArea rows={3} placeholder="Descrição do produto" />
         </Form.Item>
-        <Form.Item
-          label="Setor/Unidade"
-          name="setor"
-          rules={[
-            { required: true, message: "Por favor, insira o setor/unidade!" },
-          ]}
-        >
-          <Input placeholder="Setor ou unidade responsável" />
+        <Form.Item label="Setor/Unidade">
+          <Input
+            value={userCity}
+            disabled
+            placeholder="Setor ou unidade responsável"
+            style={{ backgroundColor: "#f5f5f5" }}
+          />
         </Form.Item>
         <Form.Item
           label="Fornecedor"
-          name="fornecedor"
+          name="supplier"
           rules={[
             {
               required: true,
@@ -124,7 +158,7 @@ const ProductForm = ({ onSuccess }) => {
         </Form.Item>
         <Form.Item
           label="Último Preço de Compra"
-          name="preco"
+          name="price"
           rules={[
             { required: true, message: "Por favor, insira o preço de compra!" },
           ]}
