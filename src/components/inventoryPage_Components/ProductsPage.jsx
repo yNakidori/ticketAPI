@@ -1,26 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { Table, Spin } from "antd";
-import { collection, getDocs } from "firebase/firestore";
+// ProductsPage.jsx
+import React, { useState, useEffect } from "react";
+import { Table, Tag, Space } from "antd";
 import { db } from "../../firebase/firebase";
+import { collection, getDocs } from "firebase/firestore";
 import "./ProductsPage.scss";
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "products"));
-        const fetchedProducts = querySnapshot.docs.map((doc) => ({
+        const productsCollection = collection(db, "products");
+        const productsSnapshot = await getDocs(productsCollection);
+        const productsList = productsSnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-        setProducts(fetchedProducts);
+        setProducts(productsList);
       } catch (error) {
-        console.error("Erro ao buscar produtos:", error);
-      } finally {
-        setLoading(false);
+        console.error("Erro ao carregar os produtos:", error);
       }
     };
 
@@ -28,31 +27,52 @@ const ProductsPage = () => {
   }, []);
 
   const columns = [
-    { title: "Nome", dataIndex: "nome", key: "nome" },
-    { title: "Tipo", dataIndex: "tipo", key: "tipo" },
-    { title: "Quantidade", dataIndex: "quantidade", key: "quantidade" },
-    { title: "Setor/Unidade", dataIndex: "setor", key: "setor" },
-    { title: "Fornecedor", dataIndex: "fornecedor", key: "fornecedor" },
-    { title: "Preço (R$)", dataIndex: "preco", key: "preco" },
-    { title: "Descrição", dataIndex: "descricao", key: "descricao" },
+    {
+      title: "Nome do Produto",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Tipo",
+      dataIndex: "type",
+      key: "type",
+    },
+    {
+      title: "Quantidade",
+      dataIndex: "quantity",
+      key: "quantity",
+    },
+    {
+      title: "Preço",
+      dataIndex: "price",
+      key: "price",
+      render: (price) => `R$ ${price.toFixed(2)}`,
+    },
+    {
+      title: "Descrição",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "Ações",
+      key: "actions",
+      render: (_, record) => (
+        <Space size="middle">
+          <a>Editar</a>
+          <a>Excluir</a>
+        </Space>
+      ),
+    },
   ];
 
   return (
-    <div className="products-page">
-      <h1>Produtos Cadastrados</h1>
-      {loading ? (
-        <Spin size="large" />
-      ) : (
-        <Table
-          dataSource={products.map((product) => ({
-            ...product,
-            id: product.id || `temp-${Math.random()}`,
-          }))}
-          columns={columns}
-          rowKey="id"
-          bordered
-        />
-      )}
+    <div className="products-page-container">
+      <Table
+        columns={columns}
+        dataSource={products}
+        rowKey="id"
+        pagination={{ pageSize: 10 }}
+      />
     </div>
   );
 };
