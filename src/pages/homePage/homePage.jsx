@@ -32,10 +32,10 @@ const HomePage = () => {
             </Col>
           </Row>
         </Card>
-        <Card>
+        <Card className="group-tickets-container">
           <Row gutter={[20, 20]}>
             <Col span={24}>
-              <div className="group-tickets-container">
+              <div className="section">
                 <UserTickets />
               </div>
             </Col>
