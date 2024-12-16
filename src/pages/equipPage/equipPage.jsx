@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import MainLayout from "../../components/mainLayout";
+import SideBar from "../../assets/Sidebar";
 import EquipmentRequestForm from "../../components/equipPage_Components/EquipmentRequest";
 import SupportTopics from "../../components/equipPage_Components/SupportTopics";
 import { auth } from "../../firebase/firebase";
@@ -25,16 +25,15 @@ const EquipPage = () => {
   }, []);
   return (
     <>
-      <MainLayout>
-        <div className="main">
-          <div className="main-form">
-            <EquipmentRequestForm userInfo={userInfo} />
-          </div>
-          <div className="main-topics">
-            <SupportTopics />
-          </div>
+      <SideBar />
+      <div className="main">
+        <div className="main-form">
+          <EquipmentRequestForm userInfo={userInfo} />
         </div>
-      </MainLayout>
+        <div className="main-topics">
+          <SupportTopics />
+        </div>
+      </div>
     </>
   );
 };

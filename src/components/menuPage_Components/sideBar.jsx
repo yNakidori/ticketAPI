@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Button, Layout } from "antd";
-import { DoubleRightOutlined, DoubleLeftOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
+import { Layout } from "antd";
 import "./sideBar.css";
 import MenuList from "./MenuList";
 
@@ -8,46 +7,30 @@ const { Header, Sider, Content } = Layout;
 
 const SideBar = ({ children }) => {
   const [darkTheme, setDarkTheme] = useState(true);
-  const [collapsed, setCollapsed] = useState(true);
-
-  const toggleTheme = () => {
-    setDarkTheme(!darkTheme);
-  };
-
-  useEffect(() => {
-    setCollapsed(true);
-  }, []);
+  const [collapsed, setCollapsed] = useState(false); // Estado para colapso da sidebar
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider
+        collapsible
         collapsed={collapsed}
-        theme={darkTheme ? "dark" : "light"}
-        className="sidebar"
+        onCollapse={(value) => setCollapsed(value)} // Atualiza o estado ao colapsar
+        className={`sidebar ${collapsed ? "floating" : ""} ${
+          darkTheme ? "dark" : ""
+        }`}
         width={250}
       >
-        <MenuList darkTheme={darkTheme} />
+        <MenuList className="menu-list" />
       </Sider>
-      <Layout className="site-layout">
+      <Layout>
         <Header
-          className="site-layout-background"
-          style={{ padding: 0, background: darkTheme ? "#466876" : "#ffffff" }}
-        >
-          <Button
-            type="text"
-            className="toggle"
-            onClick={() => setCollapsed(!collapsed)}
-            icon={collapsed ? <DoubleRightOutlined /> : <DoubleLeftOutlined />}
-            disabled
-          />
-        </Header>
-        <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
-          <div
-            className="site-layout-background"
-            style={{ padding: 24, textAlign: "center" }}
-          >
-            {children}
-          </div>
+          className="site-layout-header"
+          style={{
+            backgroundColor: darkTheme ? "#466876" : "#ffffff",
+          }}
+        ></Header>
+        <Content style={{ margin: "24px 16px", overflow: "initial" }}>
+          <div className="site-layout-content">{children}</div>
         </Content>
       </Layout>
     </Layout>
