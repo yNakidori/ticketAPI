@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CollapsibleTable from "../../components/inventoryPage_Components/CollapsibleTable";
-import MainLayout from "../../components/mainLayout";
+import SideBar from "../../assets/Sidebar";
 import ProductForm from "../../components/inventoryPage_Components/ProductForm";
 import ProductsPage from "../../components/inventoryPage_Components/ProductsPage";
 import { Button, Modal } from "antd";
@@ -63,7 +63,8 @@ const InventoryPage = () => {
   };
 
   return (
-    <MainLayout>
+    <>
+      <SideBar />
       {hasPermission ? (
         <div className="main_inventorypage">
           <div>
@@ -104,7 +105,7 @@ const InventoryPage = () => {
           </p>
         </div>
       )}
-    </MainLayout>
+    </>
   );
 };
 

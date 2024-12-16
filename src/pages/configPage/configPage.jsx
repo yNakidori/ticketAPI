@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import MainLayout from "../../components/mainLayout";
 import ProfileHeader from "../../components/configPage_Components/ProfileHeader";
 import UserManagement from "../../components/configPage_Components/UserManagement";
 import GroupManagement from "../../components/configPage_Components/GroupManagement";
@@ -15,6 +14,7 @@ import { db } from "../../firebase/firebase";
 import { message, Row, Col } from "antd";
 import "./configPage.scss";
 import EquipmentRequestsList from "../../components/configPage_Components/EquipmentRequestsList";
+import SideBar from "../../assets/Sidebar";
 
 const ConfigPage = () => {
   const [user, setUser] = useState(null); // Dados do usuário logado
@@ -65,7 +65,8 @@ const ConfigPage = () => {
   }
 
   return (
-    <MainLayout>
+    <>
+      <SideBar />
       {/* Cabeçalho do perfil */}
       <ProfileHeader
         imageURL={profilavatar}
@@ -142,7 +143,7 @@ const ConfigPage = () => {
           </Col>
         </Row>
       )}
-    </MainLayout>
+    </>
   );
 };
 
