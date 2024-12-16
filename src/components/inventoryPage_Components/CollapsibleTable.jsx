@@ -134,6 +134,7 @@ function Row({ row, onUpdate }) {
           </Box>
 
           <TextField
+            style={{ backgroundColor: "white" }}
             margin="dense"
             label="Quantidade"
             type="number"
@@ -143,6 +144,7 @@ function Row({ row, onUpdate }) {
           />
           {operation === "saida" && (
             <TextField
+              style={{ backgroundColor: "white" }}
               margin="dense"
               label="Motivo/Destinatário"
               fullWidth
