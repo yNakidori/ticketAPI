@@ -49,54 +49,6 @@ const Chat = () => {
             <span className="chat-contact">1 min atrás</span>
           </div>
         </div>
-        <div className="message-center-own">
-          <div className="message-texts">
-            <p className="chat-description">Tudo bem! E você?</p>
-            <span className="chat-contact">1 min atrás</span>
-          </div>
-        </div>
-        <div className="message-center-own">
-          <div className="message-texts">
-            <p className="chat-description">Tudo bem! E você?</p>
-            <span className="chat-contact">1 min atrás</span>
-          </div>
-        </div>
-        <div className="message-center-own">
-          <div className="message-texts">
-            <p className="chat-description">Tudo bem! E você?</p>
-            <span className="chat-contact">1 min atrás</span>
-          </div>
-        </div>
-        <div className="message-center-own">
-          <div className="message-texts">
-            <p className="chat-description">Tudo bem! E você?</p>
-            <span className="chat-contact">1 min atrás</span>
-          </div>
-        </div>
-        <div className="message-center-own">
-          <div className="message-texts">
-            <p className="chat-description">Tudo bem! E você?</p>
-            <span className="chat-contact">1 min atrás</span>
-          </div>
-        </div>
-        <div className="message-center-own">
-          <div className="message-texts">
-            <p className="chat-description">Tudo bem! E você?</p>
-            <span className="chat-contact">1 min atrás</span>
-          </div>
-        </div>
-        <div className="message-center-own">
-          <div className="message-texts">
-            <p className="chat-description">Tudo bem! E você?</p>
-            <span className="chat-contact">1 min atrás</span>
-          </div>
-        </div>
-        <div className="message-center-own">
-          <div className="message-texts">
-            <p className="chat-description">Tudo bem! E você?</p>
-            <span className="chat-contact">1 min atrás</span>
-          </div>
-        </div>
         <div className="message-center">
           <img src={Avatar} alt="profile pic" className="chat-user-img" />
           <div className="message-texts">

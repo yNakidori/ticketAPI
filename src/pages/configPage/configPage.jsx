@@ -72,10 +72,11 @@ const ConfigPage = () => {
         fullName={user ? user.name : "Usuário"}
       />
 
-      {/* Componente de chat */}
+      {/* Componente de chat 
       <div className="chat-component">
         <ChatComponent />
       </div>
+      */}
 
       {/* Renderiza os elementos da página */}
       <Row gutter={[24, 0]} className="equal-height-row">
