@@ -28,9 +28,11 @@ const MenuList = ({ darkTheme }) => {
         <Link to="/inventoryPage">Inventario</Link>
       </Menu.Item>
 
+      {/* <Menu.Item key="spotify" icon={<SpotifyOutlined /> 
       <Menu.Item key="spotify" icon={<SpotifyOutlined />}>
         <Link to="/flowPage">Flow</Link>
       </Menu.Item>
+      */}
 
       <Menu.Item key="setting" icon={<SettingOutlined />}>
         <Link to="/configPage">Configurações</Link>

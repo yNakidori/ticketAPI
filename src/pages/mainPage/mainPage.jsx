@@ -18,9 +18,11 @@ const MainPage = () => {
             <Button>LogIn</Button>
           </Link>
 
+          {/* <Link to="/signUp"> 
           <Link to="/menuPage">
             <Button>MenuPage</Button>
           </Link>
+          */}
         </div>
       </div>
     </div>
