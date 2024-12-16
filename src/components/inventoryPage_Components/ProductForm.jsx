@@ -103,6 +103,7 @@ const ProductForm = ({ onSave }) => {
             <Option value="Cabos">Cabos</Option>
             <Option value="Fones de ouvido">Fones de ouvido</Option>
             <Option values="Armazenamento">Armazenamento</Option>
+            <Option value="Outros">Outros</Option>
           </Select>
         </Form.Item>
         <Form.Item
