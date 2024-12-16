@@ -11,58 +11,55 @@ import {
 } from "@ant-design/pro-components";
 import { ConfigProvider } from "antd";
 import enUs from "antd/lib/locale/en_US";
-import { Button, Tabs, theme } from "antd";
+import { Button, Tabs, Spin, theme } from "antd";
 import "./logIn.scss";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useUserStore } from "./userStore";
 import Notification from "../components/notification/notificaiton";
 import { toast } from "react-toastify";
+import BackgroundVideo from "./BackgroundVideo";
 import "react-toastify/dist/ReactToastify.css";
 
 const LogIn = () => {
   const [videoUrl, setVideoUrl] = useState("");
-  const [tipoLogin, setTipoLogin] = useState("phone");
+  const [tipoLogin, setTipoLogin] = useState("account");
+  const [loading, setLoading] = useState(false);
   const { token } = theme.useToken();
   const navigate = useNavigate();
 
-  const signIn = ({ username, password }) => {
-    signInWithEmailAndPassword(auth, username, password)
-      .then((userCredential) => {
-        console.log("Usuário logado:", userCredential.user);
-        navigate("/configPage");
-      })
-      .catch((error) => {
-        console.error("Erro ao logar:", error);
-        toast.warn("Usuário ou senha inválidos");
-      });
+  // Zustand store
+  const { currentUser, isLoading, fetchUserInfo } = useUserStore();
+
+  const messages = {
+    emptyFields: "Por favor, preencha todos os campos.",
+    invalidCredentials: "Usuário ou senha inválidos",
   };
 
-  useEffect(() => {
-    const fetchVideo = async () => {
-      try {
-        const response = await axios.get(
-          "https://api.pexels.com/videos/search?query=logistichub&per_page=50",
-          {
-            headers: {
-              Authorization: import.meta.env.VITE_PEXELS_API_KEY,
-            },
-          }
-        );
-        const videos = response.data.videos;
-        if (videos.length > 0) {
-          const randomVideo = videos[Math.floor(Math.random() * videos.length)];
-          setVideoUrl(randomVideo.video_files[0].link);
-          console.log("Vídeo carregado:", randomVideo.video_files[0].link);
-        } else {
-          console.log("Nenhum vídeo encontrado.");
-        }
-      } catch (error) {
-        console.error("Erro ao buscar vídeo do Pexels:", error);
-      }
-    };
+  const signIn = async ({ username, password }) => {
+    try {
+      // Firebase login
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        username,
+        password
+      );
+      const uid = userCredential.user.uid;
 
-    fetchVideo();
-  }, []);
+      // Fetch user info and update Zustand state
+      await fetchUserInfo(uid);
+
+      // Espera o estado ser atualizado antes de navegar
+      if (currentUser) {
+        console.log("Logado com sucesso:", currentUser);
+        navigate("/configPage");
+      } else {
+        console.log("Erro ao carregar os dados do usuário.");
+      }
+    } catch (error) {
+      console.error("Erro ao logar:", error);
+      toast.warn("Usuário ou senha inválidos");
+    }
+  };
 
   const handleButtonClick = () => {
     window.location.href = "https://github.com/yNakidori";
@@ -76,6 +73,7 @@ const LogIn = () => {
           height: "100vh",
         }}
       >
+        <BackgroundVideo setVideoUrl={setVideoUrl} />
         <LoginFormPage
           onFinish={signIn}
           backgroundVideoUrl={videoUrl}
@@ -194,6 +192,11 @@ const LogIn = () => {
             </a>
           </div>
         </LoginFormPage>
+        {loading && (
+          <div className="loading-overlay">
+            <Spin size="large" />
+          </div>
+        )}
         <Notification />
       </div>
     </ConfigProvider>
