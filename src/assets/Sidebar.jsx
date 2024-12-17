@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
@@ -11,9 +11,10 @@ import {
   SettingOutlined,
   MenuOutlined,
 } from "@ant-design/icons";
+import AuthUserInfo from "../register/authUserInfo";
 
 export default function SideBar() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -29,6 +30,10 @@ export default function SideBar() {
         boxShadow: "4px 0 10px rgba(0, 0, 0, 0.1)",
       }}
     >
+      {/* Componente de Informações do Usuário */}
+      <AuthUserInfo />
+
+      {/* Menu de Navegação */}
       <Menu
         mode="inline"
         style={{
@@ -36,9 +41,9 @@ export default function SideBar() {
           backgroundColor: "#B1AFFF",
           borderRight: "none",
           borderRadius: "8px",
+          marginTop: "10px",
         }}
       >
-        {/* Itens de Navegação com Estilos de Hover */}
         <Menu.Item
           key="home"
           icon={<BugOutlined style={{ fontSize: "20px", color: "#FFFED3" }} />}
@@ -128,7 +133,7 @@ export default function SideBar() {
           position: "fixed",
           bottom: "100px",
           right: "30px",
-          zIndex: 1300, // Garante que o botão esteja acima de outros elementos
+          zIndex: 1300,
         }}
       >
         <Button

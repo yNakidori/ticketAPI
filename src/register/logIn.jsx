@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { auth } from "../firebase/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { login, resetPassword } from "./authFunction.jsx";
+import {
+  saveCredentials,
+  getSavedCredentials,
+  clearSavedCredentials,
+} from "./authHelper.jsx";
+import { fetchVideo } from "./authVideoFetcher";
 import Logo from "../assets/images/SPO.png";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import {
@@ -13,59 +18,56 @@ import { ConfigProvider } from "antd";
 import enUs from "antd/lib/locale/en_US";
 import { Button, Tabs, theme } from "antd";
 import "./logIn.scss";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Notification from "../components/notification/notificaiton";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const LogIn = () => {
+const Login = () => {
   const [videoUrl, setVideoUrl] = useState("");
   const [tipoLogin, setTipoLogin] = useState("phone");
-  const { token } = theme.useToken();
+  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
-
-  const signIn = ({ username, password }) => {
-    signInWithEmailAndPassword(auth, username, password)
-      .then((userCredential) => {
-        console.log("Usuário logado:", userCredential.user);
-        navigate("/configPage");
-      })
-      .catch((error) => {
-        console.error("Erro ao logar:", error);
-        toast.warn("Usuário ou senha inválidos");
-      });
-  };
+  const { token } = theme.useToken();
 
   useEffect(() => {
-    const fetchVideo = async () => {
-      try {
-        const response = await axios.get(
-          "https://api.pexels.com/videos/search?query=logistichub&per_page=50",
-          {
-            headers: {
-              Authorization: import.meta.env.VITE_PEXELS_API_KEY,
-            },
-          }
-        );
-        const videos = response.data.videos;
-        if (videos.length > 0) {
-          const randomVideo = videos[Math.floor(Math.random() * videos.length)];
-          setVideoUrl(randomVideo.video_files[0].link);
-          console.log("Vídeo carregado:", randomVideo.video_files[0].link);
-        } else {
-          console.log("Nenhum vídeo encontrado.");
-        }
-      } catch (error) {
-        console.error("Erro ao buscar vídeo do Pexels:", error);
-      }
-    };
+    // Fetch saved credentials and login automatically
+    const savedCredentials = getSavedCredentials();
+    if (savedCredentials) {
+      login(savedCredentials.email, savedCredentials.password)
+        .then(() => navigate("/configPage"))
+        .catch(() => clearSavedCredentials());
+    }
 
-    fetchVideo();
+    // Fetch background video
+    fetchVideo().then(setVideoUrl);
   }, []);
 
+  const handleLogin = async ({ username, password }) => {
+    try {
+      await login(username, password);
+      if (rememberMe) {
+        saveCredentials(username, password);
+      } else {
+        clearSavedCredentials();
+      }
+      navigate("/configPage");
+    } catch (error) {
+      toast.warn("Usuário ou senha inválidos");
+    }
+  };
+
+  const handleForgotPassword = () => {
+    const email = prompt("Por favor, insira seu email:");
+    if (email) {
+      resetPassword(email)
+        .then(() => toast.success("Email para redefinir senha enviado!"))
+        .catch(() => toast.error("Erro ao enviar email."));
+    }
+  };
+
   const handleButtonClick = () => {
-    window.location.href = "https://github.com/yNakidori";
+    window.location.href = "https://app.grupospo.com.br/home";
   };
 
   return (
@@ -77,7 +79,7 @@ const LogIn = () => {
         }}
       >
         <LoginFormPage
-          onFinish={signIn}
+          onFinish={handleLogin}
           backgroundVideoUrl={videoUrl}
           title=""
           containerStyle={{
@@ -93,9 +95,7 @@ const LogIn = () => {
               backgroundColor: "rgba(255,255,255,0.25)",
               backdropFilter: "blur(4px)",
             },
-            title: "Conheça o meu trabalho!",
-            subTitle:
-              "Visite a minha página no GitHub e veja os meus projetos!",
+            title: "Voltar para o Web-App!",
             action: (
               <Button
                 size="large"
@@ -182,14 +182,10 @@ const LogIn = () => {
               marginBlockEnd: 24,
             }}
           >
-            <ProFormCheckbox noStyle name="autoLogin">
+            <ProFormCheckbox onChange={(e) => setRememberMe(e.target.checked)}>
               Login automático
             </ProFormCheckbox>
-            <a
-              style={{
-                float: "right",
-              }}
-            >
+            <a onClick={handleForgotPassword} style={{ float: "right" }}>
               Esqueci a senha
             </a>
           </div>
@@ -204,7 +200,7 @@ export default () => {
   return (
     <ConfigProvider locale={enUs}>
       <ProConfigProvider dark>
-        <LogIn />
+        <Login />
       </ProConfigProvider>
     </ConfigProvider>
   );
