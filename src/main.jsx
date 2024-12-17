@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
-import Login from "./register/Login.jsx";
+import LogIn from "./register/logIn.jsx";
 import SignIn from "./register/signIn.jsx";
 import MainPage from "./pages/mainPage/mainPage.jsx";
 import MenuPage from "./pages/menuPage/menuPage.jsx";
@@ -27,7 +27,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/logIn",
-    element: <Login />,
+    element: <LogIn />,
   },
   {
     path: "/signIn",

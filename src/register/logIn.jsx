@@ -5,7 +5,7 @@ import {
   getSavedCredentials,
   clearSavedCredentials,
 } from "./authHelper.jsx";
-import { fetchVideo } from "./authVideoFetcher";
+import { fetchVideo } from "./authVideoFetcher.jsx";
 import Logo from "../assets/images/SPO.png";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import {
@@ -19,11 +19,11 @@ import enUs from "antd/lib/locale/en_US";
 import { Button, Tabs, theme } from "antd";
 import "./logIn.scss";
 import { useNavigate } from "react-router-dom";
-import Notification from "../components/notification/notificaiton";
+import Notification from "../components/notification/notificaiton.jsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Login = () => {
+const LogIn = () => {
   const [videoUrl, setVideoUrl] = useState("");
   const [tipoLogin, setTipoLogin] = useState("phone");
   const [rememberMe, setRememberMe] = useState(false);
@@ -200,7 +200,7 @@ export default () => {
   return (
     <ConfigProvider locale={enUs}>
       <ProConfigProvider dark>
-        <Login />
+        <LogIn />
       </ProConfigProvider>
     </ConfigProvider>
   );
