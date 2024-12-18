@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainLayout from "../../components/mainLayout";
 import TicketList from "../../components/homePage_Components/TicketList";
 import UserTickets from "../../components/homePage_Components/UserTickets";
@@ -12,6 +12,15 @@ import "../homePage/homePage.scss";
 const HomePage = () => {
   const [isAnimationPlaying, setIsAnimationPlaying] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [openTickets, setOpenTickets] = useState(0);
+  const [closedTickets, setClosedTickets] = useState(0);
+
+  // Mocked data fetching (replace with actual data fetching logic)
+  useEffect(() => {
+    // Substitua essa lógica pelos dados reais de tickets
+    setOpenTickets(10); // Exemplo de dados para tickets abertos
+    setClosedTickets(5); // Exemplo de dados para tickets fechados
+  }, []);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -24,6 +33,35 @@ const HomePage = () => {
   return (
     <div className="homepage">
       <SideBar />
+
+      {/* Cards de Status */}
+      <Row gutter={20} className="status-cards">
+        <Col span={6}>
+          <Card className="status-card purple">
+            <h3>{openTickets}</h3>
+            <p>Tickets abertos</p>
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card className="status-card green">
+            <h3>{closedTickets}</h3>
+            <p>Tickets fechados</p>
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card className="status-card yellow">
+            <h3>0</h3>
+            <p>Revisão de Tickets</p>
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card className="status-card red">
+            <h3>1</h3>
+            <p>Tickets cancelados</p>
+          </Card>
+        </Col>
+      </Row>
+
       <Card className="group-tickets-container">
         <Row gutter={[20, 20]}>
           <Col span={24}>
@@ -33,6 +71,7 @@ const HomePage = () => {
           </Col>
         </Row>
       </Card>
+
       <Card className="group-tickets-container">
         <Row gutter={[20, 20]}>
           <Col span={24}>
@@ -43,6 +82,7 @@ const HomePage = () => {
         </Row>
       </Card>
 
+      {/* Lottie Animation Button */}
       <div
         style={{
           position: "fixed",
@@ -63,15 +103,8 @@ const HomePage = () => {
           isPaused={!isAnimationPlaying}
         />
       </div>
-      <div
-        style={{
-          position: "fixed",
-          bottom: 110,
-          right: 20,
-          width: "100px",
-          height: "100px",
-        }}
-      ></div>
+
+      {/* Modal para Criar Ticket */}
       <Modal
         className="modal-1"
         title="Criar ticket"

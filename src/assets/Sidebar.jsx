@@ -24,10 +24,13 @@ export default function SideBar() {
     <Box
       sx={{
         width: 250,
-        backgroundColor: "#B1AFFF",
+        background: "rgba(177, 175, 255, 0.24)",
+        borderRadius: "16px",
+        boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+        backdropFilter: "blur(2.5px)",
+        WebkitBackdropFilter: "blur(2.5px)",
         height: "100%",
         padding: "10px",
-        boxShadow: "4px 0 10px rgba(0, 0, 0, 0.1)",
       }}
     >
       {/* Componente de Informações do Usuário */}
@@ -38,9 +41,8 @@ export default function SideBar() {
         mode="inline"
         style={{
           width: "100%",
-          backgroundColor: "#B1AFFF",
+          background: "transparent",
           borderRight: "none",
-          borderRadius: "8px",
           marginTop: "10px",
         }}
       >
@@ -52,7 +54,9 @@ export default function SideBar() {
             borderRadius: "5px",
             transition: "background-color 0.3s ease",
           }}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = "#8B88E5")}
+          onMouseEnter={(e) =>
+            (e.target.style.backgroundColor = "rgba(139, 136, 229, 0.7)")
+          }
           onMouseLeave={(e) => (e.target.style.backgroundColor = "transparent")}
         >
           <Link to="/homePage" style={{ color: "#FFFED3", fontWeight: "bold" }}>
@@ -68,7 +72,9 @@ export default function SideBar() {
             borderRadius: "5px",
             transition: "background-color 0.3s ease",
           }}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = "#8B88E5")}
+          onMouseEnter={(e) =>
+            (e.target.style.backgroundColor = "rgba(139, 136, 229, 0.7)")
+          }
           onMouseLeave={(e) => (e.target.style.backgroundColor = "transparent")}
         >
           <Link
@@ -91,7 +97,9 @@ export default function SideBar() {
             borderRadius: "5px",
             transition: "background-color 0.3s ease",
           }}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = "#8B88E5")}
+          onMouseEnter={(e) =>
+            (e.target.style.backgroundColor = "rgba(139, 136, 229, 0.7)")
+          }
           onMouseLeave={(e) => (e.target.style.backgroundColor = "transparent")}
         >
           <Link
@@ -112,7 +120,9 @@ export default function SideBar() {
             borderRadius: "5px",
             transition: "background-color 0.3s ease",
           }}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = "#8B88E5")}
+          onMouseEnter={(e) =>
+            (e.target.style.backgroundColor = "rgba(139, 136, 229, 0.7)")
+          }
           onMouseLeave={(e) => (e.target.style.backgroundColor = "transparent")}
         >
           <Link
@@ -166,8 +176,10 @@ export default function SideBar() {
         sx={{
           "& .MuiDrawer-paper": {
             width: "250px",
-            backgroundColor: "#B1AFFF",
-            borderRadius: "10px",
+            background: "rgba(177, 175, 255, 0.24)",
+            borderRadius: "16px",
+            backdropFilter: "blur(2.5px)",
+            WebkitBackdropFilter: "blur(2.5px)",
             paddingTop: "20px",
           },
         }}
