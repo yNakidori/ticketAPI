@@ -1,0 +1,36 @@
+.main_inventorypage {
+  background-color: #d6e9fc;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.inventory-controls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.inventory-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.table-container {
+  width: 100%;
+  max-width: 1200px;
+  height: 80vh;
+  overflow-y: auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.no-permission {
+  text-align: center;
+  font-size: 16px;
+}
