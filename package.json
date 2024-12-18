@@ -12,10 +12,10 @@
   },
   "dependencies": {
     "@ant-design/pro-components": "^2.7.9",
-    "@emotion/react": "^11.13.3",
-    "@emotion/styled": "^11.13.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.2.0",
-    "@mui/material": "^6.2.0",
+    "@mui/material": "^6.2.1",
     "@tsparticles/all": "^3.5.0",
     "@tsparticles/react": "^3.0.0",
     "ant": "^0.2.0",
