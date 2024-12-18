@@ -45,7 +45,7 @@ const HomePage = () => {
         <Col span={6}>
           <Card className="status-card green">
             <h3>{closedTickets}</h3>
-            <p>Tickets fechados</p>
+            <p>Tickets concluidos</p>
           </Card>
         </Col>
         <Col span={6}>

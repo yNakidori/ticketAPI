@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import {
   Card,
-  List,
   Button,
   Popconfirm,
   message,
   Tag,
   Modal,
   Image,
+  Row,
+  Col,
 } from "antd";
 import { db, auth } from "../../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -125,55 +126,50 @@ const TicketsList = () => {
         title={<h6 className="font-semibold m-0">Tickets do Grupo</h6>}
         className="header-solid h-full"
       >
-        <List
-          itemLayout="vertical"
-          dataSource={tickets}
-          renderItem={(ticket) => (
-            <List.Item
-              actions={[
-                <Popconfirm
-                  title="Tem certeza que deseja excluir este ticket?"
-                  onConfirm={() => handleDeleteTicket(ticket.id)}
-                  okText="Sim"
-                  cancelText="Não"
-                >
-                  <Button type="link" danger>
-                    Excluir
-                  </Button>
-                </Popconfirm>,
-                <Button
-                  type="link"
-                  onClick={() => handleMarkAsCompleted(ticket.id)}
-                  disabled={ticket.status === "completed"}
-                >
-                  {ticket.status === "completed"
-                    ? "Concluído"
-                    : "Marcar como Concluído"}
-                </Button>,
-                <Button
-                  type="link"
-                  onClick={() => showImages(ticket.attachments)}
-                >
-                  Ver Anexos
-                </Button>,
-              ]}
-            >
-              <List.Item.Meta
-                title={<span>{ticket.description}</span>}
-                description={
+        <Row gutter={[16, 16]}>
+          {tickets.map((ticket) => (
+            <Col span={8} key={ticket.id}>
+              <Card
+                title={ticket.description}
+                bordered
+                extra={
                   <>
-                    <p>Grupo: {ticket.group}</p>
-                    <Tag
-                      color={ticket.status === "completed" ? "blue" : "green"}
+                    <Popconfirm
+                      title="Tem certeza que deseja excluir este ticket?"
+                      onConfirm={() => handleDeleteTicket(ticket.id)}
+                      okText="Sim"
+                      cancelText="Não"
                     >
-                      {ticket.status === "completed" ? "Concluído" : "Aberto"}
-                    </Tag>
+                      <Button type="link" danger>
+                        Excluir
+                      </Button>
+                    </Popconfirm>
+                    <Button
+                      type="link"
+                      onClick={() => handleMarkAsCompleted(ticket.id)}
+                      disabled={ticket.status === "completed"}
+                    >
+                      {ticket.status === "completed"
+                        ? "Concluído"
+                        : "Marcar como Concluído"}
+                    </Button>
+                    <Button
+                      type="link"
+                      onClick={() => showImages(ticket.attachments)}
+                    >
+                      Ver Anexos
+                    </Button>
                   </>
                 }
-              />
-            </List.Item>
-          )}
-        />
+              >
+                <p>Grupo: {ticket.group}</p>
+                <Tag color={ticket.status === "completed" ? "blue" : "green"}>
+                  {ticket.status === "completed" ? "Concluído" : "Aberto"}
+                </Tag>
+              </Card>
+            </Col>
+          ))}
+        </Row>
       </Card>
 
       <Modal
