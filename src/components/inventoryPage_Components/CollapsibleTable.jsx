@@ -19,16 +19,14 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
-import { db, auth } from "../../firebase/firebase";
+import { db } from "../../firebase/firebase";
 import {
   collection,
-  getDocs,
+  onSnapshot,
   doc,
   updateDoc,
   query,
-  where,
 } from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
 
 function Row({ row, onUpdate }) {
   const [open, setOpen] = useState(false);
@@ -166,53 +164,47 @@ function Row({ row, onUpdate }) {
 
 const CollapsibleTable = () => {
   const [products, setProducts] = useState([]);
-  const [userCity, setUserCity] = useState("");
 
   useEffect(() => {
-    const fetchUserCity = () => {
-      onAuthStateChanged(auth, async (currentUser) => {
-        if (currentUser) {
-          const userDoc = await getDocs(
-            query(collection(db, "users"), where("uid", "==", currentUser.uid))
-          );
-          const userData = userDoc.docs[0]?.data();
-          setUserCity(userData?.city || "");
-        }
+    const fetchProducts = () => {
+      const q = query(collection(db, "products"));
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const productsData = [];
+        querySnapshot.forEach((doc) => {
+          productsData.push({ id: doc.id, ...doc.data() });
+        });
+        setProducts(productsData);
       });
+
+      return () => unsubscribe(); // Cleanup function
     };
 
-    const fetchProducts = async () => {
-      const querySnapshot = await getDocs(
-        query(collection(db, "products"), where("sector", "==", userCity))
+    const unsubscribeProducts = fetchProducts();
+    return () => unsubscribeProducts();
+  }, []);
+
+  const handleUpdate = async (id, newQuantity, quantity, operation, reason) => {
+    try {
+      const productRef = doc(db, "products", id);
+      await updateDoc(productRef, {
+        quantity: newQuantity,
+        lastChange: {
+          operation,
+          change: quantity,
+          reason,
+          updatedAt: new Date(),
+        },
+      });
+
+      // Atualizar o estado local para refletir as mudanças imediatamente
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product.id === id ? { ...product, quantity: newQuantity } : product
+        )
       );
-      const productList = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setProducts(productList);
-    };
-
-    if (userCity) fetchProducts();
-    else fetchUserCity();
-  }, [userCity]);
-
-  const handleUpdate = async (id, newQuantity, change, operation, reason) => {
-    const productRef = doc(db, "products", id);
-    await updateDoc(productRef, {
-      quantity: newQuantity,
-      lastChange: {
-        operation,
-        change,
-        reason,
-        updatedAt: new Date(),
-      },
-    });
-
-    setProducts((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
+    } catch (error) {
+      console.error("Erro ao atualizar produto:", error);
+    }
   };
 
   return (
