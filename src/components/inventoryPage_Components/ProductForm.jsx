@@ -55,7 +55,6 @@ const ProductForm = ({ onSave }) => {
       console.error("Erro ao cadastrar o produto:", error);
     } finally {
       setLoading(false);
-      window.location.reload();
     }
   };
 
