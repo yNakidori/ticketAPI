@@ -149,12 +149,12 @@ const ProductForm = ({ onSave }) => {
           name="supplier"
           rules={[
             {
-              required: true,
+              required: false,
               message: "Por favor, insira o nome do fornecedor!",
             },
           ]}
         >
-          <Input placeholder="Nome do fornecedor" />
+          <Input placeholder="Campo não obrigatório" />
         </Form.Item>
         <Form.Item
           label="Último Preço de Compra"

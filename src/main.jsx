@@ -13,6 +13,7 @@ import ProblemsPage from "./pages/problemsPage/problemsPage.jsx";
 import EquipPage from "./pages/equipPage/equipPage.jsx";
 import InventoryPage from "./pages/inventoryPage/inventoryPage.jsx";
 import ProtectedRoute from "./ProtectedRoute";
+import ChatPage from "./pages/chatPage/chatPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
   {
     path: "inventoryPage",
     element: <InventoryPage />,
+  },
+  {
+    path: "/chatPage",
+    element: <ChatPage />,
   },
 ]);
 

@@ -10,6 +10,7 @@ import {
   BugOutlined,
   SettingOutlined,
   MenuOutlined,
+  WechatOutlined,
 } from "@ant-design/icons";
 import AuthUserInfo from "../register/authUserInfo";
 
@@ -59,7 +60,15 @@ export default function SideBar() {
           }
           onMouseLeave={(e) => (e.target.style.backgroundColor = "transparent")}
         >
-          <Link to="/homePage" style={{ color: "#FFFED3", fontWeight: "bold" }}>
+          <Link
+            to="/homePage"
+            style={{
+              color: "#FFFED3",
+              fontWeight: "bold",
+              textDecoration: "none",
+              outline: "none",
+            }}
+          >
             Chamados
           </Link>
         </Menu.Item>
@@ -79,7 +88,12 @@ export default function SideBar() {
         >
           <Link
             to="/equipPage"
-            style={{ color: "#FFFED3", fontWeight: "bold" }}
+            style={{
+              color: "#FFFED3",
+              fontWeight: "bold",
+              textDecoration: "none",
+              outline: "none",
+            }}
           >
             Equipamentos
           </Link>
@@ -104,16 +118,54 @@ export default function SideBar() {
         >
           <Link
             to="/inventoryPage"
-            style={{ color: "#FFFED3", fontWeight: "bold" }}
+            style={{
+              color: "#FFFED3",
+              fontWeight: "bold",
+              textDecoration: "none",
+              outline: "none",
+            }}
           >
             Inventário
           </Link>
         </Menu.Item>
 
         <Menu.Item
+          key="chat"
+          icon={
+            <WechatOutlined style={{ fontSize: "20px", color: "#FFFED3" }} />
+          }
+          style={{
+            marginBottom: "10px",
+            borderRadius: "5px",
+            transition: "background-color 0.3s ease",
+          }}
+          onMouseEnter={(e) =>
+            (e.target.style.backgroundColor = "rgba(139, 136, 229, 0.7)")
+          }
+          onMouseLeave={(e) => (e.target.style.backgroundColor = "transparent")}
+        >
+          <Link
+            to="/chatPage"
+            style={{
+              color: "#FFFED3",
+              fontWeight: "bold",
+              textDecoration: "none",
+              outline: "none",
+            }}
+          >
+            Live Chat
+          </Link>
+        </Menu.Item>
+
+        <Menu.Item
           key="setting"
           icon={
-            <SettingOutlined style={{ fontSize: "20px", color: "#FFFED3" }} />
+            <SettingOutlined
+              style={{
+                fontSize: "20px",
+                color: "#FFFED3",
+              }}
+            />
           }
           style={{
             marginBottom: "10px",
@@ -127,7 +179,12 @@ export default function SideBar() {
         >
           <Link
             to="/configPage"
-            style={{ color: "#FFFED3", fontWeight: "bold" }}
+            style={{
+              color: "#FFFED3",
+              fontWeight: "bold",
+              textDecoration: "none",
+              outline: "none",
+            }}
           >
             Configurações
           </Link>
