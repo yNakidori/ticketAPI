@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import MainLayout from "../../components/mainLayout";
 import TicketList from "../../components/homePage_Components/TicketList";
 import UserTickets from "../../components/homePage_Components/UserTickets";
 import { Row, Col, Modal, Card } from "antd";

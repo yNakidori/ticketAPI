@@ -2,6 +2,15 @@
   padding: 20px;
   background: #d6e9fc;
   height: 100vh;
+  flex-direction: column;
+  overflow-y: auto;
+
+  .group-tickets-container {
+    margin: 20px;
+    padding: 20px;
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+  }
 
   .status-cards {
     margin-bottom: 20px;
