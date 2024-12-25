@@ -29,51 +29,76 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import "./UserTickets.scss";
+import "./GroupTickets.scss";
 
-export default function TicketCard() {
+export default function GroupTickets() {
   const [tickets, setTickets] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
 
   useEffect(() => {
-    const fetchUserTickets = async () => {
+    const fetchTicketsByGroup = async () => {
       onAuthStateChanged(auth, async (currentUser) => {
         if (currentUser) {
           try {
-            const ticketsQuery = query(
-              collection(db, "tickets"),
-              where("creatorId", "==", currentUser.uid)
+            // Buscar o grupo do usuário
+            const userQuery = query(
+              collection(db, "users"),
+              where("uid", "==", currentUser.uid)
             );
-            const ticketsSnapshot = await getDocs(ticketsQuery);
-            const ticketsData = ticketsSnapshot.docs.map(async (doc) => {
-              const ticketData = doc.data();
-              const userQuery = query(
-                collection(db, "users"),
-                where("uid", "==", ticketData.creatorId)
-              );
-              const userSnapshot = await getDocs(userQuery);
-              const userData =
-                userSnapshot.docs.length > 0 ? userSnapshot.docs[0].data() : {};
-              return {
-                id: doc.id,
-                ...ticketData,
-                creatorName: userData.name,
-                creatorGroup: userData.group,
-                creatorAvatar: userData.avatar,
-              };
-            });
-            const resolvedTickets = await Promise.all(ticketsData);
-            setTickets(resolvedTickets);
+            const userSnapshot = await getDocs(userQuery);
+            if (!userSnapshot.empty) {
+              const userData = userSnapshot.docs[0].data();
+              const userGroup = userData.groups?.[0];
+
+              if (userGroup) {
+                // Buscar tickets relacionados ao grupo
+                const ticketsQuery = query(
+                  collection(db, "tickets"),
+                  where("group", "==", userGroup)
+                );
+                const ticketsSnapshot = await getDocs(ticketsQuery);
+
+                const ticketsData = ticketsSnapshot.docs.map(async (doc) => {
+                  const ticketData = doc.data();
+
+                  // Buscar informações do criador do ticket
+                  const creatorQuery = query(
+                    collection(db, "users"),
+                    where("uid", "==", ticketData.creatorId)
+                  );
+                  const creatorSnapshot = await getDocs(creatorQuery);
+                  const creatorData =
+                    creatorSnapshot.docs.length > 0
+                      ? creatorSnapshot.docs[0].data()
+                      : {};
+
+                  return {
+                    id: doc.id,
+                    ...ticketData,
+                    creatorName: creatorData.name || "Usuário desconhecido",
+                    creatorGroup: creatorData.group || "Sem grupo",
+                    creatorAvatar: creatorData.avatar || "",
+                  };
+                });
+
+                const resolvedTickets = await Promise.all(ticketsData);
+                setTickets(resolvedTickets);
+              } else {
+                message.error("Grupo do usuário não encontrado.");
+              }
+            } else {
+              message.error("Usuário não encontrado.");
+            }
           } catch (error) {
-            console.error("Erro ao carregar os tickets", error);
+            console.error("Erro ao carregar os tickets:", error);
             message.error(`Erro ao carregar os tickets: ${error.message}`);
           }
         }
       });
     };
 
-    fetchUserTickets();
+    fetchTicketsByGroup();
   }, []);
 
   const handleDeleteTicket = async (ticketId) => {
@@ -131,7 +156,7 @@ export default function TicketCard() {
 
   return (
     <div>
-      <h1 className="userTickets_title">Meus Tickets</h1>
+      <h1 className="groupTickets_title">Tickets do Grupo</h1>
       <Grid container spacing={3}>
         {tickets.map((ticket) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={ticket.id}>

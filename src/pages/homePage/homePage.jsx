@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import TicketList from "../../components/homePage_Components/TicketList";
+import GroupTickets from "../../components/homePage_Components/GroupTickets";
 import UserTickets from "../../components/homePage_Components/UserTickets";
 import { Row, Col, Modal, Card } from "antd";
 import Lottie from "react-lottie";
@@ -65,7 +66,7 @@ const HomePage = () => {
         <Row gutter={[20, 20]}>
           <Col span={24}>
             <div className="section">
-              <TicketList />
+              <GroupTickets />
             </div>
           </Col>
         </Row>
