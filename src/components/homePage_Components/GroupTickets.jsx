@@ -29,6 +29,8 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
+import Lottie from "react-lottie";
+import pinkBird from "../../assets/lottie/pinkbird.json";
 import "./GroupTickets.scss";
 
 export default function GroupTickets() {
@@ -157,134 +159,162 @@ export default function GroupTickets() {
   return (
     <div>
       <h1 className="groupTickets_title">Tickets do Grupo</h1>
-      <Grid container spacing={3}>
-        {tickets.map((ticket) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={ticket.id}>
-            <Card
-              sx={{
-                backgroundColor: "#f8feff",
-                maxWidth: 345,
-                margin: "16px auto",
-                borderRadius: "12px",
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
-                transition: "transform 0.2s",
-                "&:hover": {
-                  transform: "scale(1.02)",
-                  backgroundColor: "#f1fdff",
-                },
-              }}
-            >
-              <CardHeader
-                avatar={
-                  <Avatar
-                    src={ticket.creatorAvatar}
-                    sx={{
-                      bgcolor:
-                        ticket.status === "completed" ? "#4caf50" : red[500],
-                    }}
-                  >
-                    {!ticket.creatorAvatar &&
-                      ticket.creatorName?.[0]?.toUpperCase()}
-                  </Avatar>
-                }
-                title={
-                  <Typography sx={{ fontWeight: "bold" }}>
-                    {ticket.creatorName || "Usuário desconhecido"}
-                  </Typography>
-                }
-                subheader={
-                  <Typography
-                    sx={{
-                      color:
-                        ticket.status === "completed"
-                          ? "#4caf50"
-                          : "text.secondary",
-                    }}
-                  >
-                    {ticket.group || "Sem grupo"} -{" "}
-                    {ticket.status === "completed"
-                      ? "Concluído"
-                      : ticket.status === "review"
-                      ? "Para Revisão"
-                      : "Aberto"}
-                  </Typography>
-                }
-              />
-
-              <CardContent>
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  {ticket.description || "Sem descrição disponível."}
-                </Typography>
-              </CardContent>
-              <CardActions
-                disableSpacing
-                sx={{ justifyContent: "space-between" }}
+      {tickets.length === 0 ? ( // Verifica se não há tickets
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "60vh",
+            flexDirection: "column",
+          }}
+        >
+          <Lottie
+            options={{
+              loop: true,
+              autoplay: true,
+              animationData: pinkBird,
+            }}
+            height={300}
+            width={300}
+          />
+          <Typography variant="h6" style={{ marginTop: "16px", color: "gray" }}>
+            Nenhum ticket encontrado.
+          </Typography>
+        </div>
+      ) : (
+        <Grid container spacing={3}>
+          {tickets.map((ticket) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={ticket.id}>
+              <Card
+                sx={{
+                  bgcolor: ticket.status === "review" ? "#fff8e1" : "#ffffff",
+                  maxWidth: 345,
+                  margin: "16px auto",
+                  borderRadius: "12px",
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+                  transition: "transform 0.2s",
+                  "&:hover": {
+                    transform: "scale(1.02)",
+                    backgroundColor:
+                      ticket.status === "review" ? "#fff3cd" : "#f1fdff",
+                  },
+                }}
               >
-                <Tooltip title="Ver anexos">
-                  <IconButton
-                    aria-label="Ver anexos"
-                    onClick={() => showImages(ticket.attachments)}
-                    sx={{
-                      color: "#1976d2",
-                      "&:hover": { color: "#0d47a1" },
-                    }}
-                  >
-                    <FileImageOutlined />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Excluir">
-                  <IconButton
-                    aria-label="Excluir"
-                    onClick={() =>
-                      handleDeleteTicket(ticket.id, ticket.attachments)
-                    }
-                    sx={{
-                      color: red[500],
-                      "&:hover": { color: "#b71c1c" },
-                    }}
-                  >
-                    <DeleteOutlined />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Marcar como concluído">
-                  <IconButton
-                    aria-label="Marcar como concluído"
-                    onClick={() => handleMarkAsCompleted(ticket.id)}
-                    disabled={ticket.status === "completed"}
-                    sx={{
-                      color:
-                        ticket.status === "completed" ? "#9e9e9e" : "#4caf50",
-                      "&:hover": {
+                <CardHeader
+                  avatar={
+                    <Avatar
+                      src={ticket.creatorAvatar}
+                      sx={{
+                        bgcolor:
+                          ticket.status === "completed" ? "#4caf50" : red[500],
+                      }}
+                    >
+                      {!ticket.creatorAvatar &&
+                        ticket.creatorName?.[0]?.toUpperCase()}
+                    </Avatar>
+                  }
+                  title={
+                    <Typography sx={{ fontWeight: "bold" }}>
+                      {ticket.creatorName || "Usuário desconhecido"}
+                    </Typography>
+                  }
+                  subheader={
+                    <Typography
+                      sx={{
                         color:
-                          ticket.status === "completed" ? "#9e9e9e" : "#2e7d32",
-                      },
-                    }}
-                  >
-                    <CheckOutlined />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Marcar como para revisão">
-                  <IconButton
-                    aria-label="Marcar como para revisão"
-                    onClick={() => handleMarkAsReview(ticket.id)}
-                    disabled={ticket.status === "review"}
-                    sx={{
-                      color: ticket.status === "review" ? "#9e9e9e" : "#ff9800",
-                      "&:hover": {
-                        color:
-                          ticket.status === "review" ? "#9e9e9e" : "#f57c00",
-                      },
-                    }}
-                  >
-                    <ReloadOutlined />
-                  </IconButton>
-                </Tooltip>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+                          ticket.status === "completed"
+                            ? "#4caf50"
+                            : "text.secondary",
+                      }}
+                    >
+                      {ticket.group || "Sem grupo"} -{" "}
+                      {ticket.status === "completed"
+                        ? "Concluído"
+                        : ticket.status === "review"
+                        ? "Para Revisão"
+                        : "Aberto"}
+                    </Typography>
+                  }
+                />
 
+                <CardContent>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    {ticket.description || "Sem descrição disponível."}
+                  </Typography>
+                </CardContent>
+                <CardActions
+                  disableSpacing
+                  sx={{ justifyContent: "space-between" }}
+                >
+                  <Tooltip title="Ver anexos">
+                    <IconButton
+                      aria-label="Ver anexos"
+                      onClick={() => showImages(ticket.attachments)}
+                      sx={{
+                        color: "#1976d2",
+                        "&:hover": { color: "#0d47a1" },
+                      }}
+                    >
+                      <FileImageOutlined />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Excluir">
+                    <IconButton
+                      aria-label="Excluir"
+                      onClick={() =>
+                        handleDeleteTicket(ticket.id, ticket.attachments)
+                      }
+                      sx={{
+                        color: red[500],
+                        "&:hover": { color: "#b71c1c" },
+                      }}
+                    >
+                      <DeleteOutlined />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Marcar como concluído">
+                    <IconButton
+                      aria-label="Marcar como concluído"
+                      onClick={() => handleMarkAsCompleted(ticket.id)}
+                      disabled={ticket.status === "completed"}
+                      sx={{
+                        color:
+                          ticket.status === "completed" ? "#9e9e9e" : "#4caf50",
+                        "&:hover": {
+                          color:
+                            ticket.status === "completed"
+                              ? "#9e9e9e"
+                              : "#2e7d32",
+                        },
+                      }}
+                    >
+                      <CheckOutlined />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Marcar como para revisão">
+                    <IconButton
+                      aria-label="Marcar como para revisão"
+                      onClick={() => handleMarkAsReview(ticket.id)}
+                      disabled={ticket.status === "review"}
+                      sx={{
+                        color:
+                          ticket.status === "review" ? "#9e9e9e" : "#ff9800",
+                        "&:hover": {
+                          color:
+                            ticket.status === "review" ? "#9e9e9e" : "#f57c00",
+                        },
+                      }}
+                    >
+                      <ReloadOutlined />
+                    </IconButton>
+                  </Tooltip>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      )}
       {isModalVisible && (
         <Modal
           visible={isModalVisible}
