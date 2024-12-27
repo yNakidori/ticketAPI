@@ -65,7 +65,7 @@ const ConfigPage = () => {
   }
 
   return (
-    <>
+    <div className="main-content">
       <SideBar />
       {/* Cabeçalho do perfil */}
       <ProfileHeader
@@ -143,7 +143,7 @@ const ConfigPage = () => {
           </Col>
         </Row>
       )}
-    </>
+    </div>
   );
 };
 

@@ -18,7 +18,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import { KeyboardArrowDown, KeyboardArrowUp, Build } from "@mui/icons-material";
 import { db } from "../../firebase/firebase";
 import {
   collection,
@@ -69,9 +69,8 @@ function Row({ row, onUpdate }) {
             variant="contained"
             size="small"
             onClick={() => setDialogOpen(true)}
-          >
-            Atualizar
-          </Button>
+            startIcon={<Build />}
+          ></Button>
         </TableCell>
       </TableRow>
       <TableRow>
@@ -113,7 +112,7 @@ function Row({ row, onUpdate }) {
       </TableRow>
 
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <DialogTitle>Atualizar Produto</DialogTitle>
+        <DialogTitle>Realizar Movimentação</DialogTitle>
         <DialogContent>
           <Typography>Operação:</Typography>
           <Box display="flex" gap={1} marginY={1}>

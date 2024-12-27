@@ -70,13 +70,13 @@ const InventoryPage = () => {
             <Button
               type="primary"
               onClick={showModal}
-              style={{ marginBottom: 20, marginRight: 20 }}
+              style={{ marginBottom: 5, marginRight: 20, marginTop: 25 }}
             >
               Cadastros
             </Button>
             <Button
               type="primary"
-              style={{ marginBottom: 20 }}
+              style={{ marginBottom: 5, marginTop: 25 }}
               onClick={toggleProductsPage}
             >
               {showProducts ? "Voltar" : "Estoque"}
