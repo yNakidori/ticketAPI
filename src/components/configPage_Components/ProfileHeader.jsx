@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Card, Avatar } from "antd";
+import { Row, Col, Avatar } from "antd";
 import { auth, db } from "../../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
+import "./ProfileHeader.scss";
 
 const ProfileHeader = () => {
   const [data, setData] = useState({
@@ -38,41 +39,17 @@ const ProfileHeader = () => {
   }, []);
 
   return (
-    <div className="sec-1">
-      <Card className="card-profile-head">
-        <div
-          className="profile-banner"
-          style={{
-            position: "relative",
-            width: "100%",
-            height: "200px",
-            backgroundImage: `url(${data.bannerURL || ""})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            borderRadius: "8px",
-          }}
-        />
-        <Row
-          justify="center"
-          align="middle"
-          gutter={[24, 0]}
-          style={{ marginTop: "-40px" }}
-        >
-          <Col>
-            <Avatar
-              size={74}
-              src={data.imageURL}
-              style={{ border: "3px solid white" }}
-            />
-          </Col>
-        </Row>
-        <Row justify="center" style={{ marginTop: "10px" }}>
-          <Col>
-            <h4 className="font-semibold m-0">{data.fullName}</h4>
-          </Col>
-        </Row>
-      </Card>
+    <div className="profile-header">
+      <div
+        className="profile-banner"
+        style={{
+          backgroundImage: `url(${data.bannerURL || ""})`,
+        }}
+      />
+      <div className="profile-info">
+        <Avatar size={96} src={data.imageURL} className="profile-avatar" />
+        <h2 className="profile-name">{data.fullName}</h2>
+      </div>
     </div>
   );
 };
