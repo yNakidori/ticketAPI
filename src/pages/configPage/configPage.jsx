@@ -13,7 +13,7 @@ import { getDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { message, Row, Col } from "antd";
 import "./configPage.scss";
-import EquipmentRequestsList from "../../components/configPage_Components/EquipmentRequestsList";
+import EquipmentRequestsList from "../../components/tasksPage_Components/EquipmentRequestsList";
 import SideBar from "../../assets/Sidebar";
 
 const ConfigPage = () => {

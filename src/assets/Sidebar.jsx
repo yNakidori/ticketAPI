@@ -11,6 +11,7 @@ import {
   SettingOutlined,
   MenuOutlined,
   WechatOutlined,
+  AuditOutlined,
 } from "@ant-design/icons";
 import AuthUserInfo from "../register/authUserInfo";
 
@@ -154,6 +155,39 @@ export default function SideBar() {
             }}
           >
             Live Chat
+          </Link>
+        </Menu.Item>
+
+        <Menu.Item
+          key="tasks"
+          icon={
+            <AuditOutlined
+              style={{
+                fontSize: "20px",
+                color: "#FFFED3",
+              }}
+            />
+          }
+          style={{
+            marginBottom: "10px",
+            borderRadius: "5px",
+            transition: "background-color 0.3s ease",
+          }}
+          onMouseEnter={(e) =>
+            (e.target.style.backgroundColor = "rgba(139, 136, 229, 0.7)")
+          }
+          onMouseLeave={(e) => (e.target.style.backgroundColor = "transparent")}
+        >
+          <Link
+            to="/tasksPage"
+            style={{
+              color: "#FFFED3",
+              fontWeight: "bold",
+              textDecoration: "none",
+              outline: "none",
+            }}
+          >
+            Tarefas
           </Link>
         </Menu.Item>
 
