@@ -160,12 +160,12 @@ function Row({ row, onUpdate }) {
   );
 }
 
-const CollapsibleTable = () => {
+const AuxCollapsibleTable = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchProducts = () => {
-      const q = query(collection(db, "products"));
+      const q = query(collection(db, "aux'Pproducts"));
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const productsData = [];
         querySnapshot.forEach((doc) => {
@@ -183,7 +183,7 @@ const CollapsibleTable = () => {
 
   const handleUpdate = async (id, newQuantity, quantity, operation, reason) => {
     try {
-      const productRef = doc(db, "products", id);
+      const productRef = doc(db, "auxProducts", id);
       await updateDoc(productRef, {
         quantity: newQuantity,
         lastChange: {
@@ -215,7 +215,6 @@ const CollapsibleTable = () => {
             <TableCell>Tipo</TableCell>
             <TableCell>Quantidade</TableCell>
             <TableCell>Preço</TableCell>
-            <TableCell>Preço Unitario</TableCell>
             <TableCell>Ações</TableCell>
           </TableRow>
         </TableHead>
@@ -229,4 +228,4 @@ const CollapsibleTable = () => {
   );
 };
 
-export default CollapsibleTable;
+export default AuxCollapsibleTable;

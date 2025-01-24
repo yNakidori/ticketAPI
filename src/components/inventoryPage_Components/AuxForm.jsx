@@ -3,15 +3,15 @@ import { Form, Input, Button, message, Select, InputNumber } from "antd";
 import { db, auth } from "../../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, addDoc, collection } from "firebase/firestore";
-import "./ProductForm.scss";
+import "./AuxForm.scss";
 
 const { Option } = Select;
 
-const ProductForm = ({ onSave }) => {
+const AuxForm = ({ onSave }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [userCity, setUserCity] = useState("");
-  const [perUnityprice, setPerUnityPrice] = useState(0); // Estado para o preço por unidade
+  const [perUnityPrice, setPerUnityPrice] = useState(0); // Estado para o preço por unidade
 
   useEffect(() => {
     const fetchUserCity = async () => {
@@ -21,9 +21,7 @@ const ProductForm = ({ onSave }) => {
           if (userDoc.exists()) {
             const userData = userDoc.data();
             setUserCity(userData.city || "");
-          } else {
-            console.log("Não foi possível carregar os dados do usuário.");
-          }
+          } else console.log("Não foi possível carregar os dados do usuário.");
         }
       });
     };
@@ -31,7 +29,7 @@ const ProductForm = ({ onSave }) => {
     fetchUserCity();
   }, []);
 
-  const handleValuesChange = (changedvalues, allValues) => {
+  const handleValuesChange = (changedValues, allValues) => {
     const { quantity, price } = allValues;
     if (quantity && price) {
       setPerUnityPrice((price / quantity).toFixed(2)); // Calcula o preço por unidade
@@ -49,7 +47,7 @@ const ProductForm = ({ onSave }) => {
       const perunityprice = price / quantity;
 
       // Salvando no Firebase
-      await addDoc(collection(db, "products"), {
+      await addDoc(collection(db, "auxProducts"), {
         name,
         quantity: parseInt(quantity, 10),
         price: parseFloat(price),
@@ -72,7 +70,7 @@ const ProductForm = ({ onSave }) => {
 
   return (
     <div className="product-form-container">
-      <h1>Inventario Principal</h1>
+      <h1>Inventario Auxiliar</h1>
       <Form
         layout="vertical"
         form={form}
@@ -176,4 +174,4 @@ const ProductForm = ({ onSave }) => {
   );
 };
 
-export default ProductForm;
+export default AuxForm;

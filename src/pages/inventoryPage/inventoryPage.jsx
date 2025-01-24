@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import CollapsibleTable from "../../components/inventoryPage_Components/CollapsibleTable";
+import AuxCollapsibleTable from "../../components/inventoryPage_Components/AuxCollapsibleTable";
 import SideBar from "../../assets/Sidebar";
 import ProductForm from "../../components/inventoryPage_Components/ProductForm";
+import AuxForm from "../../components/inventoryPage_Components/AuxForm";
 import ProductsPage from "../../components/inventoryPage_Components/ProductsPage";
+import AuxPage from "../../components/inventoryPage_Components/AuxPage";
 import { Button, Modal } from "antd";
 import { getAuth } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
@@ -10,11 +13,12 @@ import { db } from "../../firebase/firebase";
 import "./inventoryPage.scss";
 
 const InventoryPage = () => {
-  const [user, setUser] = useState(null); // Dados do usuário logado
-  const [hasPermission, setHasPermission] = useState(false); // Permissão do grupo
-  const [isLoading, setIsLoading] = useState(true); // Estado de carregamento
+  const [user, setUser] = useState(null);
+  const [hasPermission, setHasPermission] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [showProducts, setShowProducts] = useState(false);
+  const [formType, setFormType] = useState("main");
 
   const fetchUserData = async () => {
     try {
@@ -61,6 +65,10 @@ const InventoryPage = () => {
     setShowProducts((prev) => !prev);
   };
 
+  const handleFormTypeChange = (type) => {
+    setFormType(type);
+  };
+
   return (
     <>
       <SideBar />
@@ -88,6 +96,9 @@ const InventoryPage = () => {
             <div className="table-container">
               {showProducts ? <ProductsPage /> : <CollapsibleTable />}
             </div>
+            <div className="table-container">
+              {showProducts ? <AuxPage /> : <AuxCollapsibleTable />}
+            </div>
           </div>
 
           {/* Modal para o formulário */}
@@ -97,7 +108,28 @@ const InventoryPage = () => {
             onCancel={handleCancel}
             footer={null}
           >
-            <ProductForm onSuccess={handleCancel} />
+            <div style={{ marginBottom: 16 }}>
+              <Button
+                type={formType === "main" ? "primary" : "default"}
+                onClick={() => handleFormTypeChange("main")}
+                style={{ marginRight: 10 }}
+              >
+                Estoque Principal
+              </Button>
+              <Button
+                type={formType === "aux" ? "primary" : "default"}
+                onClick={() => handleFormTypeChange("aux")}
+              >
+                Estoque Auxiliar
+              </Button>
+            </div>
+
+            {/* Renderiza o formulário com base no tipo selecionado */}
+            {formType === "main" ? (
+              <ProductForm onSuccess={handleCancel} />
+            ) : (
+              <AuxForm onSuccess={handleCancel} />
+            )}
           </Modal>
         </div>
       ) : (
