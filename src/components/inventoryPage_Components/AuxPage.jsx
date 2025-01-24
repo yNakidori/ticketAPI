@@ -1,17 +1,16 @@
-// ProductsPage.jsx
 import React, { useState, useEffect } from "react";
 import { Table, Tag, Space, Modal, Form, Input, message } from "antd";
 import { db } from "../../firebase/firebase";
 import {
   collection,
   getDocs,
-  deleteDoc,
   doc,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
-import "./ProductsPage.scss";
+import "./AuxPage.scss";
 
-const ProductsPage = () => {
+const AuxPage = () => {
   const [products, setProducts] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
@@ -19,7 +18,7 @@ const ProductsPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const productsCollection = collection(db, "products");
+        const productsCollection = collection(db, "auxProducts");
         const productsSnapshot = await getDocs(productsCollection);
         const productsList = productsSnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -27,7 +26,7 @@ const ProductsPage = () => {
         }));
         setProducts(productsList);
       } catch (error) {
-        console.error("Erro ao carregar os produtos:", error);
+        console.errror("Erro ao carregar os produtos:", error);
       }
     };
 
@@ -36,7 +35,7 @@ const ProductsPage = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteDoc(doc(db, "products", id));
+      await deleteDoc(doc(db, "auxProducts", id));
       setProducts((prev) => prev.filter((product) => product.id !== id));
       message.success("Produto excluído com sucesso!");
     } catch (error) {
@@ -52,7 +51,7 @@ const ProductsPage = () => {
 
   const handleModalOk = async (values) => {
     try {
-      const productRef = doc(db, "products", currentProduct.id);
+      const productRef = doc(db, "auxProducts", currentProduct.id);
       await updateDoc(productRef, values);
       setProducts((prev) =>
         prev.map((product) =>
@@ -63,12 +62,12 @@ const ProductsPage = () => {
       setIsModalVisible(false);
       setCurrentProduct(null);
     } catch (error) {
-      console.log("Erro ao atualizar o produto:", error);
+      console.error("Erro ao atualizar o produto:", error);
       message.error("Erro ao atualizar o produto. Tente novamente.");
     }
   };
 
-  const handleModalCancel = () => {
+  const handlemodalCancel = () => {
     setIsModalVisible(false);
     setCurrentProduct(null);
   };
@@ -90,16 +89,10 @@ const ProductsPage = () => {
       key: "quantity",
     },
     {
-      title: "Preço de nota",
+      title: "Preço",
       dataIndex: "price",
       key: "price",
       render: (price) => `R$ ${price.toFixed(2)}`,
-    },
-    {
-      title: "Preço Unitário",
-      dataIndex: "perunityprice",
-      key: "perunityprice",
-      render: (perunityprice) => `R$ ${perunityprice.toFixed(2)}`,
     },
     {
       title: "Ações",
@@ -149,6 +142,9 @@ const ProductsPage = () => {
             <Form.Item name="price" label="Preço">
               <Input type="number" />
             </Form.Item>
+            <Form.Item name="description" label="Descrição">
+              <Input.TextArea />
+            </Form.Item>
             <Form.Item>
               <Space>
                 <button type="submit" className="btn btn-primary">
@@ -170,4 +166,4 @@ const ProductsPage = () => {
   );
 };
 
-export default ProductsPage;
+export default AuxPage;
