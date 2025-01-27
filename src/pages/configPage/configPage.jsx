@@ -7,13 +7,11 @@ import AddGroupModal from "../../components/configPage_Components/AddGroupModal"
 import profilavatar from "../../assets/images/face-1.jpg";
 import UserEdit from "../../components/configPage_Components/UserEdit";
 import SupportPointEdit from "../../components/configPage_Components/SupportPointsEdit";
-import ChatComponent from "../../components/chatArea_Component/chatComponent";
 import { getAuth } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { message, Row, Col } from "antd";
 import "./configPage.scss";
-import EquipmentRequestsList from "../../components/tasksPage_Components/EquipmentRequestsList";
 import SideBar from "../../assets/Sidebar";
 
 const ConfigPage = () => {
@@ -46,7 +44,6 @@ const ConfigPage = () => {
             const userData = userDoc.data();
             setUser(userData);
 
-            // Verifica se o usuário pertence ao grupo "TI"
             setHasPermission(userData.groups?.includes("TI"));
           }
         }
@@ -134,15 +131,6 @@ const ConfigPage = () => {
           </Col>
         )}
       </Row>
-
-      {/* Renderiza o componente de solicitações de equipamentos apenas para o grupo "TI" */}
-      {hasPermission && (
-        <Row gutter={[24, 0]} className="equal-height-row">
-          <Col span={24}>
-            <EquipmentRequestsList />
-          </Col>
-        </Row>
-      )}
     </div>
   );
 };
