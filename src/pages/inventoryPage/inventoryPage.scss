@@ -12,22 +12,32 @@
 }
 
 .inventory-content {
-  flex: 1;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
+  flex-direction: column; /* Define a direção como coluna */
+  gap: 20px; /* Espaçamento entre os elementos */
 
-.table-container {
-  width: 100%;
-  max-width: 1200px;
-  height: 80vh;
-  overflow-y: auto;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  .table-container {
+    background-color: #f9f9f9; /* Exemplo de cor de fundo */
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    margin-left: 25px;
+    margin-right: 25px;
+    max-height: 55vh;
+    overflow-y: auto;
+
+    &:first-of-type {
+      /* Estilo específico para o inventário principal */
+      border-color: #007bff;
+      box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+    }
+
+    &:last-of-type {
+      /* Estilo específico para o inventário auxiliar */
+      border-color: #28a745;
+      box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+    }
+  }
 }
 
 .no-permission {

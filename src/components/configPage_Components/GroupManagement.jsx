@@ -52,61 +52,63 @@ const GroupManagement = ({ onAddGroupClick }) => {
   };
 
   return (
-    <Card
-      bordered={false}
-      title={<h6 className="font-semibold m-0">Grupos</h6>}
-      className="group-management-card"
-      extra={
-        <Button type="primary" onClick={onAddGroupClick}>
-          Criar grupo
-        </Button>
-      }
-    >
-      <div className="list-container">
-        <List
-          dataSource={groups}
-          renderItem={(group) => (
-            <List.Item
-              actions={[
-                <Button type="link" onClick={() => handleEditGroup(group)}>
-                  Editar
-                </Button>,
-                <Popconfirm
-                  title="Realmente gostaria de deletar esse grupo?"
-                  onConfirm={() => handleDeleteGroup(group.id)}
-                  okText="Sim"
-                  cancelText="Não"
-                >
-                  <Button type="link" danger>
-                    Deletar
-                  </Button>
-                </Popconfirm>,
-              ]}
-            >
-              <List.Item.Meta
-                title={group.name}
-                description={
-                  <>
-                    <p>{group.description}</p>
-                    <p>Permissions: {group.permissions.join(", ")}</p>
-                  </>
-                }
-              />
-            </List.Item>
-          )}
-        />
-      </div>
+    <div className="card-container">
+      <Card
+        bordered={false}
+        title={<h6 className="font-semibold m-0">Grupos</h6>}
+        className="group-management-card"
+        extra={
+          <Button type="primary" onClick={onAddGroupClick}>
+            Criar grupo
+          </Button>
+        }
+      >
+        <div className="list-container">
+          <List
+            dataSource={groups}
+            renderItem={(group) => (
+              <List.Item
+                actions={[
+                  <Button type="link" onClick={() => handleEditGroup(group)}>
+                    Editar
+                  </Button>,
+                  <Popconfirm
+                    title="Realmente gostaria de deletar esse grupo?"
+                    onConfirm={() => handleDeleteGroup(group.id)}
+                    okText="Sim"
+                    cancelText="Não"
+                  >
+                    <Button type="link" danger>
+                      Deletar
+                    </Button>
+                  </Popconfirm>,
+                ]}
+              >
+                <List.Item.Meta
+                  title={group.name}
+                  description={
+                    <>
+                      <p>{group.description}</p>
+                      <p>Permissions: {group.permissions.join(", ")}</p>
+                    </>
+                  }
+                />
+              </List.Item>
+            )}
+          />
+        </div>
 
-      {/* Modal de edição de grupo */}
-      {selectedGroup && (
-        <EditGroupModal
-          visible={isEditModalVisible}
-          group={selectedGroup}
-          onCancel={closeEditModal}
-          onSave={closeEditModal}
-        />
-      )}
-    </Card>
+        {/* Modal de edição de grupo */}
+        {selectedGroup && (
+          <EditGroupModal
+            visible={isEditModalVisible}
+            group={selectedGroup}
+            onCancel={closeEditModal}
+            onSave={closeEditModal}
+          />
+        )}
+      </Card>
+    </div>
   );
 };
 

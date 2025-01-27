@@ -165,7 +165,7 @@ const AuxCollapsibleTable = () => {
 
   useEffect(() => {
     const fetchProducts = () => {
-      const q = query(collection(db, "aux'Pproducts"));
+      const q = query(collection(db, "auxProducts"));
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const productsData = [];
         querySnapshot.forEach((doc) => {
@@ -183,7 +183,7 @@ const AuxCollapsibleTable = () => {
 
   const handleUpdate = async (id, newQuantity, quantity, operation, reason) => {
     try {
-      const productRef = doc(db, "auxProducts", id);
+      const productRef = doc(db, "products", id);
       await updateDoc(productRef, {
         quantity: newQuantity,
         lastChange: {
@@ -215,6 +215,7 @@ const AuxCollapsibleTable = () => {
             <TableCell>Tipo</TableCell>
             <TableCell>Quantidade</TableCell>
             <TableCell>Preço</TableCell>
+            <TableCell>Preço Unitario</TableCell>
             <TableCell>Ações</TableCell>
           </TableRow>
         </TableHead>

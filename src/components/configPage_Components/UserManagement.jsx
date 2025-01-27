@@ -128,121 +128,123 @@ const UserManagement = ({ onAddUserClick }) => {
   };
 
   return (
-    <Card
-      bordered={false}
-      title={<h6 className="font-semibold m-0">Usuarios</h6>}
-      className="user-management-card"
-      extra={
-        <Button type="primary" onClick={onAddUserClick}>
-          Adicionar usuarios
-        </Button>
-      }
-    >
-      <div className="list-container">
-        <List
-          dataSource={users}
-          renderItem={(user) => (
-            <List.Item
-              actions={[
-                <Button type="link" onClick={() => handleManageGroup(user)}>
-                  Alterar grupos
-                </Button>,
-                <Button
-                  type="link"
-                  onClick={() => handleManageSupportPoint(user)}
-                >
-                  Alterar ponto de apoio
-                </Button>,
-                <Popconfirm
-                  title="Realmente deseja desativar esse usuario?"
-                  onConfirm={() => handleDeactivateUser(user.id)}
-                  okText="Sim"
-                  cancelText="Não, quero voltar"
-                >
-                  <Button type="link" danger>
-                    Desativar
-                  </Button>
-                </Popconfirm>,
-                <Popconfirm
-                  title="Realmente deseja cancelar esse usuario?"
-                  onConfirm={() => handleDeleteUser(user.id)}
-                  okText="Sim"
-                  cancelText="Não, quero voltar"
-                >
-                  <Button type="link" danger>
-                    Deletar
-                  </Button>
-                </Popconfirm>,
-              ]}
-            >
-              <List.Item.Meta
-                title={`${user.name} (${user.email})`}
-                description={
-                  <>
-                    <p>Phone: {user.phone}</p>
-                    <p>City: {user.supportPoints}</p>
-                    <Tag color={user.active ? "green" : "red"}>
-                      {user.active ? "Active" : "Inactive"}
-                    </Tag>
-                    <p>
-                      Groups:{" "}
-                      {user.groups && user.groups.length > 0
-                        ? user.groups.join(", ")
-                        : "None"}
-                    </p>
-                  </>
-                }
-              />
-            </List.Item>
-          )}
-        />
-      </div>
-
-      <Modal
-        title={`Altere o grupo de ${selectedUser?.name}`}
-        visible={isGroupModalVisible}
-        onOk={handleSaveGroups}
-        onCancel={() => setIsGroupModalVisible(false)}
-        okText="Save"
-        cancelText="Cancel"
+    <div className="card-container">
+      <Card
+        bordered={false}
+        title={<h6 className="font-semibold m-0">Usuarios</h6>}
+        className="user-management-card"
+        extra={
+          <Button type="primary" onClick={onAddUserClick}>
+            Adicionar usuarios
+          </Button>
+        }
       >
-        <Select
-          mode="multiple"
-          value={selectedGroups}
-          onChange={(value) => setSelectedGroups(value)}
-          style={{ width: "100%" }}
-          placeholder="Select groups"
-        >
-          {groups.map((group) => (
-            <Select.Option key={group.id} value={group.name}>
-              {group.name}
-            </Select.Option>
-          ))}
-        </Select>
-      </Modal>
+        <div className="list-container">
+          <List
+            dataSource={users}
+            renderItem={(user) => (
+              <List.Item
+                actions={[
+                  <Button type="link" onClick={() => handleManageGroup(user)}>
+                    Alterar grupos
+                  </Button>,
+                  <Button
+                    type="link"
+                    onClick={() => handleManageSupportPoint(user)}
+                  >
+                    Alterar ponto de apoio
+                  </Button>,
+                  <Popconfirm
+                    title="Realmente deseja desativar esse usuario?"
+                    onConfirm={() => handleDeactivateUser(user.id)}
+                    okText="Sim"
+                    cancelText="Não, quero voltar"
+                  >
+                    <Button type="link" danger>
+                      Desativar
+                    </Button>
+                  </Popconfirm>,
+                  <Popconfirm
+                    title="Realmente deseja cancelar esse usuario?"
+                    onConfirm={() => handleDeleteUser(user.id)}
+                    okText="Sim"
+                    cancelText="Não, quero voltar"
+                  >
+                    <Button type="link" danger>
+                      Deletar
+                    </Button>
+                  </Popconfirm>,
+                ]}
+              >
+                <List.Item.Meta
+                  title={`${user.name} (${user.email})`}
+                  description={
+                    <>
+                      <p>Phone: {user.phone}</p>
+                      <p>City: {user.supportPoints}</p>
+                      <Tag color={user.active ? "green" : "red"}>
+                        {user.active ? "Active" : "Inactive"}
+                      </Tag>
+                      <p>
+                        Groups:{" "}
+                        {user.groups && user.groups.length > 0
+                          ? user.groups.join(", ")
+                          : "None"}
+                      </p>
+                    </>
+                  }
+                />
+              </List.Item>
+            )}
+          />
+        </div>
 
-      <Modal
-        title={`Altere o ponto de apoio de ${selectedUser?.name}`}
-        visible={isSupportPointModalVisible}
-        onOk={handleSaveSupportPoint}
-        onCancel={() => setIsSupportPointModalVisible(false)}
-        okText="Save"
-        cancelText="Cancel"
-      >
-        <Select
-          value={selectedSupportPoint}
-          onChange={(value) => setSelectedSupportPoint(value)}
-          style={{ width: "100%" }}
-          placeholder="Select support point"
+        <Modal
+          title={`Altere o grupo de ${selectedUser?.name}`}
+          visible={isGroupModalVisible}
+          onOk={handleSaveGroups}
+          onCancel={() => setIsGroupModalVisible(false)}
+          okText="Save"
+          cancelText="Cancel"
         >
-          {supportPoints.map((point) => (
-            <Select.Option key={point.id} value={point.abbreviation}>
-              {point.cityname}
-            </Select.Option>
-          ))}
-        </Select>
-      </Modal>
-    </Card>
+          <Select
+            mode="multiple"
+            value={selectedGroups}
+            onChange={(value) => setSelectedGroups(value)}
+            style={{ width: "100%" }}
+            placeholder="Select groups"
+          >
+            {groups.map((group) => (
+              <Select.Option key={group.id} value={group.name}>
+                {group.name}
+              </Select.Option>
+            ))}
+          </Select>
+        </Modal>
+
+        <Modal
+          title={`Altere o ponto de apoio de ${selectedUser?.name}`}
+          visible={isSupportPointModalVisible}
+          onOk={handleSaveSupportPoint}
+          onCancel={() => setIsSupportPointModalVisible(false)}
+          okText="Save"
+          cancelText="Cancel"
+        >
+          <Select
+            value={selectedSupportPoint}
+            onChange={(value) => setSelectedSupportPoint(value)}
+            style={{ width: "100%" }}
+            placeholder="Select support point"
+          >
+            {supportPoints.map((point) => (
+              <Select.Option key={point.id} value={point.abbreviation}>
+                {point.cityname}
+              </Select.Option>
+            ))}
+          </Select>
+        </Modal>
+      </Card>
+    </div>
   );
 };
 
