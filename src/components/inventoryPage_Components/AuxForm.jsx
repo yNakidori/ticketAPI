@@ -49,6 +49,8 @@ const AuxForm = ({ onSave }) => {
       // Salvando no Firebase
       await addDoc(collection(db, "auxProducts"), {
         name,
+        supplier: "Não informado",
+        numeroNota: "Não informado",
         quantity: parseInt(quantity, 10),
         price: parseFloat(price),
         perunityprice: parseFloat(perunityprice.toFixed(2)), // Arredondar para 2 casas decimais
@@ -84,6 +86,10 @@ const AuxForm = ({ onSave }) => {
         >
           <Select placeholder="Selecione o tipo">
             <Option value="Papel">Papeis A4, A3</Option>
+            <Option value="Fitilho">Fitilho</Option>
+            <Option value="Cilindro">Cilindro</Option>
+            <Option value="Lacres">Lacres</Option>
+            <Option value="Strech">Strech</Option>
             <Option value="Caderno">Caderno/Agenda</Option>
             <Option value="Caneta">Caneta</Option>
             <Option value="Clips">Clips</Option>
@@ -124,6 +130,27 @@ const AuxForm = ({ onSave }) => {
           ]}
         >
           <Input placeholder="Nome do produto" />
+        </Form.Item>
+        <Form.Item
+          label="Fornecedor"
+          name="supplier"
+          rules={[
+            {
+              required: true,
+              message: "Por favor, insira o nome do fornecedor!",
+            },
+          ]}
+        >
+          <Input placeholder="Nome do Forecedor" />
+        </Form.Item>
+        <Form.Item
+          label="Numero da nota"
+          name="numeroNota"
+          rules={[
+            { required: true, message: "Por favor, insira o numero da nota!" },
+          ]}
+        >
+          <Input placeholder="Numero da nota" />
         </Form.Item>
         <Form.Item
           label="Quantidade"

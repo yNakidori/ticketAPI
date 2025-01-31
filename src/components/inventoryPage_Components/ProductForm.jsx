@@ -43,7 +43,7 @@ const ProductForm = ({ onSave }) => {
   const handleFormSubmit = async (values) => {
     setLoading(true);
     try {
-      const { name, quantity, price, type } = values;
+      const { name, quantity, price, type, supplier, numeroNota } = values;
 
       // Calcular o preço por unidade
       const perunityprice = price / quantity;
@@ -51,6 +51,8 @@ const ProductForm = ({ onSave }) => {
       // Salvando no Firebase
       await addDoc(collection(db, "products"), {
         name,
+        supplier,
+        numeroNota,
         quantity: parseInt(quantity, 10),
         price: parseFloat(price),
         perunityprice: parseFloat(perunityprice.toFixed(2)), // Arredondar para 2 casas decimais
@@ -126,6 +128,27 @@ const ProductForm = ({ onSave }) => {
           ]}
         >
           <Input placeholder="Nome do produto" />
+        </Form.Item>
+        <Form.Item
+          label="Fornecedor"
+          name="supplier"
+          rules={[
+            {
+              required: true,
+              message: "Por favor, insira o nome do fornecedor!",
+            },
+          ]}
+        >
+          <Input placeholder="Nome do Forecedor" />
+        </Form.Item>
+        <Form.Item
+          label="Numero da nota"
+          name="numeroNota"
+          rules={[
+            { required: true, message: "Por favor, insira o numero da nota!" },
+          ]}
+        >
+          <Input placeholder="Numero da nota" />
         </Form.Item>
         <Form.Item
           label="Quantidade"
