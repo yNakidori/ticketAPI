@@ -88,6 +88,10 @@ const ProductForm = ({ onSave }) => {
         >
           <Select placeholder="Selecione o tipo">
             <Option value="Papel">Papeis A4, A3</Option>
+            <Option value="Fitilho">Fitilho</Option>
+            <Option value="Cilindro">Cilindro</Option>
+            <Option value="Lacres">Lacres</Option>
+            <Option value="Strech">Strech</Option>
             <Option value="Caderno">Caderno/Agenda</Option>
             <Option value="Caneta">Caneta</Option>
             <Option value="Clips">Clips</Option>
